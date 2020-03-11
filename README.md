@@ -1,8 +1,8 @@
-If you do not know the git CLI commands, recommand to use [sourcetree](https://www.sourcetreeapp.com/) or [gitkraren](https://www.gitkraken.com/).
+If you do not know the git CLI commands, recommend to use [sourcetree](https://www.sourcetreeapp.com/) or [gitkraren](https://www.gitkraken.com/).
 
 # Setup
 
-1. git clone https://github.com/pkgpkr/Packge-Picker.git to your local folder 
+1. git clone https://github.com/pkgpkr/Package-Picker.git to your local folder 
 2. create a branch locally for your small features.
 3. start coding.
 4. make commits frequently 
