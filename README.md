@@ -7,6 +7,13 @@ If you do not know the git CLI commands, recommand to use [sourcetree](https://w
 3. start coding.
 4. make commits frequently 
 
+# Run
+
+1. `cd webserver/pkgpkr`
+2. `python3 manage.py runserver`
+
+When the web server starts, open your browser to http://localhost:8000
+
 # Pull Request
 
 1. make your final commit for this branch
