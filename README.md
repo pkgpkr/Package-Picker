@@ -24,3 +24,5 @@ When the web server starts, open your browser to http://localhost:8000
 1. need at least one peer to review code and approve the change
 2. let Jenkins build and check tests(including lint) and do the merge if no error
 
+# run script
+`TOKEN=<your token> python3 script.py`
