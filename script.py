@@ -70,6 +70,5 @@ def runQuery():
         f.close()
         writeLog(result, i)
     result = runQueryOnce(totalRepos - i * 100)
-
-
+    
 runQuery()
