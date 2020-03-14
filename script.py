@@ -2,7 +2,7 @@ import requests
 import os.path
 import datetime
 
-headers = {"Authorization": "Bearer b678af988f8b2d43ac10a882aae5b630b3b711f8"}
+headers = {"Authorization": "Bearer " + os.environ['TOKEN']}
 MAX_NODES_PER_LOOP = 100
 totalRepos = 0
 
