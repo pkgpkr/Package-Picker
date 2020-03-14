@@ -7,7 +7,7 @@ If you do not know the git CLI commands, recommend to use [sourcetree](https://w
 3. start coding.
 4. make commits frequently 
 
-# Pull Request
+# Pull Request 
 
 1. make your final commit for this branch
 2. send a pull request from `your branch name` to `origin/dev`
