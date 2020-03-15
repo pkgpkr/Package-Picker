@@ -25,4 +25,5 @@ When the web server starts, open your browser to http://localhost:8000
 2. let Jenkins build and check tests(including lint) and do the merge if no error
 
 # run script
-`TOKEN=<your token> python3 script.py`
+Do not run script in script folder, run it in the main folder!
+`TOKEN=<your token> python3 script/Script.py`
