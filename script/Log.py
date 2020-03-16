@@ -2,9 +2,12 @@ import os.path
 import shutil
 
 logPrefix = "./log/"
+
+
 def writeLog(result, today):
     return
-    
+
+
 def writeLog1(result, today):
     if not os.path.exists(logPrefix):
         os.mkdir(logPrefix)
@@ -15,13 +18,14 @@ def writeLog1(result, today):
         nodes = result['data']['search']['edges']
         count = 1
         for n in nodes:
-            if n['node']['object'] != None:
+            if n['node']['object'] is not None:
                 f.write(n['node']['nameWithOwner'] + ':\n')
                 f.write(n['node']['url'] + ':\n')
-                f.write(('').join(n['node']['object']['text'])) 
+                f.write(''.join(n['node']['object']['text']))
                 f.write('\n')
                 count += 1
         f.close()
+
 
 def clearLog():
     if os.path.exists(logPrefix):

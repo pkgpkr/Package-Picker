@@ -4,7 +4,6 @@ import MonthCalculation
 import Log
 import PSQL
 import json
-import sys
 
 headers = {"Authorization": "Bearer " + os.environ['TOKEN']}
 MAX_NODES_PER_LOOP = 100
@@ -38,18 +37,18 @@ query = """
 
 searchQuery = "topic:JavaScript stars:>70 followers:>70 "
 
+
 # insert name, url, retrieved time
 def writeDB(db, result):
     nodes = result['data']['search']['edges']
     for n in nodes:
         url = n['node']['url']
         name = n['node']['nameWithOwner']
-        followers= n['node']['watchers']['totalCount']
+        followers = n['node']['watchers']['totalCount']
 
-
-        if not (n['node']['object'] is None):                       
-            packageStr = n['node']['object']['text'].replace('\n','').replace('\"','"')
-            # TODO: somethimes package.json is corrupted, skip them first
+        if not (n['node']['object'] is None):
+            packageStr = n['node']['object']['text'].replace('\n', '').replace('\"', '"')
+            # TODO: sometimes package.json is corrupted, skip them first
             try:
                 packageJSON = json.loads(packageStr)
             except:
@@ -65,22 +64,23 @@ def writeDB(db, result):
                         if type(v) is not str:
                             pass
                         else:
-                            dependencyStr = k.replace('@','') + "@" + v.replace('^','')
-                        package_id = PSQL.insertToPackages(db,dependencyStr)
+                            dependencyStr = k.replace('@', '') + "@" + v.replace('^', '')
+                        package_id = PSQL.insertToPackages(db, dependencyStr)
                         print("packageID:" + str(package_id))
-                        PSQL.insertToDependencies(db,str(application_id),str(package_id))
+                        PSQL.insertToDependencies(db, str(application_id), str(package_id))
                 except:
                     pass
 
-def runQuery(today): 
-    # set up databse
+
+def runQuery(today):
+    # set up database
     db = PSQL.connectToDB()
     monthlySearchStr = MonthCalculation.getMonthlySearchStr(today)
-    result = runQueryOnce(MAX_NODES_PER_LOOP, monthlySearchStr) 
+    result = runQueryOnce(MAX_NODES_PER_LOOP, monthlySearchStr)
     totalRepos = result['data']['search']['repositoryCount']
     i = 0
-    while (i * 100 < totalRepos - MAX_NODES_PER_LOOP):
-        result = runQueryOnce(MAX_NODES_PER_LOOP, monthlySearchStr) 
+    while i * 100 < totalRepos - MAX_NODES_PER_LOOP:
+        result = runQueryOnce(MAX_NODES_PER_LOOP, monthlySearchStr)
         writeDB(db, result)
         i += 1
         lastNode = result['data']['search']['edges'][-1]['cursor']
@@ -94,9 +94,10 @@ def runQuery(today):
     result = runQueryOnce(totalRepos - i * 100, monthlySearchStr)
     writeDB(db, result)
     Log.writeLog(result, today)
-    # today = MonthCalculation.monthdelta(today,1)
+    # today = MonthCalculation.monthDelta(today,1)
 
-def runQueryOnce(nodePerLoop, monthlySearchStr): 
+
+def runQueryOnce(nodePerLoop, monthlySearchStr):
     f = None
     fileName = logPrefix + "lastNode_" + monthlySearchStr + ".txt"
     if os.path.exists(fileName):
@@ -106,10 +107,10 @@ def runQueryOnce(nodePerLoop, monthlySearchStr):
         "maybeAfter": f.read() if f else None,
         "numberOfNodes": nodePerLoop
     }
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables': variables}, headers=headers)
+    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables': variables},
+                            headers=headers)
     if request.status_code == 200:
         print(variables['queryString'])
         return request.json()
     else:
         raise Exception("Query failed to run by returning code")
-
