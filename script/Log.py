@@ -2,8 +2,10 @@ import os.path
 import shutil
 
 logPrefix = "./log/"
-
 def writeLog(result, today):
+    return
+    
+def writeLog1(result, today):
     if not os.path.exists(logPrefix):
         os.mkdir(logPrefix)
     fileName = logPrefix + today.strftime("%Y_%m_") + "log" + ".txt"

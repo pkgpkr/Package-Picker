@@ -41,3 +41,4 @@ def insertToDependencies(db,application_id,package_id):
     db.commit()
     cur.execute("SELECT * FROM dependencies;")
     return cur.fetchall()
+    

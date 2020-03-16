@@ -4,6 +4,7 @@ import MonthCalculation
 import Log
 import PSQL
 import json
+import sys
 
 headers = {"Authorization": "Bearer " + os.environ['TOKEN']}
 MAX_NODES_PER_LOOP = 100
@@ -59,19 +60,17 @@ def writeDB(db, result):
                 application_id = PSQL.insertToApplication(db, url, followers, name, hashValue)
                 print("appID:" + str(application_id))
                 dependencies = packageJSON['dependencies']
-                if not dependencies:
+                try:
+                    for k, v in dependencies.items():
+                        if type(v) is not str:
+                            pass
+                        else:
+                            dependencyStr = k.replace('@','') + "@" + v.replace('^','')
+                        package_id = PSQL.insertToPackages(db,dependencyStr)
+                        print("packageID:" + str(package_id))
+                        PSQL.insertToDependencies(db,str(application_id),str(package_id))
+                except:
                     pass
-                for k, v in dependencies.items():
-                    if type(v) is not str:
-                        pass
-                    else:
-                        dependencyStr = k.replace('@','') + "@" + v.replace('^','')
-                    package_id = PSQL.insertToPackages(db,dependencyStr)
-                    print("packageID:" + str(package_id))
-                    PSQL.insertToDependencies(db,str(application_id),str(package_id))
-
-                    
-            
 
 def runQuery(today): 
     # set up databse
@@ -84,8 +83,10 @@ def runQuery(today):
         result = runQueryOnce(MAX_NODES_PER_LOOP, monthlySearchStr) 
         writeDB(db, result)
         i += 1
-        lastNode = result['data']['search']['edges'][MAX_NODES_PER_LOOP - 1]['cursor']
+        lastNode = result['data']['search']['edges'][-1]['cursor']
         fileName = logPrefix + "lastNode_" + monthlySearchStr + ".txt"
+        if not os.path.exists(logPrefix):
+            os.mkdir(logPrefix)
         f = open(fileName, "w")
         f.write(lastNode)
         f.close()

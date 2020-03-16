@@ -5,11 +5,12 @@ import sys
 import PSQL
  
 def main():
-    db = PSQL.connectToDB()
-    cur = db.cursor()
-    cur.execute("SELECT * FROM applications;")
-    result = cur.fetchall()
-    print(result)
+    # db = PSQL.connectToDB()
+    # cur = db.cursor()
+    # cur.execute("SELECT * FROM applications;")
+    # result = cur.fetchall()
+    # print(result)
+    print(type({}))
 
 if __name__ == "__main__":
     main()
