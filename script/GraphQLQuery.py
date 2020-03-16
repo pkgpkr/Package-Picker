@@ -3,6 +3,7 @@ import os.path
 import MonthCalculation
 import Log
 import PSQL
+import json
 
 headers = {"Authorization": "Bearer " + os.environ['TOKEN']}
 MAX_NODES_PER_LOOP = 100
@@ -43,7 +44,31 @@ def writeDB(db, result):
         url = n['node']['url']
         name = n['node']['nameWithOwner']
         followers= n['node']['watchers']['totalCount']
-        PSQL.insertToApplication(db, url, followers, name)
+
+
+        if not (n['node']['object'] is None):                       
+            packageStr = n['node']['object']['text'].replace('\n','').replace('\"','"')
+            # TODO: somethimes package.json is corrupted, skip them first
+            try:
+                packageJSON = json.loads(packageStr)
+            except:
+                pass
+            if 'dependencies' in packageJSON:
+                # insert applications table only if dependencies exist in package.json
+                application_id = PSQL.insertToApplication(db, url, followers, name)
+                print("appID:" + str(application_id))
+                dependencies = packageJSON['dependencies']
+                for k, v in dependencies.items():
+                    if type(v) is not str:
+                        dependencyStr = k.replace('@','') + "@" + v['version']
+                    else:
+                        dependencyStr = k.replace('@','') + "@" + v
+                    package_id = PSQL.insertToPackages(db,dependencyStr)
+                    print("packageID:" + str(package_id))
+                    PSQL.insertToDependencies(db,str(application_id),str(package_id))
+
+                    
+            
 
 def runQuery(today): 
     # set up databse
