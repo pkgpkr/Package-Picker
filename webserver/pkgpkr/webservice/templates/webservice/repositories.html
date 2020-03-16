@@ -1,0 +1,29 @@
+{% extends "webservice/base.html" %}
+
+{% block title %}
+    Package Picker
+{% endblock %}
+
+{% block body %}
+    <h1>Welcome to Package Picker</h1>
+
+    <table class="table">
+    <tr>
+      <th>Name</th>
+    </tr>
+
+    {% if not one_or_more_with_dependencies %}
+        <li>No repositories.</li>
+    {% else %}
+        {% for repo in repos %}
+          {% if repo.dependencies %}
+              <tr>
+                  <td><a href="{% url 'recommendations' repo.nameWithOwnerEscaped %} ">{{repo.nameWithOwner}}</a></td>
+              </tr>
+          {% endif %}
+        {% endfor %}
+    {% endif %}
+    </table>
+
+
+{% endblock %}

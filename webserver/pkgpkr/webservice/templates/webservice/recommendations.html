@@ -1,0 +1,19 @@
+{% extends "webservice/base.html" %}
+
+{% block title %}
+    Package Picker
+{% endblock %}
+
+{% block body %}
+
+    <h3>Recommendations for `{{ repository_name }}`:</h3>
+
+    <ul>
+        {% for recommendation in recommendations %}
+
+            <li><a target="_blank" href="{{ recommendation.url }}">{{ recommendation.name }}
+                - {{ recommendation.average_downloads }} - {{ recommendation.keywords }} - {{ recommendation.rate  }}</a></li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
