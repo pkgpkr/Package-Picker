@@ -55,7 +55,8 @@ def writeDB(db, result):
                 pass
             if 'dependencies' in packageJSON:
                 # insert applications table only if dependencies exist in package.json
-                application_id = PSQL.insertToApplication(db, url, followers, name)
+                hashValue = hash(packageStr)
+                application_id = PSQL.insertToApplication(db, url, followers, name, hashValue)
                 print("appID:" + str(application_id))
                 dependencies = packageJSON['dependencies']
                 if not dependencies:

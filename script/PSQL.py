@@ -12,11 +12,11 @@ def connectToDB():
     db = psycopg2.connect(conn_string)
     return db
 
-def insertToApplication(db, url, followers, appName):
+def insertToApplication(db, url, followers, appName, hash):
     # Get a cursor for executing queries
     cur = db.cursor()
     # Upsert a row into the applications table
-    cur.execute("INSERT INTO applications (url, name, followers, retrieved) VALUES (%s, %s, %s, %s) ON CONFLICT ON CONSTRAINT unique_url_and_hash DO UPDATE SET (url, name, followers, retrieved) = (EXCLUDED.url, EXCLUDED.name, EXCLUDED.followers, EXCLUDED.retrieved) RETURNING id;", (url, appName, followers, datetime.datetime.now()))
+    cur.execute("INSERT INTO applications (url, name, followers, retrieved, hash) VALUES (%s, %s, %s, %s, %s) ON CONFLICT ON CONSTRAINT unique_url_and_hash DO UPDATE SET (url, name, followers, retrieved, hash) = (EXCLUDED.url, EXCLUDED.name, EXCLUDED.followers, EXCLUDED.retrieved, EXCLUDED.hash) RETURNING id;", (url, appName, followers, datetime.datetime.now(), hash))
     # print("%s, %s, %s", (url, appName, followers))
     id = cur.fetchone()[0]
     # Commit the transaction
