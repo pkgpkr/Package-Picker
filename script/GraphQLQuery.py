@@ -60,9 +60,9 @@ def writeDB(db, result):
                 dependencies = packageJSON['dependencies']
                 for k, v in dependencies.items():
                     if type(v) is not str:
-                        dependencyStr = k.replace('@','') + "@" + v['version']
+                        pass
                     else:
-                        dependencyStr = k.replace('@','') + "@" + v
+                        dependencyStr = k.replace('@','') + "@" + v.replace('^','')
                     package_id = PSQL.insertToPackages(db,dependencyStr)
                     print("packageID:" + str(package_id))
                     PSQL.insertToDependencies(db,str(application_id),str(package_id))
