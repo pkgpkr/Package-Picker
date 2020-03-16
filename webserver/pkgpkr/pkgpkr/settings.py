@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
@@ -26,7 +25,6 @@ SECRET_KEY = '2@)h)0oz7su2wdinjl9ni5w%wa7+4l9s1c)!3%a1#ya6quow-3'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -48,7 +46,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
 ROOT_URLCONF = 'pkgpkr.urls'
 
@@ -70,7 +71,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pkgpkr.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -80,7 +80,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -100,7 +99,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -114,8 +112,33 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Env keys
+GITHUB_CLIENT_ID = os.environ.get('CLIENT_ID')
+GITHUB_CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
+
+# Github auth config
+GITHUB_SCOPE = 'repo'
+GITHUB_ALLOW_SIGN_UP = 'false'
+
+# Endpoints
+GITHUB_BASE_URL = 'https://github.com'
+APP_GITHUB_CALLBACK_URI = 'http://localhost:8000/callback'
+GITHUB_OATH_AUTH_PATH = f'{GITHUB_BASE_URL}/login/oauth/authorize?client_id={GITHUB_CLIENT_ID}&' \
+    f'allow_signup={GITHUB_ALLOW_SIGN_UP}&redirect_uri={APP_GITHUB_CALLBACK_URI}&scope={GITHUB_SCOPE}'
+GITHUB_OATH_ACCESS_TOKEN_PATH = f'{GITHUB_BASE_URL}/login/oauth/access_token'
+GITHUB_OATH_REVIEW_AUTHORIZATIONS_PATH = f'{GITHUB_BASE_URL}/settings/connections/applications/{GITHUB_CLIENT_ID}'
+
+GITHUB_BASE_API_URL = 'https://api.github.com'
+GITHUB_USER_INFO_URL = f'{GITHUB_BASE_API_URL}/user'
+GITHUB_GRAPHQL_URL = 'https://api.github.com/graphql'
+
+NPM_DEPENDENCY_META_URL = 'https://registry.npmjs.org'
+NPM_DEPENDENCY_URL = 'https://npmjs.com/package'
+
+NPM_API_BASE_URL = 'https://api.npmjs.org'
+NPM_LAST_MONTH_DOWNLOADS_META_API_URL = f'{NPM_API_BASE_URL}/downloads/range/last-month'

@@ -10,22 +10,19 @@
     <table class="table">
     <tr>
       <th>Name</th>
-      <th>Category</th>
-      <th>Downloads</th>
-      <th>Rate</th>
-      <th>Last Updated</th>
     </tr>
-    {% for repo in repositories %}
-      <tr>
-        <td><a href="{% url 'recommendations' repo.name %}">{{repo.name}}</a></td>
-        <td>{{repo.category}}</td>
-        <td>{{repo.donwloads}}</td>
-        <td>{{repo.rate}}</td>
-        <td>{{repo.last_upd}}</td>
-      </tr>
-    {% empty %}
-          <li>No repositories.</li>
-    {% endfor %}
+
+    {% if not one_or_more_with_dependencies %}
+        <li>No repositories.</li>
+    {% else %}
+        {% for repo in repos %}
+          {% if repo.dependencies %}
+              <tr>
+                  <td><a href="{% url 'recommendations' repo.nameWithOwnerEscaped %} ">{{repo.nameWithOwner}}</a></td>
+              </tr>
+          {% endif %}
+        {% endfor %}
+    {% endif %}
     </table>
 
 
