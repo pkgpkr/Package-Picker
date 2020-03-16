@@ -58,6 +58,8 @@ def writeDB(db, result):
                 application_id = PSQL.insertToApplication(db, url, followers, name)
                 print("appID:" + str(application_id))
                 dependencies = packageJSON['dependencies']
+                if not dependencies:
+                    pass
                 for k, v in dependencies.items():
                     if type(v) is not str:
                         pass
