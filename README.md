@@ -26,4 +26,4 @@ When the web server starts, open your browser to http://localhost:8000
 
 # Run data scraping script
 Do not run script in script folder, run it in the main folder!
-`TOKEN=<your token> python3 script/Script.py`
+`TOKEN=<your token> MONTH=<number of months> python3 script/Script.py`
