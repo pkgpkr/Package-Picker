@@ -70,6 +70,7 @@ def writeDB(db, result):
                         PSQL.insertToDependencies(db, str(application_id), str(package_id))
                 except:
                     pass
+    db.commit()
 
 
 def runQuery(today):
