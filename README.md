@@ -24,3 +24,6 @@ When the web server starts, open your browser to http://localhost:8000
 1. need at least one peer to review code and approve the change
 2. let Jenkins build and check tests(including lint) and do the merge if no error
 
+# Run data scraping script
+Do not run script in script folder, run it in the main folder!
+`TOKEN=<your token> MONTH=<number of months> python3 script/Script.py`
