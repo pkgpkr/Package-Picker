@@ -57,7 +57,6 @@ def writeDB(db, result):
                 # insert applications table only if dependencies exist in package.json
                 hashValue = hash(packageStr)
                 application_id = PSQL.insertToApplication(db, url, followers, name, hashValue)
-                print("appID:" + str(application_id))
                 dependencies = packageJSON['dependencies']
                 try:
                     for k, v in dependencies.items():
@@ -66,7 +65,6 @@ def writeDB(db, result):
                         else:
                             dependencyStr = k.replace('@', '') + "@" + v.replace('^', '')
                         package_id = PSQL.insertToPackages(db, dependencyStr)
-                        print("packageID:" + str(package_id))
                         PSQL.insertToDependencies(db, str(application_id), str(package_id))
                 except:
                     pass
@@ -111,7 +109,6 @@ def runQueryOnce(nodePerLoop, monthlySearchStr):
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables': variables},
                             headers=headers)
     if request.status_code == 200:
-        print(variables['queryString'])
         return request.json()
     else:
         raise Exception("Query failed to run by returning code")
