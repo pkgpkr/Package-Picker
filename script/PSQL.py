@@ -1,13 +1,11 @@
 import psycopg2
 import datetime
+import os
 
-# user = "postgres"
-# password = os.environ['DB_PASSWORD']
-# host = "package-picker-test.c7etfrntf9yq.us-east-1.rds.amazonaws.com"
-# conn_string = str("host=%s user=%s password=%s", (host, user, password))
-
-conn_string = "host='localhost' dbname='postgres' user='postgres' password='secret'"
-
+user = os.environ['DB_USER'] or "postgres"
+password = os.environ['DB_PASSWORD'] or "secret"
+host = os.environ['DB_HOST'] or "localhost"
+conn_string = f"host={host} user={user} password={password}"
 
 def connectToDB():
     # Connect to the database
