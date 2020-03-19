@@ -9,7 +9,7 @@ def main():
     Log.clearLog()
     today = datetime.datetime.now()
     for i in range(0, int(os.environ['MONTH'])):
-        print("Fetching month " + i + " of " + os.environ['MONTH'])
+        print("Fetching month " + str(i) + " of " + os.environ['MONTH'])
         GraphQLQuery.runQuery(MonthCalculation.monthDelta(today, i))
 
 
