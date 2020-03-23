@@ -1,0 +1,6 @@
+psycopg2
+pyarrow
+django
+requests
+boto3
+pandas
