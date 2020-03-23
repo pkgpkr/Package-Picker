@@ -4,11 +4,13 @@ import MonthCalculation
 import Log
 import PSQL
 import json
+import re
 
 headers = {"Authorization": "Bearer " + os.environ['TOKEN']}
 MAX_NODES_PER_LOOP = 100
 totalRepos = 0
 logPrefix = "./log/"
+numberRegex = re.compile(r'\d+')
 
 query = """
     query SearchMostTop10Star($queryString: String!, $maybeAfter: String, $numberOfNodes: Int) {
@@ -61,13 +63,18 @@ def writeDB(db, result):
                 try:
                     for k, v in dependencies.items():
                         if type(v) is not str:
-                            pass
+                            continue
                         else:
-                            dependencyStr = 'pkg:npm/' + k + "@" + v.replace('^', '').replace('~', '')
+                            # Extract the major version number from the version string
+                            result = numberRegex.search(v)
+                            if (result):
+                                dependencyStr = 'pkg:npm/' + k + "@" + result.group()
+                            else:
+                                continue
                         package_id = PSQL.insertToPackages(db, dependencyStr)
                         PSQL.insertToDependencies(db, str(application_id), str(package_id))
                 except:
-                    pass
+                    continue
     db.commit()
 
 
