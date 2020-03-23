@@ -3,16 +3,16 @@
 <html>
   <head>
     <link rel="stylesheet" href="{% static 'bulma.min.css' %}">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
     <link href="{% static 'fontawesome/css/all.min.css' %}" type="text/css" rel="stylesheet"/>
     <link rel="shortcut icon" type="image/png" href="{% static 'images/logo.png' %}"/>
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
     <title>{% block title %}{% endblock %}</title>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
-		<!-- Global site tag (gtag.js) - Google Analytics -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=G-3ZJTB9DHQG"></script>
-		<script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3ZJTB9DHQG"></script>
+    <script>
 			window.dataLayer = window.dataLayer || [];
 			function gtag(){dataLayer.push(arguments);}
 			gtag('js', new Date());
@@ -47,18 +47,18 @@
             <div class="navbar-start">
               <a class="navbar-item" href="{% url 'index' %}">
                 <i class="fas fa-home"></i>
-                &nbsp;Home
+                <p class="text-icon">Home</p>
               </a>
 
               <a class="navbar-item" href="{% url 'about' %}">
                 <i class="fas fa-question"></i>
-                &nbsp;About
+                <p class="text-icon">About</p>
               </a>
 
               {% if request.session.github_token %}
               <a class="navbar-item" href="{% url 'repositories' %}">
                 <i class="fas fa-list"></i>
-                &nbsp;My Repositories
+                <p class="text-icon">My Repositories</p>
               </a>
               {% endif %}
             </div>
@@ -81,7 +81,7 @@
                 <div class="buttons">
                   <a class="button is-linkl" href="{% url 'login' %}">
                     <i class="fas fa-sign-in-alt"></i>
-                    <strong>&nbsp;Log in</strong>
+                    <strong><p class="text-icon">Log in</p></strong>
                   </a>
                 </div>
                 {% endif %}
@@ -89,7 +89,7 @@
                 <div class="buttons">
                   <a class="button is-light" href="{% url 'logout' %}">
                     <i class="fas fa-sign-in-alt"></i>
-                    <strong>&nbsp;Logout</strong>
+                    <strong><p class="text-icon">Logout</p></strong>
                   </a>
                 </div>
                 {% endif %}

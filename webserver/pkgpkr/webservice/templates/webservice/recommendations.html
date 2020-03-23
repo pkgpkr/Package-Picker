@@ -12,9 +12,9 @@
       <br>
       <table>
         <tr>
-          <td style="width:200px;">Selected Category: </td>
-          <td style="width:80px;"><input type="text" id="categoryName" name="categoryName" disabled style="border: none; background-color: white; font-size:20px"></td>
-          <td><button id="categoryClear" class="button is-light" onclick="categoryClear()" style="visibility:hidden;">Clear</button></td>
+          <td id="selected-category">Selected Category: </td>
+          <td id="selected-category-input"><input type="text" id="categoryName" name="categoryName" disabled></td>
+          <td><button id="categoryClear" class="button is-light" onclick="categoryClear()">Clear</button></td>
         </tr>
       </table>
       <div class="table-container">
@@ -25,7 +25,7 @@
               <th>Category</th>
               <th>Downloads</th>
               <th>Rate</th>
-              <th style="min-width: 150px;">Version Date</th>
+              <th id="version-date-header">Version Date</th>
             </tr>
           </thead>
           <tbody>
@@ -47,7 +47,7 @@
           </<tbody>
         </table>
       </div>
-      <div style="width:250px; margin: auto;">
+      <div class="recommendation-filter">
         <p class="control has-icons-right">
           <input id="recommendationFilter" class="input is-small" type="text" placeholder="Search">
           <span class="icon is-small is-right">

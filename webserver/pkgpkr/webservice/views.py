@@ -95,7 +95,7 @@ def repositories(request):
         date = dateTime.split('T')[0]
         time = dateTime.split('T')[-1][:-1]
 
-        repo['date'] = date + ' ' + time
+        repo['date'] = f'{date} {time}'
 
         # Convert string to encoded URL e.g. hello/world -> hello%2world
         repo['nameWithOwnerEscaped'] = urllib.parse.quote_plus(repo['nameWithOwner'])

@@ -72,7 +72,7 @@ class RecommenderService:
                 timeWithZone = dateTime.split('T')[-1]
                 time = timeWithZone.split('.')[0]
 
-                d['date'] = date + ' ' + time
+                d['date'] = f'{date} {time}'
 
             # Url to NPM
             d['url'] = NPM_DEPENDENCY_URL + f'/{dependency_name}'
