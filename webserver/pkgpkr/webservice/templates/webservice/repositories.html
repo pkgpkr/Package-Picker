@@ -1,29 +1,42 @@
 {% extends "webservice/base.html" %}
 
 {% block title %}
-    Package Picker
+    My Repositories
 {% endblock %}
 
 {% block body %}
-    <h1>Welcome to Package Picker</h1>
-
-    <table class="table">
-    <tr>
-      <th>Name</th>
-    </tr>
-
-    {% if not one_or_more_with_dependencies %}
-        <li>No repositories.</li>
-    {% else %}
-        {% for repo in repos %}
-          {% if repo.dependencies %}
+<section class="section">
+  <div class="container">
+    <div class="content is-medium">
+      <h2>MY REPOSITORIES</h2>
+      <br>
+      {% if not one_or_more_with_dependencies %}
+        <p>You have no repositories with package.json</p>
+      {% else %}
+      <div class="table-container">
+        <table class="display-data-tables">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Last Updated Date</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for repo in repos %}
+            {% if repo.dependencies %}
               <tr>
-                  <td><a href="{% url 'recommendations' repo.nameWithOwnerEscaped %} ">{{repo.nameWithOwner}}</a></td>
+                <td><a href="{% url 'recommendations' repo.nameWithOwnerEscaped %} ">{{repo.nameWithOwner}}</a></td>
+                <td>{{repo.date}}</td>
               </tr>
-          {% endif %}
-        {% endfor %}
-    {% endif %}
-    </table>
+            {% endif %}
+          {% endfor %}
+          </<tbody>
+        </table>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
 
 
 {% endblock %}

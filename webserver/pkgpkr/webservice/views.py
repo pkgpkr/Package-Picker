@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+
 import requests
 import urllib.parse
 import json
@@ -87,6 +88,14 @@ def repositories(request):
     one_or_more_with_dependencies = False
 
     for repo in repos:
+        # Updated Date
+        dateTime = repo['updatedAt']
+
+        # Convert time format e.g. 2020-03-16T13:03:34Z -> 2020-03-16 13:03:34
+        date = dateTime.split('T')[0]
+        time = dateTime.split('T')[-1][:-1]
+
+        repo['date'] = date + ' ' + time
 
         # Convert string to encoded URL e.g. hello/world -> hello%2world
         repo['nameWithOwnerEscaped'] = urllib.parse.quote_plus(repo['nameWithOwner'])
