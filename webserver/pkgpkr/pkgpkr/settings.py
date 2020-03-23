@@ -120,6 +120,13 @@ STATIC_URL = '/static/'
 # Env keys
 GITHUB_CLIENT_ID = os.environ.get('CLIENT_ID')
 GITHUB_CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
+S3_ACCESS_KEY_ID = os.environ.get('S3_ACCESS_KEY_ID')
+S3_SECRET_ACCESS_KEY = os.environ.get('S3_SECRET_ACCESS_KEY')
+S3_BUCKET = os.environ.get('S3_BUCKET')
+S3_MODEL_PATH = os.environ.get('S3_MODEL_PATH')
+DB_HOST = os.environ.get('DB_HOST')
+DB_USER = os.environ.get('DB_USER')
+DB_PASSWORD = os.environ.get('DB_PASSWORD')
 
 # Github auth config
 GITHUB_SCOPE = 'repo'
