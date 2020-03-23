@@ -35,7 +35,7 @@ query = """
     }
     """
 
-searchQuery = "topic:JavaScript stars:>70 followers:>70 "
+searchQuery = "topic:JavaScript stars:>10"
 
 
 # insert name, url, retrieved time
@@ -102,7 +102,7 @@ def runQueryOnce(nodePerLoop, monthlySearchStr):
     if os.path.exists(fileName):
         f = open(fileName, "r")
     variables = {
-        "queryString": searchQuery + monthlySearchStr,
+        "queryString": f"{searchQuery} {monthlySearchStr}",
         "maybeAfter": f.read() if f else None,
         "numberOfNodes": nodePerLoop
     }
