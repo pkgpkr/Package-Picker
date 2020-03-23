@@ -52,7 +52,7 @@ def writeDB(db, result):
             try:
                 packageJSON = json.loads(packageStr)
             except:
-                pass
+                continue
             if 'dependencies' in packageJSON:
                 # insert applications table only if dependencies exist in package.json
                 hashValue = hash(packageStr)
