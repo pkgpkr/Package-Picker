@@ -3,3 +3,4 @@ pyarrow
 django
 requests
 boto3
+pandas
