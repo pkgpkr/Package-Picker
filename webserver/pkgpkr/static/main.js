@@ -15,7 +15,7 @@ $(document).ready( function () {
 
 function categoryClick(value) {
     var categoryName = document.getElementById('categoryName');
-    document.getElementById('categoryName').value = value;
+    categoryName.value = value;
     triggerEvent(categoryName, 'keyup');
     document.getElementById('categoryClear').style.visibility = "visible";
 }
