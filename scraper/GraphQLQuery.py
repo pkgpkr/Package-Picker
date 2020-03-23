@@ -63,7 +63,7 @@ def writeDB(db, result):
                         if type(v) is not str:
                             pass
                         else:
-                            dependencyStr = k.replace('@', '') + "@" + v.replace('^', '')
+                            dependencyStr = 'pkg:npm/' + k + "@" + v.replace('^', '').replace('~', '')
                         package_id = PSQL.insertToPackages(db, dependencyStr)
                         PSQL.insertToDependencies(db, str(application_id), str(package_id))
                 except:
