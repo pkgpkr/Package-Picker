@@ -1,78 +1,123 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-
-<head>
-    <meta charset="utf-8">
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-            crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-            crossorigin="anonymous"></script>
-
-    <link href="{% static 'webservice/styles.css' %}" rel="stylesheet">
-
-
+<html>
+  <head>
+    <link rel="stylesheet" href="{% static 'bulma.min.css' %}">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link href="{% static 'fontawesome/css/all.min.css' %}" type="text/css" rel="stylesheet"/>
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/logo.png' %}"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
     <title>{% block title %}{% endblock %}</title>
-</head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3ZJTB9DHQG"></script>
+    <script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
 
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{% url 'index' %}">Package Picker</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="{% url 'index' %}">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'about' %}">About</a>
-            </li>
-            {% if request.session.github_token %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'repositories' %}">My Repositories</a>
-                </li>
-            {% endif %}
-            {% if not request.session.github_token %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'login' %}">Login</a>
-                </li>
-            {% endif %}
-            {% if request.session.github_token %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                </li>
-            {% endif %}
+			gtag('config', 'G-3ZJTB9DHQG');
+		</script>
+  </head>
+  <body>
+    <section class="hero is-medium is-primary is-bold">
+      <div class="hero-body" style="padding-top: 4rem; padding-bottom: 2rem;">
+        <div class="container has-text-centered">
+          <a href="/">
+            <h1 class="title is-1">
+              <i class="fas fa-box"></i>
+              Package Picker
+            </h1>
+          </a>
+          <h2 class="subtitle">
+            Choose Good Packages, Faster.
+          </h2>
+        </div>
+        <nav class="container" role="navigation" aria-label="main navigation">
+          <div class="navbar">
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+            </a>
+          </div>
 
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-            {%  if request.session.github_info.name %}
-                 <h5> Welcome {{ request.session.github_info.name }}</h5>
-            {%  else %}
-                <h5> Welcome {{ request.session.github_info.login }}</h5>
-            {% endif %}
-            <img style="width: 32px" src="{{ request.session.github_info.avatar_url }}">
+          <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-start">
+              <a class="navbar-item" href="{% url 'index' %}">
+                <i class="fas fa-home"></i>
+                <p class="text-icon">Home</p>
+              </a>
 
-        </form>
-    </div>
-</nav>
+              <a class="navbar-item" href="{% url 'about' %}">
+                <i class="fas fa-question"></i>
+                <p class="text-icon">About</p>
+              </a>
 
-{% block nav %}
-{% endblock %}
+              {% if request.session.github_token %}
+              <a class="navbar-item" href="{% url 'repositories' %}">
+                <i class="fas fa-list"></i>
+                <p class="text-icon">My Repositories</p>
+              </a>
+              {% endif %}
+            </div>
 
-{% block body %}
-{% endblock %}
-</body>
-
+            <div class="navbar-end">
+              {% if request.session.github_token %}
+                {%  if request.session.github_info.name %}
+                <a class="navbar-item" style="pointer-events: none;">
+                  Welcome, {{ request.session.github_info.name }}
+                </a>
+                {%  else %}
+                <a class="navbar-item" style="pointer-events: none;">
+                  Welcome {{ request.session.github_info.login }}
+                </a>
+                {% endif %}
+                <img src="{{ request.session.github_info.avatar_url }}" alt="Profile" style="height: 48px; width: 40px; padding: 8px 0 0 0">
+              {% endif %}
+              <div class="navbar-item">
+                {% if not request.session.github_token %}
+                <div class="buttons">
+                  <a class="button is-linkl" href="{% url 'login' %}">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <strong><p class="text-icon">Log in</p></strong>
+                  </a>
+                </div>
+                {% endif %}
+                {% if request.session.github_token %}
+                <div class="buttons">
+                  <a class="button is-light" href="{% url 'logout' %}">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <strong><p class="text-icon">Logout</p></strong>
+                  </a>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </section>
+    {% block body %}
+    {% endblock %}
+    <footer class="footer has-background-black has-text-light">
+      <div class="container">
+        <div class="level-left">
+          <div class="level-item">
+            <p>
+              Copyright &copy; 2020
+            </p>
+          </div>
+        </div>
+        <div class="level-right">
+          <div class="level-item">
+            <p>
+              Icons courtesy of <a href="https://fontawesome.com/license" target="_blank">Font Awesome</a>
+            </p>
+          </div>
+      </div>
+    </footer>
+  <script type='text/javascript' src="{% static 'main.js' %}"></script>
+  </body>
 </html>

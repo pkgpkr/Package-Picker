@@ -5,12 +5,22 @@
 {% endblock %}
 
 {% block body %}
-    <h2>Package Picker</h2>
-
-    <h4>Welcome {{ name }}</h4>
-
-    {% if info %}
-        <pre>{{ info }}</pre>
-    {% endif %}
-    
+<section class="section">
+  <div class="container">
+    <div class="content is-medium">
+      <h2>HOME</h2>
+      <br>
+      <p>
+        Modern applications rely heavily on OSS packages. So how do you find
+        good ones? Search engines only know what you tell them, and humans
+        can't keep track of the millions of OSS packages available.
+      </p>
+      <p>
+        Our approach is to instead look at the dependencies in your
+        application. We feed these to a machine learning algorithm, which
+        recommends packages that are tailored to your specific application.
+      </p>
+    </div>
+  </div>
+</section>
 {% endblock %}

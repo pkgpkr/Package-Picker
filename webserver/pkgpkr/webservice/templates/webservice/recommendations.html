@@ -1,19 +1,61 @@
 {% extends "webservice/base.html" %}
 
 {% block title %}
-    Package Picker
+    Recommendations
 {% endblock %}
 
 {% block body %}
-
-    <h3>Recommendations for `{{ repository_name }}`:</h3>
-
-    <ul>
-        {% for recommendation in recommendations %}
-
-            <li><a target="_blank" href="{{ recommendation.url }}">{{ recommendation.name }}
-                - {{ recommendation.average_downloads }} - {{ recommendation.keywords }} - {{ recommendation.rate  }}</a></li>
-        {% endfor %}
-    </ul>
-
+<section class="section">
+  <div class="container">
+    <div class="content is-medium">
+      <h2>RECOMMENDATIONS for `{{ repository_name }}`</h2>
+      <br>
+      <table>
+        <tr>
+          <td id="selected-category">Selected Category: </td>
+          <td id="selected-category-input"><input type="text" id="categoryName" name="categoryName" disabled></td>
+          <td><button id="categoryClear" class="button is-light" onclick="categoryClear()">Clear</button></td>
+        </tr>
+      </table>
+      <div class="table-container">
+        <table class="display-data-tables">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Downloads</th>
+              <th>Rate</th>
+              <th id="version-date-header">Version Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for recommendation in recommendations %}
+              <tr>
+                <td><a target="_blank" href="{{ recommendation.url }}">{{ recommendation.name }}</td>
+                <td>
+                  {% for keyword in recommendation.keywords %}
+                  <div class="buttons" style="margin-bottom: 0; display:inline-block;">
+                    <button class="button is-info is-light is-small is-hovered" onclick="categoryClick('{{ keyword }}')">{{ keyword }}</button>
+                  </div>
+                  {% endfor %}
+                </td>
+                <td>{{ recommendation.average_downloads }}</td>
+                <td>{{ recommendation.rate }}</td>
+                <td>{{ recommendation.date }}</td>
+              </tr>
+            {% endfor %}
+          </<tbody>
+        </table>
+      </div>
+      <div class="recommendation-filter">
+        <p class="control has-icons-right">
+          <input id="recommendationFilter" class="input is-small" type="text" placeholder="Search">
+          <span class="icon is-small is-right">
+            <i class="fas fa-search"></i>
+          </span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock %}

@@ -1,0 +1,30 @@
+.text-icon {
+  padding: 5px;
+}
+
+#selected-category {
+  width: 200px;
+}
+
+#selected-category-input {
+  width: 80px;
+}
+
+#categoryName {
+  border: none;
+  background-color: white;
+  font-size:20px;
+}
+
+#categoryClear {
+   visibility: hidden;
+}
+
+#version-date-header {
+  min-width: 150px;
+}
+
+.recommendation-filter {
+   width: 250px;
+   margin: auto;
+}

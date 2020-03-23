@@ -39,6 +39,7 @@ def get_repositories(token):
                 user(login: $userString) {
                     repositories(first:100) {
                       nodes {
+                        updatedAt
                         nameWithOwner
                         object(expression: "master:package.json") {
                             ... on Blob {

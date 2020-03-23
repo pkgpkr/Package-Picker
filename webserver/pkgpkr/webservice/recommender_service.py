@@ -48,25 +48,37 @@ class RecommenderService:
             # Get average downloads
             res = requests.get(NPM_LAST_MONTH_DOWNLOADS_META_API_URL + f'/{dependency_name}')
             average_downloads = self.get_average_monthly_donwloads(res.json()['downloads'])
-            d['average_downloads'] = average_downloads
+            # commas as thousands separators
+            d['average_downloads'] = f'{average_downloads:,}'
 
-            # Get keywords (i.e. categories)
+            # Get keywords (i.e. categories) and date
             res = requests.get(NPM_DEPENDENCY_META_URL + f'/{dependency_name}')
 
             res_json = res.json()
 
             d['keywords'] = None
+            d['date'] = None
 
             if res_json.get('versions') and \
                     res_json['versions'].get(dependency_version) and \
                     res_json['versions'][dependency_version].get('keywords'):
                 d['keywords'] = res_json['versions'][dependency_version]['keywords']
 
+                # Version Date
+                dateTime = res_json['time'][dependency_version]
+
+                # Convert time format e.g. 2017-02-16T20:43:07.414Z -> 2017-02-16 20:43:07
+                date = dateTime.split('T')[0]
+                timeWithZone = dateTime.split('T')[-1]
+                time = timeWithZone.split('.')[0]
+
+                d['date'] = f'{date} {time}'
+
             # Url to NPM
             d['url'] = NPM_DEPENDENCY_URL + f'/{dependency_name}'
 
             # TODO placeholder for the rate
-            d['rate'] = random.uniform(1, 5)
+            d['rate'] = round(random.uniform(1, 5), 1)
 
             recommended_dependencies.append(d)
 
