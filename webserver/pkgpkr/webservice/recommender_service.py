@@ -53,7 +53,7 @@ class RecommenderService:
         cur = db.cursor()
 
         # Get recommendations from our model
-        recs_per_dep = 2
+        recs_per_dep = 10
         recommended = []
         for dependency in dependencies:
 
