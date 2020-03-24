@@ -5,7 +5,7 @@ import os
 user = os.environ['DB_USER'] or "postgres"
 password = os.environ['DB_PASSWORD'] or "secret"
 host = os.environ['DB_HOST'] or "localhost"
-conn_string = f"host={host} user={user} password={password}"
+conn_string = "host=" + host + " user=" + user + " password=" + password
 
 def connectToDB():
     # Connect to the database

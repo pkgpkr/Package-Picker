@@ -109,7 +109,7 @@ def runQueryOnce(nodePerLoop, monthlySearchStr):
     if os.path.exists(fileName):
         f = open(fileName, "r")
     variables = {
-        "queryString": f"{searchQuery} {monthlySearchStr}",
+        "queryString": searchQuery + " " + monthlySearchStr,
         "maybeAfter": f.read() if f else None,
         "numberOfNodes": nodePerLoop
     }
