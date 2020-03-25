@@ -5,13 +5,13 @@ on:
     branches:
       - dev
     paths:
-      - 'webserver/pkgpkr/*'
+      - 'webserver/pkgpkr/**'
   pull_request:
     branches:
       - master
       - dev
     paths:
-      - 'webserver/pkgpkr/*'
+      - 'webserver/pkgpkr/**'
 
 jobs:
   build:
