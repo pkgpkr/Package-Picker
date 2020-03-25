@@ -89,8 +89,7 @@ class RecommenderService:
         for dependency in recommended:
 
             at_split = dependency.split('@')
-            dependency_name = at_split[0].split('/')[-1]
-            dependency_version = at_split[-1]
+            dependency_name = at_split[len(at_split)-2].split('/')[len(at_split)-3]
 
             d = dict()
 
@@ -98,8 +97,14 @@ class RecommenderService:
 
             # Get average downloads
             res = requests.get(NPM_LAST_MONTH_DOWNLOADS_META_API_URL + f'/{dependency_name}')
-            average_downloads = self.get_average_monthly_donwloads(res.json()['downloads'])
-            # commas as thousands separators
+
+            # If there are download counts for the package
+            if 'downloads' in res.json():
+                average_downloads = self.get_average_monthly_donwloads(res.json()['downloads'])
+            else:
+                average_downloads = 0
+
+            # Commas as thousands separators
             d['average_downloads'] = f'{average_downloads:,}'
 
             # Get keywords (i.e. categories)
@@ -107,12 +112,27 @@ class RecommenderService:
 
             res_json = res.json()
 
+            # Get lastest version
+            if 'dist-tags' in res_json:
+                dependency_version = res_json['dist-tags']['latest']
+            else:
+                dependency_version = '0.0.0'
+
             d['keywords'] = None
+            d['date'] = None
 
             if res_json.get('versions') and \
                     res_json['versions'].get(dependency_version) and \
                     res_json['versions'][dependency_version].get('keywords'):
                 d['keywords'] = res_json['versions'][dependency_version]['keywords']
+
+                # Version Date
+                dateTime = res_json['time'][dependency_version]
+
+                # Convert time format e.g. 2020-03-16T13:03:34Z -> 2020-03-16 13:03:34
+                date = dateTime.split('T')[0]
+
+                d['date'] = date
 
             # Url to NPM
             d['url'] = NPM_DEPENDENCY_URL + f'/{dependency_name}'

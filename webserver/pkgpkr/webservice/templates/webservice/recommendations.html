@@ -25,6 +25,7 @@
               <th>Category</th>
               <th>Downloads</th>
               <th>Rate</th>
+              <th id="version-date-header">Version Date</th>
             </tr>
           </thead>
           <tbody>
@@ -40,6 +41,7 @@
                 </td>
                 <td>{{ recommendation.average_downloads }}</td>
                 <td>{{ recommendation.rate }}</td>
+                <td>{{ recommendation.date }}</td>
               </tr>
             {% endfor %}
           </<tbody>
