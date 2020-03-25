@@ -22,4 +22,4 @@ class SimpleTest(TestCase):
 
     def test_vlad_bad(self):
         # TODO THIS IS DUMMY
-        self.assertTrue(True)
+        self.assertTrue(False)
