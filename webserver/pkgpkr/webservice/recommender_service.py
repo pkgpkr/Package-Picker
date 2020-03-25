@@ -6,6 +6,7 @@ from io import BytesIO
 
 import psycopg2
 import os
+import re
 
 from pkgpkr.settings import NPM_DEPENDENCY_META_URL
 from pkgpkr.settings import NPM_LAST_MONTH_DOWNLOADS_META_API_URL
@@ -23,6 +24,7 @@ class RecommenderService:
     def __init__(self):
 
         self.reimport_model_from_s3()
+        self.majorVersionRegex = re.compile(r'pkg:npm/.*@\d+')
 
     def reimport_model_from_s3(self):
 
@@ -53,12 +55,18 @@ class RecommenderService:
         cur = db.cursor()
 
         # Get recommendations from our model
-        recs_per_dep = 2
+        recs_per_dep = 10
         recommended = []
         for dependency in dependencies:
 
+            # Strip everything after the major version
+            match = self.majorVersionRegex.search(dependency)
+            if not match:
+                continue
+            packageWithMajorVersion = match.group()
+
             # Get the corresponding ID
-            cur.execute(f"SELECT id FROM packages WHERE name = '{dependency}'")
+            cur.execute(f"SELECT id FROM packages WHERE name = '{packageWithMajorVersion}'")
             result = cur.fetchone()
             if not result:
                 continue
