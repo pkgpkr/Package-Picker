@@ -2,7 +2,7 @@ If you do not know the git CLI commands, recommend to use [sourcetree](https://w
 
 # Setup
 
-1. git clone https://github.com/pkgpkr/Package-Picker.git to your local folder 
+1. git clone https://github.com/pkgpkr/Package-Picker.git to your local folder
 2. create a branch locally for your small features.
 3. start coding.
 4. make commits frequently
@@ -58,3 +58,9 @@ When the web server starts, open your browser to http://localhost:8000
 
 1. need at least one peer to review code and approve the change
 2. let Jenkins build and check tests(including lint) and do the merge if no error
+
+
+
+
+
+test
