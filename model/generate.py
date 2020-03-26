@@ -65,7 +65,7 @@ similarityDf.coalesce(1).write.format("parquet").option("compression", "gzip").o
 
 # Upload the model file to S3
 tempFile = glob.glob(path.split('/')[-1] + "/*.parquet")[0]
-with open(tempFile, "r") as fileHandle:
+with open(tempFile, "rb") as fileHandle:
     s3.put_object(Body=fileHandle, Bucket=bucket, Key=path)
 
 # Close the database connection
