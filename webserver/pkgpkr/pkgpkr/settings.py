@@ -119,7 +119,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
-
 # Env keys
 GITHUB_CLIENT_ID = os.environ.get('CLIENT_ID')
 GITHUB_CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
@@ -152,3 +151,6 @@ NPM_DEPENDENCY_URL = 'https://npmjs.com/package'
 
 NPM_API_BASE_URL = 'https://api.npmjs.org'
 NPM_LAST_MONTH_DOWNLOADS_META_API_URL = f'{NPM_API_BASE_URL}/downloads/range/last-month'
+
+# Recommender settings
+MAX_RECOMMENDATIONS_PER_DEPENDENCY = 10
