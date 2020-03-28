@@ -27,7 +27,11 @@ def insertToPackages(cur, name, downloads_last_month, categories, modified):
     # Reformat the category array to a string literal for PostgreSQL
     categoryString = None
     if categories and len(categories) > 0:
-        temp = [category.replace(",", "\,") for category in categories]
+
+        # Escape any commas in the categories
+        temp = [category.replace(",", "\\,") for category in categories]
+
+        # Convert to an array literal for PostgreSQL
         categoryString = str(temp).replace("'", "").replace("[", "{").replace("]", "}")
 
     cur.execute(
