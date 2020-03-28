@@ -3,9 +3,6 @@ import json
 
 from pkgpkr.settings import GITHUB_USER_INFO_URL
 from pkgpkr.settings import GITHUB_GRAPHQL_URL
-from pkgpkr.settings import NPM_DEPENDENCY_META_URL
-from pkgpkr.settings import NPM_LAST_MONTH_DOWNLOADS_META_API_URL
-from pkgpkr.settings import NPM_DEPENDENCY_URL
 
 
 def get_user_info(token):

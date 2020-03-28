@@ -7,7 +7,6 @@ import re
 from pkgpkr.settings import DB_HOST
 from pkgpkr.settings import DB_USER
 from pkgpkr.settings import DB_PASSWORD
-from pkgpkr.settings import MAX_RECOMMENDATIONS_PER_DEPENDENCY
 
 class RecommenderService:
 
