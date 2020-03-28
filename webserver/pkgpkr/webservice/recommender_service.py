@@ -7,12 +7,14 @@ import re
 from pkgpkr.settings import DB_HOST
 from pkgpkr.settings import DB_USER
 from pkgpkr.settings import DB_PASSWORD
+from pkgpkr.settings import NPM_DEPENDENCY_BASE_URL
 
 class RecommenderService:
 
     def __init__(self):
 
         self.majorVersionRegex = re.compile(r'pkg:npm/.*@\d+')
+        self.nameOnlyRegex = re.compile(r'pkg:npm/(.*)@\d+')
 
     def get_recommendations(self, dependencies):
 
@@ -40,7 +42,20 @@ class RecommenderService:
                         ) GROUP BY package_b
                     ) s ON s.package_b = packages.id
                     """)
-        recommended = [{'name': result[0], 'average_downloads': result[1], 'keywords': result[2], 'date': result[3], 'rate': result[4]} for result in cur.fetchall()]
+
+        # Add recommendations (including metadata) to results
+        recommended = []
+        for result in cur.fetchall():
+            recommended.append(
+                {
+                    'name': result[0],
+                    'url': f"{NPM_DEPENDENCY_BASE_URL}/{self.nameOnlyRegex.search(result[0]).group(1)}",
+                    'average_downloads': result[1],
+                    'keywords': result[2],
+                    'date': result[3],
+                    'rate': result[4]
+                }
+            )
 
         # Disconnect from the database
         cur.close()

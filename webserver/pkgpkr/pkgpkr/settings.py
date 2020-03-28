@@ -142,3 +142,5 @@ GITHUB_OATH_REVIEW_AUTHORIZATIONS_PATH = f'{GITHUB_BASE_URL}/settings/connection
 GITHUB_BASE_API_URL = 'https://api.github.com'
 GITHUB_USER_INFO_URL = f'{GITHUB_BASE_API_URL}/user'
 GITHUB_GRAPHQL_URL = 'https://api.github.com/graphql'
+
+NPM_DEPENDENCY_BASE_URL = 'https://npmjs.com/package'
