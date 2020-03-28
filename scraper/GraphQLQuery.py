@@ -37,7 +37,7 @@ query = """
     }
     """
 
-searchQuery = "topic:JavaScript stars:>10"
+searchQuery = "topic:JavaScript stars:>1"
 
 
 # insert name, url, retrieved time
