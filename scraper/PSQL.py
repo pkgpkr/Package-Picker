@@ -27,7 +27,8 @@ def insertToPackages(cur, name, downloads_last_month, categories, modified):
     # Reformat the category array to a string literal for PostgreSQL
     categoryString = None
     if categories and len(categories) > 0:
-        categoryString = str(categories).replace("'", "").replace("[", "{").replace("]", "}")
+        temp = [category.replace(",", "\,") for category in categories]
+        categoryString = str(temp).replace("'", "").replace("[", "{").replace("]", "}")
 
     cur.execute(
         "INSERT INTO packages (name, downloads_last_month, categories, modified, retrieved) VALUES (%s, %s, %s, %s, %s) ON CONFLICT(name) DO UPDATE SET (name, downloads_last_month, categories, modified) = (EXCLUDED.name, EXCLUDED.downloads_last_month, EXCLUDED.categories, EXCLUDED.modified) RETURNING id;",
