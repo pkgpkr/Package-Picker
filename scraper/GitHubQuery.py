@@ -36,6 +36,7 @@ query = """
     """
 
 searchQuery = "topic:JavaScript stars:>1"
+GITHUB_V4_URL = 'https://api.github.com/graphql'
 
 
 # insert name, url, retrieved time
@@ -101,7 +102,7 @@ def runQueryOnce(nodePerLoop, monthlySearchStr, cursor):
         "maybeAfter": cursor,
         "numberOfNodes": nodePerLoop
     }
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables': variables},
+    request = requests.post(GITHUB_V4_URL, json={'query': query, 'variables': variables},
                             headers=headers)
     if request.status_code == 200:
         return request.json()
