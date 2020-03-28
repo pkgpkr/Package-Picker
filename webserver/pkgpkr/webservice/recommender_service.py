@@ -35,13 +35,13 @@ class RecommenderService:
         # 2. Get the identifier for every package that is similar to those packages
         # 3. Get the names and similarity scores of those packages
         cur.execute(f"""
-                    SELECT packages.name, s.similarity FROM packages INNER JOIN (
+                    SELECT packages.name, packages.downloads_last_month, packages.categories, packages.modified, s.similarity FROM packages INNER JOIN (
                         SELECT package_b, MAX(similarity) AS similarity FROM similarity WHERE package_a IN (
                             SELECT DISTINCT id FROM packages WHERE name in ({str(packages)[1:-1]})
                         ) GROUP BY package_b
                     ) s ON s.package_b = packages.id
                     """)
-        recommended = [{'name': result[0], 'rate': result[1]} for result in cur.fetchall()]
+        recommended = [{'name': result[0], 'average_downloads': result[1], 'keywords': result[2], 'date': result[3], 'rate': result[4]} for result in cur.fetchall()]
 
         # Disconnect from the database
         cur.close()

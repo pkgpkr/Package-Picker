@@ -13,9 +13,7 @@ def connectToDB():
     return db
 
 
-def insertToApplication(db, url, followers, appName, hash):
-    # Get a cursor for executing queries
-    cur = db.cursor()
+def insertToApplication(cur, url, followers, appName, hash):
     # Upsert a row into the applications table
     cur.execute(
         "INSERT INTO applications (url, name, followers, retrieved, hash) VALUES (%s, %s, %s, %s, %s) ON CONFLICT ON CONSTRAINT unique_url DO UPDATE SET (url, name, followers, retrieved, hash) = (EXCLUDED.url, EXCLUDED.name, EXCLUDED.followers, EXCLUDED.retrieved, EXCLUDED.hash) RETURNING id;",
@@ -24,16 +22,20 @@ def insertToApplication(db, url, followers, appName, hash):
     return application_id
 
 
-def insertToPackages(db, name):
-    cur = db.cursor()
+def insertToPackages(cur, name, downloads_last_month, categories, modified):
+
+    # Reformat the category array to a string literal for PostgreSQL
+    categoryString = None
+    if categories and len(categories) > 0:
+        categoryString = str(categories).replace("'", "").replace("[", "{").replace("]", "}")
+
     cur.execute(
-        "INSERT INTO packages (name, retrieved) VALUES (%s, %s) ON CONFLICT(name) DO UPDATE SET name=EXCLUDED.name RETURNING id;",
-        (name, datetime.datetime.now()))
+        "INSERT INTO packages (name, downloads_last_month, categories, modified, retrieved) VALUES (%s, %s, %s, %s, %s) ON CONFLICT(name) DO UPDATE SET (name, downloads_last_month, categories, modified) = (EXCLUDED.name, EXCLUDED.downloads_last_month, EXCLUDED.categories, EXCLUDED.modified) RETURNING id;",
+        (name, downloads_last_month, categoryString, modified, datetime.datetime.now()))
     package_id = cur.fetchone()[0]
     return package_id
 
 
-def insertToDependencies(db, application_id, package_id):
-    cur = db.cursor()
+def insertToDependencies(cur, application_id, package_id):
     cur.execute("INSERT INTO dependencies (application_id, package_id) VALUES (%s, %s) ON CONFLICT DO NOTHING;",
                 (application_id, package_id))

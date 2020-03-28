@@ -148,7 +148,6 @@ def get_package_metadata(dependency):
     versionSymbolIndex = dependency.rfind('@')
     nameIndex = dependency.find('/') + 1
     dependency_name = dependency[nameIndex:versionSymbolIndex]
-    dependency_version = dependency[versionSymbolIndex+1:]
 
     d = dict()
 
