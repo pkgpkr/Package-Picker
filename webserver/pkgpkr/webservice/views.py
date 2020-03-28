@@ -142,16 +142,3 @@ def recommendations(request, name):
         'repository_name': name,
         'recommendations': recommended_dependencies
     })
-
-
-def metadata(request, name):
-    """
-    Get the metadata associated with a package
-    :param request:
-    :param name: package name
-    :return:
-    """
-
-    data = json.dumps(github_util.get_package_metadata(name))
-
-    return HttpResponse(data, content_type="application/json")

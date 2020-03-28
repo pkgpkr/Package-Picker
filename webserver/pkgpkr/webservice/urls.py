@@ -9,6 +9,5 @@ urlpatterns = [
     path("callback", views.callback, name="callback"),
     path("logout", views.logout, name="logout"),
     path("repositories", views.repositories, name="repositories"),
-    path("repositories/<str:name>", views.recommendations, name="recommendations"),
-    path("metadata/<path:name>", views.metadata, name="metadata"),
+    path("repositories/<str:name>", views.recommendations, name="recommendations")
 ]
