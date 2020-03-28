@@ -37,6 +37,10 @@ Do not run script in script folder, run it in the main folder!
 
 `python3 scraper/Script.py`
 
+## Data scraper test
+
+`DB_USER=postgres DB_PASSWORD=secret DB_HOST=localhost TOKEN=<your token> python3 -m unittest scraper/test.py -v`
+
 ## Model trainer
 
 `python3 model/generate.py`

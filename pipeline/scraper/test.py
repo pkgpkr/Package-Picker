@@ -1,16 +1,26 @@
-# This is used to test PSQL, ignore this
-#!/usr/bin/python
-import psycopg2
-import sys
+# Test Script
 import PSQL
- 
-def main():
-    # db = PSQL.connectToDB()
-    # cur = db.cursor()
-    # cur.execute("SELECT * FROM applications;")
-    # result = cur.fetchall()
-    # print(result)
-    print(type({}))
+import GraphQLQuery
+import unittest
+
+class TestStringMethods(unittest.TestCase):
+    def test_runQuery(self):
+        return
+    
+    def test_runQueryOnce(self):
+        return
+    
+    def test_connectToDB(self):
+        return
+
+    def test_insertToApplication(self):
+        return
+
+    def test_insertToPackages(self):
+        return
+
+    def test_insertToDependencies(self):
+        return
 
 if __name__ == "__main__":
-    main()
+    unittest.main()
