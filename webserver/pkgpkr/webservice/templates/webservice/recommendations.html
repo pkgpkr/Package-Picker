@@ -63,6 +63,8 @@
   $('.display-data-tables').on('page.dt', function (e, settings) {
       var table = $('.display-data-tables').DataTable();
       var indices = table.rows({ page: "current" }).indexes();
+      var majorVersionRegex = /pkg:npm\/.*@\d+/
+
       for (var i = 0; i <= indices.length; ++i) {
         (function (rowIndex) {
           var row = table.row(rowIndex).data();
@@ -72,16 +74,38 @@
             return;
           }
 
+          // Make sure we can strip out the package name
+          var found = row[0].match(majorVersionRegex);
+          if (found == 0) {
+            return;
+          }
+
           // Fetch data and load asyncronously
           $.ajax({
             type: 'GET',
-            url: '/metadata/lodash@3.0.0',
+            url: '/metadata/' + found[0],
             dataType: 'json',
             success: function (data) {
-                row[1] = data['keywords'];
-                row[2] = data['average_downloads'];
-                row[4] = data['date'];
-                table.row(rowIndex).data(row).invalidate("data").draw(false);
+
+              // Set keywords
+              if (data['keywords']) {
+                var keywordHtml = "";
+                for (var keyword of data['keywords']) {
+                  keywordHtml += '<div class="buttons" style="margin-bottom: 0; display:inline-block;">' +
+                                '<button class="button is-info is-light is-small is-hovered" onclick="categoryClick(\'' + keyword + '\')">' + keyword + '</button>' +
+                                '</div>'
+                } 
+                row[1] = keywordHtml;
+              }
+
+              // Set average downloads
+              row[2] = data['average_downloads'];
+
+              // Set date
+              row[4] = data['date'];
+
+              // Redraw the row
+              table.row(rowIndex).data(row).invalidate("data").draw(false);
             }
           });
         })(indices[i]);

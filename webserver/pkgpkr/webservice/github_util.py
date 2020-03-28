@@ -145,9 +145,10 @@ def get_average_monthly_donwloads(daily_donwloads_list):
 
 def get_package_metadata(dependency):
 
-    at_split = dependency.split('@')
-    dependency_name = at_split[0].split('/')[-1]
-    dependency_version = at_split[-1]
+    versionSymbolIndex = dependency.rfind('@')
+    nameIndex = dependency.find('/') + 1
+    dependency_name = dependency[nameIndex:versionSymbolIndex]
+    dependency_version = dependency[versionSymbolIndex+1:]
 
     d = dict()
 
@@ -161,26 +162,20 @@ def get_package_metadata(dependency):
 
     # Get keywords (i.e. categories) and date
     res = requests.get(NPM_DEPENDENCY_META_URL + f'/{dependency_name}')
-
     res_json = res.json()
 
-    d['keywords'] = None
+    # TODO: Figure out a way to load these without making it hard to view the table
+    #d['keywords'] = None
+    #if res_json.get('keywords'):
+    #    d['keywords'] = res_json['keywords']
+    
     d['date'] = None
-
-    if res_json.get('versions') and \
-            res_json['versions'].get(dependency_version) and \
-            res_json['versions'][dependency_version].get('keywords'):
-        d['keywords'] = res_json['versions'][dependency_version]['keywords']
-
+    if res_json.get('time') and res_json.get('time')['modified']:
         # Version Date
-        dateTime = res_json['time'][dependency_version]
+        dateTime = res_json.get('time')['modified']
 
         # Convert time format e.g. 2017-02-16T20:43:07.414Z -> 2017-02-16 20:43:07
-        date = dateTime.split('T')[0]
-        timeWithZone = dateTime.split('T')[-1]
-        time = timeWithZone.split('.')[0]
-
-        d['date'] = f'{date} {time}'
+        d['date'] = dateTime.split('T')[0]
 
     # Url to NPM
     d['url'] = NPM_DEPENDENCY_URL + f'/{dependency_name}'

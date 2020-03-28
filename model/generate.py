@@ -10,6 +10,9 @@ from pyspark.sql.functions import col
 from pyspark.sql.functions import collect_list
 from pyspark.sql.functions import lit
 from pyspark.sql import Row
+from pyspark.sql import SparkSession
+from pyspark import SparkContext
+sc = SparkContext("local[2]", "pkgpkr")
 
 # Connect to the database
 user = os.environ.get("DB_USER")
@@ -21,7 +24,7 @@ cur = db.cursor()
 # Load the raw data into Spark
 cur.execute("SELECT * FROM dependencies")
 dependencies = cur.fetchall()
-spark = SparkSession.builder.appName("pkgpkr").getOrCreate()
+spark = SparkSession.builder.master("local[2]").appName("pkgpkr").getOrCreate()
 df = spark.createDataFrame(dependencies).toDF("application_id", "package_id")
 
 # Close the database connection

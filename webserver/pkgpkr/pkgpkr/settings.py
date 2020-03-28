@@ -152,3 +152,6 @@ NPM_DEPENDENCY_URL = 'https://npmjs.com/package'
 
 NPM_API_BASE_URL = 'https://api.npmjs.org'
 NPM_LAST_MONTH_DOWNLOADS_META_API_URL = f'{NPM_API_BASE_URL}/downloads/range/last-month'
+
+# Recommender settings
+MAX_RECOMMENDATIONS_PER_DEPENDENCY = 10
