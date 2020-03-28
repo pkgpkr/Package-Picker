@@ -59,9 +59,9 @@
   </div>
 </section>
 <script>
-  // Fetch all the npm metadata for the packages shown in the table
-  $('.display-data-tables').on('page.dt', function (e, settings) {
-      var table = $('.display-data-tables').DataTable();
+  // Fetch all the npm metadata for the packages shown in the current page
+  function fetchPage() {
+    var table = $('.display-data-tables').DataTable();
       var indices = table.rows({ page: "current" }).indexes();
       var majorVersionRegex = /pkg:npm\/.*@\d+/
 
@@ -73,6 +73,8 @@
           if (row[1]) {
             return;
           }
+          row[2] = '...';
+          row[4] = '...';
 
           // Make sure we can strip out the package name
           var found = row[0].match(majorVersionRegex);
@@ -110,6 +112,14 @@
           });
         })(indices[i]);
       }
+  }
+
+  // Events to trigger a metadata fetch
+  $('.display-data-tables').on('init.dt', function (e, settings) {
+      fetchPage();
+  });
+  $('.display-data-tables').on('page.dt', function (e, settings) {
+      fetchPage();
   });
 </script>
 {% endblock %}
