@@ -89,8 +89,7 @@ class RecommenderService:
         for dependency in recommended:
 
             at_split = dependency.split('@')
-            dependency_name = at_split[0].split('/')[-1]
-            dependency_version = at_split[-1]
+            dependency_name = at_split[len(at_split)-2].split('/')[len(at_split)-3]
 
             d = dict()
 
@@ -98,14 +97,26 @@ class RecommenderService:
 
             # Get average downloads
             res = requests.get(NPM_LAST_MONTH_DOWNLOADS_META_API_URL + f'/{dependency_name}')
-            average_downloads = self.get_average_monthly_donwloads(res.json()['downloads'])
-            # commas as thousands separators
+
+            # If there are download counts for the package
+            if 'downloads' in res.json():
+                average_downloads = self.get_average_monthly_donwloads(res.json()['downloads'])
+            else:
+                average_downloads = 0
+
+            # Commas as thousands separators
             d['average_downloads'] = f'{average_downloads:,}'
 
-            # Get keywords (i.e. categories) and date
+            # Get keywords (i.e. categories)
             res = requests.get(NPM_DEPENDENCY_META_URL + f'/{dependency_name}')
 
             res_json = res.json()
+
+            # Get lastest version
+            if 'dist-tags' in res_json:
+                dependency_version = res_json['dist-tags']['latest']
+            else:
+                dependency_version = '0.0.0'
 
             d['keywords'] = None
             d['date'] = None
@@ -118,12 +129,10 @@ class RecommenderService:
                 # Version Date
                 dateTime = res_json['time'][dependency_version]
 
-                # Convert time format e.g. 2017-02-16T20:43:07.414Z -> 2017-02-16 20:43:07
+                # Convert time format e.g. 2020-03-16T13:03:34Z -> 2020-03-16 13:03:34
                 date = dateTime.split('T')[0]
-                timeWithZone = dateTime.split('T')[-1]
-                time = timeWithZone.split('.')[0]
 
-                d['date'] = f'{date} {time}'
+                d['date'] = date
 
             # Url to NPM
             d['url'] = NPM_DEPENDENCY_URL + f'/{dependency_name}'
