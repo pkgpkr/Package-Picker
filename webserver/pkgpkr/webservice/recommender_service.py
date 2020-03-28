@@ -54,6 +54,14 @@ class RecommenderService:
         db = psycopg2.connect(f"host={DB_HOST} user={DB_USER} password={DB_PASSWORD}")
         cur = db.cursor()
 
+        ###################
+
+        #f"SELECT id FROM packages WHERE name in ({str(packages)[1:-1]})"
+
+
+
+        ###################
+
         # Get recommendations from our model
         recs_per_dep = 10
         recommended = []
