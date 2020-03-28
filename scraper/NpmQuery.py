@@ -1,7 +1,6 @@
 
 import requests
 import PSQL
-#import json
 
 NPM_DEPENDENCY_META_URL = 'https://registry.npmjs.org'
 NPM_DEPENDENCY_URL = 'https://npmjs.com/package'
