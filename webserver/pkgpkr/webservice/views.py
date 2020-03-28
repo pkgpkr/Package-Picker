@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.urls import reverse
 
 import requests
@@ -144,10 +145,14 @@ def recommendations(request, name):
     })
 
 
-def reimport_model(request):
+def metadata(request, name):
     """
-    Reimport model from storage (when API is called e.g. by lambda)
+    Get the metadata associated with a package
     :param request:
+    :param name: package name
     :return:
     """
-    recommender_service.import_model()
+
+    data = json.dumps(github_util.get_package_metadata(name))
+
+    return HttpResponse(data, content_type="application/json")

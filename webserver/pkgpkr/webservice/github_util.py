@@ -1,7 +1,11 @@
 import requests
 import json
 
-from pkgpkr.settings import GITHUB_USER_INFO_URL, GITHUB_GRAPHQL_URL
+from pkgpkr.settings import GITHUB_USER_INFO_URL
+from pkgpkr.settings import GITHUB_GRAPHQL_URL
+from pkgpkr.settings import NPM_DEPENDENCY_META_URL
+from pkgpkr.settings import NPM_LAST_MONTH_DOWNLOADS_META_API_URL
+from pkgpkr.settings import NPM_DEPENDENCY_URL
 
 
 def get_user_info(token):
@@ -128,3 +132,57 @@ def parse_dependencies(text_response):
     if text_response_json.get('dependencies'):
         # Fetch the dependencies and convert into P-URLs pkg:npm/scope/name@version
         return depenencies_name_to_purl(text_response_json['dependencies'])
+
+
+def get_average_monthly_donwloads(daily_donwloads_list):
+
+    total = 0
+    for daily_donwloads in daily_donwloads_list:
+        total += daily_donwloads['downloads']
+
+    return total // len(daily_donwloads_list)
+
+
+def get_package_metadata(dependency):
+
+    at_split = dependency.split('@')
+    dependency_name = at_split[0].split('/')[-1]
+    dependency_version = at_split[-1]
+
+    d = dict()
+
+    d['name'] = dependency
+
+    # Get average downloads
+    res = requests.get(NPM_LAST_MONTH_DOWNLOADS_META_API_URL + f'/{dependency_name}')
+    average_downloads = get_average_monthly_donwloads(res.json()['downloads'])
+    # commas as thousands separators
+    d['average_downloads'] = f'{average_downloads:,}'
+
+    # Get keywords (i.e. categories) and date
+    res = requests.get(NPM_DEPENDENCY_META_URL + f'/{dependency_name}')
+
+    res_json = res.json()
+
+    d['keywords'] = None
+    d['date'] = None
+
+    if res_json.get('versions') and \
+            res_json['versions'].get(dependency_version) and \
+            res_json['versions'][dependency_version].get('keywords'):
+        d['keywords'] = res_json['versions'][dependency_version]['keywords']
+
+        # Version Date
+        dateTime = res_json['time'][dependency_version]
+
+        # Convert time format e.g. 2017-02-16T20:43:07.414Z -> 2017-02-16 20:43:07
+        date = dateTime.split('T')[0]
+        timeWithZone = dateTime.split('T')[-1]
+        time = timeWithZone.split('.')[0]
+
+        d['date'] = f'{date} {time}'
+
+    # Url to NPM
+    d['url'] = NPM_DEPENDENCY_URL + f'/{dependency_name}'
+
+    return d
