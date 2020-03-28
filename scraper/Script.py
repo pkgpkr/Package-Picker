@@ -2,12 +2,10 @@ import MonthCalculation
 import datetime
 import GitHubQuery
 import NpmQuery
-import Log
 import os
 
 
 def main():
-    Log.clearLog()
     today = datetime.datetime.now()
 
     # Fetch applications from GitHub

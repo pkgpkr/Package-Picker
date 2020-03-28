@@ -1,7 +1,6 @@
 import requests
 import os.path
 import MonthCalculation
-import Log
 import PSQL
 import json
 import re
@@ -9,7 +8,6 @@ import re
 headers = {"Authorization": "Bearer " + os.environ['TOKEN']}
 MAX_NODES_PER_LOOP = 100
 totalRepos = 0
-logPrefix = "./log/"
 numberRegex = re.compile(r'\d+')
 
 query = """
@@ -41,7 +39,7 @@ searchQuery = "topic:JavaScript stars:>1"
 
 
 # insert name, url, retrieved time
-def writeDB(db, cur, result):
+def writeDB(db, result):
     nodes = result['data']['search']['edges']
     for n in nodes:
         url = n['node']['url']
@@ -58,7 +56,7 @@ def writeDB(db, cur, result):
             if 'dependencies' in packageJSON:
                 # insert applications table only if dependencies exist in package.json
                 hashValue = hash(packageStr)
-                application_id = PSQL.insertToApplication(cur, url, followers, name, hashValue)
+                application_id = PSQL.insertToApplication(db, url, followers, name, hashValue)
                 dependencies = packageJSON['dependencies']
                 try:
                     for k, v in dependencies.items():
@@ -71,8 +69,8 @@ def writeDB(db, cur, result):
                                 dependencyStr = 'pkg:npm/' + k + "@" + result.group()
                             else:
                                 continue
-                        package_id = PSQL.insertToPackages(cur, dependencyStr, None, None, None)
-                        PSQL.insertToDependencies(cur, str(application_id), str(package_id))
+                        package_id = PSQL.insertToPackages(db, dependencyStr, None, None, None)
+                        PSQL.insertToDependencies(db, str(application_id), str(package_id))
                 except:
                     continue
     db.commit()
@@ -81,42 +79,26 @@ def writeDB(db, cur, result):
 def runQuery(today):
     # set up database
     db = PSQL.connectToDB()
-    cur = db.cursor()
 
     # fetch data and write to database
+    lastNode = None
     monthlySearchStr = MonthCalculation.getMonthlySearchStr(today)
-    result = runQueryOnce(MAX_NODES_PER_LOOP, monthlySearchStr)
-    totalRepos = result['data']['search']['repositoryCount']
-    i = 0
-    while i * 100 < totalRepos - MAX_NODES_PER_LOOP:
-        result = runQueryOnce(MAX_NODES_PER_LOOP, monthlySearchStr)
-        writeDB(db, cur, result)
-        i += 1
-        lastNode = result['data']['search']['edges'][-1]['cursor']
-        fileName = logPrefix + "lastNode_" + monthlySearchStr + ".txt"
-        if not os.path.exists(logPrefix):
-            os.mkdir(logPrefix)
-        f = open(fileName, "w")
-        f.write(lastNode)
-        f.close()
-        Log.writeLog(result, today)
-    result = runQueryOnce(totalRepos - i * 100, monthlySearchStr)
-    writeDB(db, cur, result)
-    Log.writeLog(result, today)
+    while True:
+        result = runQueryOnce(MAX_NODES_PER_LOOP, monthlySearchStr, lastNode)
+        writeDB(db, result)
+        if len(result['data']['search']['edges']) > 0:
+            lastNode = result['data']['search']['edges'][-1]['cursor']
+        else:
+            break
     
     # tear down database connection
-    cur.close()
     db.close()
 
 
-def runQueryOnce(nodePerLoop, monthlySearchStr):
-    f = None
-    fileName = logPrefix + "lastNode_" + monthlySearchStr + ".txt"
-    if os.path.exists(fileName):
-        f = open(fileName, "r")
+def runQueryOnce(nodePerLoop, monthlySearchStr, cursor):
     variables = {
         "queryString": f"{searchQuery} {monthlySearchStr}",
-        "maybeAfter": f.read() if f else None,
+        "maybeAfter": cursor,
         "numberOfNodes": nodePerLoop
     }
     request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables': variables},

@@ -8,13 +8,16 @@ host = os.environ['DB_HOST'] or "localhost"
 conn_string = f"host={host} user={user} password={password}"
 
 def connectToDB():
+
     # Connect to the database
     db = psycopg2.connect(conn_string)
     return db
 
 
-def insertToApplication(cur, url, followers, appName, hash):
+def insertToApplication(db, url, followers, appName, hash):
+
     # Upsert a row into the applications table
+    cur = db.cursor()
     cur.execute(
         "INSERT INTO applications (url, name, followers, retrieved, hash) VALUES (%s, %s, %s, %s, %s) ON CONFLICT ON CONSTRAINT unique_url DO UPDATE SET (url, name, followers, retrieved, hash) = (EXCLUDED.url, EXCLUDED.name, EXCLUDED.followers, EXCLUDED.retrieved, EXCLUDED.hash) RETURNING id;",
         (url, appName, followers, datetime.datetime.now(), hash))
@@ -22,9 +25,10 @@ def insertToApplication(cur, url, followers, appName, hash):
     return application_id
 
 
-def insertToPackages(cur, name, downloads_last_month, categories, modified):
+def insertToPackages(db, name, downloads_last_month, categories, modified):
 
     # Reformat the category array to a string literal for PostgreSQL
+    cur = db.cursor()
     categoryString = None
     if categories and len(categories) > 0:
 
@@ -41,6 +45,7 @@ def insertToPackages(cur, name, downloads_last_month, categories, modified):
     return package_id
 
 
-def insertToDependencies(cur, application_id, package_id):
+def insertToDependencies(db, application_id, package_id):
+    cur = db.cursor()
     cur.execute("INSERT INTO dependencies (application_id, package_id) VALUES (%s, %s) ON CONFLICT DO NOTHING;",
                 (application_id, package_id))
