@@ -1,5 +1,6 @@
 # Test Script
-# To run test, DB_USER=postgres DB_PASSWORD=secret DB_HOST=localhost TOKEN=<token> python3 -m unittest test.py -v in the scraper folder
+# To run test, use the command below under teh scraper folder instead of the main folder. I will try to change this later
+# DB_USER=postgres DB_PASSWORD=secret DB_HOST=localhost TOKEN=<token> python3 -m unittest test.py -v in the scraper folder
 
 import PSQL
 import GitHubQuery
