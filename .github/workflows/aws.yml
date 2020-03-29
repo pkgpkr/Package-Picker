@@ -23,11 +23,22 @@
 #    See the documentation for each action used below for the recommended IAM policies for this IAM user,
 #    and best practices on handling the access key credentials.
 
-on:
-  release:
-    types: [created]
-
 name: Deploy to Amazon ECS
+
+#on:
+#  release:
+#    types: [created]
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'webserver/pkgpkr/**'
+  pull_request:
+      branches:
+        - dev
+      paths:
+        - 'webserver/pkgpkr/**'
 
 jobs:
   deploy:
