@@ -2,10 +2,7 @@
   "memory": "512",
   "networkMode": "awsvpc",
   "cpu": "256",
-  "revision": 2,
-  "status": "ACTIVE",
   "executionRoleArn": "arn:aws:iam::392133285793:role/ecsTaskExecutionRole",
-  "taskDefinitionArn": "arn:aws:ecs:us-east-1:392133285793:task-definition/first-run-task-definition:2",
   "family": "first-run-task-definition",
   "requiresCompatibilities": [
     "FARGATE"
