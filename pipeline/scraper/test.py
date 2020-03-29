@@ -2,10 +2,11 @@
 # To run test, DB_USER=postgres DB_PASSWORD=secret DB_HOST=localhost TOKEN=<token> python3 -m unittest test.py -v in the scraper folder
 
 import PSQL
-import GraphQLQuery
+import GitHubQuery
 import unittest
 import json
 import urllib
+import datetime
 
 def make_orderer():
     order = {}
@@ -32,8 +33,9 @@ class TestMyClass(unittest.TestCase):
     @ordered
     def test_runQueryOnce(self):
         monthStr = "created:2020-01-01..2020-02-01"
+        cursor = "Y3Vyc29yOjE="
         for i in [1,10,100]: 
-            result = GraphQLQuery.runQueryOnce(i, monthStr)
+            result = GitHubQuery.runQueryOnce(i, monthStr, cursor)
             json_obj = None
             try:
                 json_obj = json.load(result)
@@ -70,7 +72,10 @@ class TestMyClass(unittest.TestCase):
     def test_insertToPackages(self):
         db = PSQL.connectToDB()
         name = "myPkg"
-        id = PSQL.insertToPackages(db,name)
+        downloads_last_month = 200
+        categories = ["critical"]
+        modified = datetime.datetime.now()
+        id = PSQL.insertToPackages(db, name, downloads_last_month, categories, modified)
         self.assertTrue(type(id) == int)
         cur = db.cursor()
         cur.execute(
@@ -89,7 +94,10 @@ class TestMyClass(unittest.TestCase):
         myHash = hash(appName)
         application_id = PSQL.insertToApplication(db,url,followers,appName,myHash)
         name = "myPkg"
-        package_id = PSQL.insertToPackages(db,name)
+        downloads_last_month = 200
+        categories = ["critical"]
+        modified = datetime.datetime.now()
+        package_id = PSQL.insertToPackages(db, name, downloads_last_month, categories, modified)
         PSQL.insertToDependencies(db, application_id, package_id)
         cur = db.cursor()
         cur.execute(
