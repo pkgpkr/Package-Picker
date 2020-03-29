@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.urls import reverse
 
 import requests
@@ -141,12 +142,3 @@ def recommendations(request, name):
         'repository_name': name,
         'recommendations': recommended_dependencies
     })
-
-
-def reimport_model(request):
-    """
-    Reimport model from storage (when API is called e.g. by lambda)
-    :param request:
-    :return:
-    """
-    recommender_service.import_model()

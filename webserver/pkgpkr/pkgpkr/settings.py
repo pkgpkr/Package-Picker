@@ -123,10 +123,6 @@ STATICFILES_DIRS = [
 # Env keys
 GITHUB_CLIENT_ID = os.environ.get('CLIENT_ID')
 GITHUB_CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
-S3_ACCESS_KEY_ID = os.environ.get('S3_ACCESS_KEY_ID')
-S3_SECRET_ACCESS_KEY = os.environ.get('S3_SECRET_ACCESS_KEY')
-S3_BUCKET = os.environ.get('S3_BUCKET')
-S3_MODEL_PATH = os.environ.get('S3_MODEL_PATH')
 DB_HOST = os.environ.get('DB_HOST')
 DB_USER = os.environ.get('DB_USER')
 DB_PASSWORD = os.environ.get('DB_PASSWORD')
@@ -147,11 +143,4 @@ GITHUB_BASE_API_URL = 'https://api.github.com'
 GITHUB_USER_INFO_URL = f'{GITHUB_BASE_API_URL}/user'
 GITHUB_GRAPHQL_URL = 'https://api.github.com/graphql'
 
-NPM_DEPENDENCY_META_URL = 'https://registry.npmjs.org'
-NPM_DEPENDENCY_URL = 'https://npmjs.com/package'
-
-NPM_API_BASE_URL = 'https://api.npmjs.org'
-NPM_LAST_MONTH_DOWNLOADS_META_API_URL = f'{NPM_API_BASE_URL}/downloads/range/last-month'
-
-# Recommender settings
-MAX_RECOMMENDATIONS_PER_DEPENDENCY = 10
+NPM_DEPENDENCY_BASE_URL = 'https://npmjs.com/package'

@@ -1,7 +1,8 @@
 import requests
 import json
 
-from pkgpkr.settings import GITHUB_USER_INFO_URL, GITHUB_GRAPHQL_URL
+from pkgpkr.settings import GITHUB_USER_INFO_URL
+from pkgpkr.settings import GITHUB_GRAPHQL_URL
 
 
 def get_user_info(token):
