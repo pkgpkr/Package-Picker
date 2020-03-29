@@ -5,11 +5,11 @@ services:
 #    image: postgres
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:80
     volumes:
       - .:/code
     ports:
-      - "8000:8000"
+      - "80:80"
     environment:   
       - CLIENT_ID=${CLIENT_ID}
       - CLIENT_SECRET=${CLIENT_SECRET}
