@@ -7,6 +7,10 @@ If you do not know the git CLI commands, recommend to use [sourcetree](https://w
 3. start coding.
 4. make commits frequently
 
+## Deploying to ECS
+
+TBD
+
 ## Environment variables
 
 ### Database (required by all services)
