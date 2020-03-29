@@ -89,4 +89,4 @@ jobs:
         service: nginx-service
         cluster: default
         wait-for-service-stability: true
-        wait-for-minutes:1
+        wait-for-minutes: 1
