@@ -29,7 +29,7 @@
         {
           "hostPort": 8000,
           "containerPort": 8000,
-          "protocol": "tcp",
+          "protocol": "tcp"
         }
       ]
     }
