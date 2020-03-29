@@ -1,8 +1,6 @@
 version: '3'
 
 services:
-#  db:
-#    image: postgres
   web:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
@@ -16,7 +14,3 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=${DB_HOST} 
-
-#    depends_on:
-#      - db
-
