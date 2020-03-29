@@ -1,6 +1,7 @@
 import psycopg2
 import datetime
 import os
+import re
 
 INSERT_TO_APPLICATION_SQL = "INSERT INTO applications (url, name, followers, retrieved, hash) VALUES (%s, %s, %s, %s, %s) ON CONFLICT ON CONSTRAINT unique_url DO UPDATE SET (url, name, followers, retrieved, hash) = (EXCLUDED.url, EXCLUDED.name, EXCLUDED.followers, EXCLUDED.retrieved, EXCLUDED.hash) RETURNING id;"
 INSERT_TO_PACKAGES_SQL = "INSERT INTO packages (name, downloads_last_month, categories, modified, retrieved) VALUES (%s, %s, %s, %s, %s) ON CONFLICT(name) DO UPDATE SET (name, downloads_last_month, categories, modified) = (EXCLUDED.name, EXCLUDED.downloads_last_month, EXCLUDED.categories, EXCLUDED.modified) RETURNING id;"
@@ -34,8 +35,8 @@ def insertToPackages(db, name, downloads_last_month, categories, modified):
     categoryString = None
     if categories and len(categories) > 0:
 
-        # Remove any commas in the categories
-        temp = [category.replace(",", "").replace("{", "").replace("}", "") for category in categories]
+        # Remove any commas, curly braces, single quotes, and double quotes in the categories
+        temp = [re.sub(r"[\,\{\}\'\"]", "", "category") for category in categories]
 
         # Convert to an array literal for PostgreSQL
         categoryString = str(temp).replace("'", "").replace("[", "{").replace("]", "}")
