@@ -62,7 +62,7 @@ def runQuery():
     for result in results:
         print(f"Fetching metadata for {result}")
         metadata = get_package_metadata(result)
-        PSQL.insertToPackages(cur, metadata['name'], metadata['downloads_last_month'], metadata['categories'], metadata['modified'])
+        PSQL.insertToPackages(db, metadata['name'], metadata['downloads_last_month'], metadata['categories'], metadata['modified'])
 
         # Commit the changes to the database
         db.commit()
