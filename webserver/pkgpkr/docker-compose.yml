@@ -9,7 +9,7 @@ services:
     volumes:
       - .:/code
     ports:
-      - "8000:8000"
+      - "80:8000"
     environment:   
       - CLIENT_ID=${CLIENT_ID}
       - CLIENT_SECRET=${CLIENT_SECRET}
