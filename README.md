@@ -9,7 +9,7 @@ If you do not know the git CLI commands, recommend to use [sourcetree](https://w
 
 ## Deploying to ECS
 
-TBD
+Be prepared for pain.
 
 ## Environment variables
 
