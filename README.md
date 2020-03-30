@@ -7,18 +7,17 @@ If you do not know the git CLI commands, recommend to use [sourcetree](https://w
 3. start coding.
 4. make commits frequently
 
+## Deploying to ECS
+
+When PRs are merged into the dev branch, your changes will automatically be deployed.
+
+
 ## Environment variables
 
 ### Database (required by all services)
 `DB_USER` # Database user
 `DB_PASSWORD` # Database password
 `DB_HOST` # Database URL
-
-### S3 (required by the model training script and web server)
-`S3_BUCKET` # The S3 bucket where the model is stored
-`S3_MODEL_PATH` # The relative path within the bucket
-`S3_ACCESS_KEY_ID` # The access key ID to get and put the model into S3
-`S3_SECRET_ACCESS_KEY` # The secret access key for S3
 
 ### Data scraping (GitHub)
 `TOKEN` # Your GitHub API token
