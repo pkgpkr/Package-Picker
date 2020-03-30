@@ -9,9 +9,7 @@ If you do not know the git CLI commands, recommend to use [sourcetree](https://w
 
 ## Deploying to ECS
 
-Be prepared for pain. Maybe don't use a load balancer. Scream again. Let's try EC2 instead.
-
-Again
+When PRs are merged into the dev branch, your changes will automatically be deployed.
 
 Hmmm.... might have something this time.
 
