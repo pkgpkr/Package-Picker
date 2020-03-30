@@ -24,7 +24,7 @@
 #    and best practices on handling the access key credentials.
 
 on:
-  PR:
+  pull_request:
     branches:
       - dev
     paths:
