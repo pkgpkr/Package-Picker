@@ -66,8 +66,6 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: pkgpkr
         IMAGE_TAG: ${{ github.sha }}
-        CLIENT_ID: ${{ secrets.CLIENT_ID }}
-        CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
         DB_USER: ${{ secrets.DB_USER }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         DB_HOST: ${{ secrets.DB_HOST }}
@@ -75,7 +73,7 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./webserver/pkgpkr
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --build-arg CLIENT_ID=${{ secrets.CLIENT_ID }} --build-arg CLIENT_SECRET=${{ secrets.CLIENT_SECRET }} --build-arg DB_USER=${{ secrets.DB_USER }} --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }} --build-arg DB_HOST=${{ secrets.DB_HOST }} --build-arg DOMAIN_NAME=${{ secrets.DOMAIN_NAME }} ./webserver/pkgpkr
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
