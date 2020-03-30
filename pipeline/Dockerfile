@@ -1,6 +1,4 @@
-FROM openjdk:8-alpine
-
-COPY --from=python:3.8-alpine / /
+FROM python:3
 
 ARG DB_USER
 ARG DB_HOST
@@ -18,14 +16,9 @@ ENV MONTH $MONTH
 RUN mkdir /code
 WORKDIR /code
 COPY requirements.txt /code/
-#RUN apt-get list  | grep openjdk
 
-RUN apk update
-#RUN apt-get install openjdk-11-jdk -y
-RUN apk add gcc
-RUN apk add postgresql-dev
-RUN apk add python3-dev
-
+RUN apt-get update
+RUN apt-get install openjdk-11-jdk -y
 RUN pip install -r requirements.txt
 
 COPY . /code/
