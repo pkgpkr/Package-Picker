@@ -11,7 +11,6 @@ If you do not know the git CLI commands, recommend to use [sourcetree](https://w
 
 When PRs are merged into the dev branch, your changes will automatically be deployed.
 
-Hmmm.... might have something this time.
 
 ## Environment variables
 
