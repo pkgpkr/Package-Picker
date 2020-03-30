@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Add the container IP address as an allowed host if it exists
-if os.environ['ECS_CONTAINER_METADATA_URI']:
+if os.environ.get('ECS_CONTAINER_METADATA_URI'):
   METADATA_URI = os.environ['ECS_CONTAINER_METADATA_URI']
   container_metadata = requests.get(METADATA_URI).json()
   ALLOWED_HOSTS.append(container_metadata['Networks'][0]['IPv4Addresses'][0])
