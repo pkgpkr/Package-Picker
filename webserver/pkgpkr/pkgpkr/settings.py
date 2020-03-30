@@ -32,7 +32,7 @@ if os.environ.get('ECS_CONTAINER_METADATA_URI'):
   METADATA_URI = os.environ['ECS_CONTAINER_METADATA_URI']
   container_metadata = requests.get(METADATA_URI).json()
   ALLOWED_HOSTS.append(container_metadata['Networks'][0]['IPv4Addresses'][0])
-  ALLOWED_HOSTS.append('amazonaws.com')
+  ALLOWED_HOSTS.append('ec2co-ecsel-fuhnhdckc351-561658854.us-east-1.elb.amazonaws.com')
 
 # Application definition
 
