@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-import socket
+import requests
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,7 +25,13 @@ SECRET_KEY = '2@)h)0oz7su2wdinjl9ni5w%wa7+4l9s1c)!3%a1#ya6quow-3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [socket.gethostbyname(socket.gethostname())]
+ALLOWED_HOSTS = []
+
+# Add the container IP address as an allowed host if it exists
+if os.environ['ECS_CONTAINER_METADATA_URI']:
+  METADATA_URI = os.environ['ECS_CONTAINER_METADATA_URI']
+  container_metadata = requests.get(METADATA_URI).json()
+  ALLOWED_HOSTS.append(container_metadata['Networks'][0]['IPv4Addresses'][0])
 
 # Application definition
 
