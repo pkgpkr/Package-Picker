@@ -13,6 +13,8 @@ Be prepared for pain. Maybe don't use a load balancer. Scream again. Let's try E
 
 Again
 
+Hmmm.... might have something this time.
+
 ## Environment variables
 
 ### Database (required by all services)
