@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import requests
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,6 +26,13 @@ SECRET_KEY = '2@)h)0oz7su2wdinjl9ni5w%wa7+4l9s1c)!3%a1#ya6quow-3'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+# Add the container IP address as an allowed host if it exists
+if os.environ.get('ECS_CONTAINER_METADATA_URI'):
+  METADATA_URI = os.environ['ECS_CONTAINER_METADATA_URI']
+  container_metadata = requests.get(METADATA_URI).json()
+  ALLOWED_HOSTS.append(container_metadata['Networks'][0]['IPv4Addresses'][0])
+  ALLOWED_HOSTS.append(os.environ.get('DOMAIN_NAME'))
 
 # Application definition
 
@@ -133,7 +141,7 @@ GITHUB_ALLOW_SIGN_UP = 'false'
 
 # Endpoints
 GITHUB_BASE_URL = 'https://github.com'
-APP_GITHUB_CALLBACK_URI = 'http://localhost:8000/callback'
+APP_GITHUB_CALLBACK_URI = f"http://{os.environ.get('DOMAIN_NAME')}/callback"
 GITHUB_OATH_AUTH_PATH = f'{GITHUB_BASE_URL}/login/oauth/authorize?client_id={GITHUB_CLIENT_ID}&' \
     f'allow_signup={GITHUB_ALLOW_SIGN_UP}&redirect_uri={APP_GITHUB_CALLBACK_URI}&scope={GITHUB_SCOPE}'
 GITHUB_OATH_ACCESS_TOKEN_PATH = f'{GITHUB_BASE_URL}/login/oauth/access_token'

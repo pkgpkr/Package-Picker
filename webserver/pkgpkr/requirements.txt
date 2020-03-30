@@ -1,6 +1,4 @@
-psycopg2
-pyarrow
-django
-requests
-boto3
-pandas
+psycopg2==2.8.4
+Django==3.0.4
+requests==2.22.0
+boto3==1.9.224
