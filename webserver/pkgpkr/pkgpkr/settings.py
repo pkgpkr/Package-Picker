@@ -32,7 +32,7 @@ if os.environ.get('ECS_CONTAINER_METADATA_URI'):
   METADATA_URI = os.environ['ECS_CONTAINER_METADATA_URI']
   container_metadata = requests.get(METADATA_URI).json()
   ALLOWED_HOSTS.append(container_metadata['Networks'][0]['IPv4Addresses'][0])
-  ALLOWED_HOSTS.append('pkgpkr.com')
+  ALLOWED_HOSTS.append(os.environ.get('DOMAIN_NAME'))
 
 # Application definition
 
@@ -141,7 +141,7 @@ GITHUB_ALLOW_SIGN_UP = 'false'
 
 # Endpoints
 GITHUB_BASE_URL = 'https://github.com'
-APP_GITHUB_CALLBACK_URI = 'http://localhost:8000/callback'
+APP_GITHUB_CALLBACK_URI = f"http://{os.environ.get('DOMAIN_NAME')}/callback"
 GITHUB_OATH_AUTH_PATH = f'{GITHUB_BASE_URL}/login/oauth/authorize?client_id={GITHUB_CLIENT_ID}&' \
     f'allow_signup={GITHUB_ALLOW_SIGN_UP}&redirect_uri={APP_GITHUB_CALLBACK_URI}&scope={GITHUB_SCOPE}'
 GITHUB_OATH_ACCESS_TOKEN_PATH = f'{GITHUB_BASE_URL}/login/oauth/access_token'
