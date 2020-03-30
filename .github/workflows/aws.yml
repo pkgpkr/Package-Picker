@@ -25,20 +25,12 @@
 
 name: Deploy to Amazon ECS
 
-#on:
-#  release:
-#    types: [created]
 on:
   push:
     branches:
       - dev
     paths:
       - 'webserver/pkgpkr/**'
-  pull_request:
-      branches:
-        - dev
-      paths:
-        - 'webserver/pkgpkr/**'
 
 jobs:
   deploy:
