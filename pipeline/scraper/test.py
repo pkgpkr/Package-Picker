@@ -29,10 +29,6 @@ unittest.defaultTestLoader.sortTestMethodsUsing = compare
 
 class TestMyClass(unittest.TestCase):
 
-    @ordered
-    def test_runQuery(self):
-        return
-    
 
     @ordered
     def test_runQueryOnce(self):
