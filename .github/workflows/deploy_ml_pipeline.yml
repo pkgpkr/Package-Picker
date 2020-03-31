@@ -24,11 +24,6 @@
 #    and best practices on handling the access key credentials.
 
 on:
-  pull_request:
-    branches:
-      - dev
-    paths:
-      - 'pipeline/**'
   push:
     branches:
       - dev
