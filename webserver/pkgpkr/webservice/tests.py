@@ -58,17 +58,6 @@ class LoginTest(LiveServerTestCase):
 
         login_button.click()
 
-        # Check URL of redirected page
-        self.assertEqual('Sign in to GitHub · GitHub', self.driver.title)
-
-        # Put id and password and login
-        username_input = self.driver.find_element_by_xpath("//*[@id='login_field']")
-        password_input = self.driver.find_element_by_xpath("//*[@id='password']")
-        username_input.send_keys("edkang59@gmail.com")
-        password_input.send_keys("asdf1117T")
-        sign_in_button = self.driver.find_element_by_xpath("//*[@id='login']/form/div[3]/input[9]")
-        sign_in_button.click()
-
         # Check if the user redirected back to the main page
         self.assertEqual('http://localhost:8000/', self.driver.current_url)
 
