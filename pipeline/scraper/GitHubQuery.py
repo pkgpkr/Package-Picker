@@ -85,11 +85,15 @@ def runQuery(today):
     lastNode = None
     monthlySearchStr = MonthCalculation.getMonthlySearchStr(today)
     while True:
-        result = runQueryOnce(MAX_NODES_PER_LOOP, monthlySearchStr, lastNode)
-        writeDB(db, result)
-        if len(result['data']['search']['edges']) > 0:
-            lastNode = result['data']['search']['edges'][-1]['cursor']
-        else:
+        try:
+            result = runQueryOnce(MAX_NODES_PER_LOOP, monthlySearchStr, lastNode)
+            writeDB(db, result)
+            if len(result['data']['search']['edges']) > 0:
+                lastNode = result['data']['search']['edges'][-1]['cursor']
+            else:
+                break
+        except:
+            print(f"Could not run query starting at {lastNode} for {monthlySearchStr}")
             break
     
     # tear down database connection
