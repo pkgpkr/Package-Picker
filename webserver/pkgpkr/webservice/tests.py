@@ -97,7 +97,7 @@ class LoginTest(LiveServerTestCase):
         clear_ele = self.driver.find_element_by_xpath("//*[@id='categoryClear']")
         clear_ele.click()
 
-        # Filter text input
+        # Filter text inputs
         search_ele = self.driver.find_element_by_xpath("//*[@id='recommendationFilter']")
         search_ele.send_keys("te")
         search_ele.clear()
