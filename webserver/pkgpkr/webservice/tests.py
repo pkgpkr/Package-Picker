@@ -35,7 +35,7 @@ class LoginTest(LiveServerTestCase):
 
     def setUp(self):
         # Create chrome sessions
-        display = Display(visible=0, size=(800, 800))
+        display = Display(visible=0, size=(1920, 1080))
         display.start()
         if platform == "win32":
             self.driver = webdriver.Chrome(executable_path="C:\DRIVERS\chromedriver_win32\chromedriver.exe")
