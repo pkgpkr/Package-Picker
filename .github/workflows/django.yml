@@ -2,16 +2,13 @@ name: Webserver Django CI
 
 on:
   push:
-    branches:
-      - dev
     paths:
       - 'webserver/pkgpkr/**'
+      - '.github/workflows/django.yml'
   pull_request:
-    branches:
-      - master
-      - dev
     paths:
       - 'webserver/pkgpkr/**'
+      - '.github/workflows/django.yml'
 
 jobs:
   build:
@@ -33,6 +30,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        sudo apt-get update
+        sudo apt-get install chromium-chromedriver -y
+        sudo apt-get install xvfb -y
+
     - name: Run Tests
       env:
         MONTH: 120
@@ -44,8 +45,11 @@ jobs:
         S3_BUCKET: pkgpkr-models
         S3_MODEL_PATH: 1/pkgpkr-model.parquet
         S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
-        S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}       
-        
+        S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+        SELENIUM_TEST: ${{ secrets.SELENIUM_TEST }}
+        TOKEN: ${{ secrets.TOKEN }}
+
       working-directory: webserver/pkgpkr
       run: |
+        python manage.py collectstatic
         python manage.py test

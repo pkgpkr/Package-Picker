@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.urls import reverse
+import os
 
 import requests
 import urllib.parse
@@ -31,10 +32,17 @@ def about(request):
 def login(request):
     """ Log user in using Github OAuth"""
 
-    # Create keys if not yet there
+    # Create keys if not yet there!
     if not request.session.get('github_token'):
         request.session['github_token'] = None  # To keep API token
         request.session['github_info'] = None  # To keep user infor (e.g. name, avatar url)
+
+    # For Selenium testing
+    if os.environ.get('SELENIUM_TEST'):
+        request.session['github_token'] = os.environ.get('TOKEN')
+        request.session['github_info'] = github_util.get_user_info(request.session['github_token'])
+
+        return HttpResponseRedirect(reverse('index'))
 
     # Redirect to attempt Github Auth
     return HttpResponseRedirect(GITHUB_OATH_AUTH_PATH)
@@ -92,7 +100,7 @@ def repositories(request):
         # Updated Date
         dateTime = repo['updatedAt']
 
-        # Convert time format e.g. 2020-03-16T13:03:34Z -> 2020-03-16 13:03:34
+        # Convert time format e.g. 2020-03-16T13:03:34Z -> 2020-03-16
         date = dateTime.split('T')[0]
 
         repo['date'] = date
