@@ -2,6 +2,8 @@ from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import AnonymousUser, User
 from selenium import webdriver
 import unittest
+from sys import platform
+from django.test import LiveServerTestCase
 
 # Create your tests here.
 
@@ -27,13 +29,23 @@ class SimpleTest(TestCase):
         self.assertTrue(True)
 
 
-class LoginTest(unittest.TestCase):
+class LoginTest(LiveServerTestCase):
+    port = 8000
+
     def setUp(self):
         # Create chrome sessions
-        self.driver = webdriver.Chrome(executable_path="C:\DRIVERS\chromedriver_win32\chromedriver.exe")
+        if platform == "win32":
+            self.driver = webdriver.Chrome(executable_path="C:\DRIVERS\chromedriver_win32\chromedriver.exe")
+        else:
+            self.driver = webdriver.Chrome(executable_path="/usr/lib/chromium-browser/chromedriver")
         self.driver.implicitly_wait(3)
         self.driver.maximize_window()
-        self.driver.get("http://localhost:8000/")
+        self.driver.get(self.live_server_url)
+        super(LoginTest, self).setUp()
+
+    def tearDown(self):
+        self.driver.quit()
+        super(LoginTest, self).tearDown()
 
     def test_work_process(self):
         # get the login button
@@ -42,14 +54,13 @@ class LoginTest(unittest.TestCase):
         login_button.click()
 
         # Check URL of redirected page
-        self.assertEqual('https://github.com/login?allow_signup=false&client_id=2a68b1bc572b19b734df&return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3D2a68b1bc572b19b734df%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A8000%252Fcallback%26scope%3Drepo',
-        self.driver.current_url)
+        self.assertEqual('Sign in to GitHub · GitHub', self.driver.title)
 
         # Put id and password and login
         username_input = self.driver.find_element_by_xpath("//*[@id='login_field']")
         password_input = self.driver.find_element_by_xpath("//*[@id='password']")
-        username_input.send_keys("")
-        password_input.send_keys("")
+        username_input.send_keys("edkang59@gmail.com")
+        password_input.send_keys("asdf1117T")
         sign_in_button = self.driver.find_element_by_xpath("//*[@id='login']/form/div[3]/input[9]")
         sign_in_button.click()
 
