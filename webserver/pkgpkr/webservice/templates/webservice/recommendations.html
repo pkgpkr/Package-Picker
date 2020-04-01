@@ -14,9 +14,17 @@
         <tr>
           <td id="selected-category">Selected Category: </td>
           <td id="selected-category-input"><input type="text" id="categoryName" name="categoryName" disabled></td>
-          <td><button id="categoryClear" class="button is-light" onclick="categoryClear()">Clear</button></td>
+          <td><button id="categoryClear" class="button is-light is-small" onclick="categoryClear()">Clear</button></td>
         </tr>
       </table>
+      <div class="recommendation-filter">
+        <p class="control has-icons-right">
+          <input id="recommendationFilter" class="input" type="text" placeholder="Search">
+          <span class="icon is-small is-right">
+            <i class="fas fa-search"></i>
+          </span>
+        </p>
+      </div>
       <div class="table-container">
         <table class="display-data-tables">
           <thead>
@@ -46,14 +54,6 @@
             {% endfor %}
           </<tbody>
         </table>
-      </div>
-      <div class="recommendation-filter">
-        <p class="control has-icons-right">
-          <input id="recommendationFilter" class="input is-small" type="text" placeholder="Search">
-          <span class="icon is-small is-right">
-            <i class="fas fa-search"></i>
-          </span>
-        </p>
       </div>
     </div>
   </div>

@@ -113,7 +113,8 @@ class RecommenderService:
             res_json = res.json()
 
             # Get lastest version
-            if 'dist-tags' in res_json:
+            if 'dist-tags' in res_json and\
+                    'latest' in res_json['dist-tags']:
                 dependency_version = res_json['dist-tags']['latest']
             else:
                 dependency_version = '0.0.0'
@@ -122,14 +123,16 @@ class RecommenderService:
             d['date'] = None
 
             if res_json.get('versions') and \
-                    res_json['versions'].get(dependency_version) and \
-                    res_json['versions'][dependency_version].get('keywords'):
-                d['keywords'] = res_json['versions'][dependency_version]['keywords']
+                    res_json['versions'].get(dependency_version):
+
+                # If the pakcage contains keywords
+                if res_json['versions'][dependency_version].get('keywords'):
+                    d['keywords'] = res_json['versions'][dependency_version]['keywords']
 
                 # Version Date
                 dateTime = res_json['time'][dependency_version]
 
-                # Convert time format e.g. 2020-03-16T13:03:34Z -> 2020-03-16 13:03:34
+                # Convert time format e.g. 2020-03-16T13:03:34Z -> 2020-03-16
                 date = dateTime.split('T')[0]
 
                 d['date'] = date

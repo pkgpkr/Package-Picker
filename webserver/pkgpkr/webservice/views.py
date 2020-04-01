@@ -91,7 +91,7 @@ def repositories(request):
         # Updated Date
         dateTime = repo['updatedAt']
 
-        # Convert time format e.g. 2020-03-16T13:03:34Z -> 2020-03-16 13:03:34
+        # Convert time format e.g. 2020-03-16T13:03:34Z -> 2020-03-16
         date = dateTime.split('T')[0]
 
         repo['date'] = date
