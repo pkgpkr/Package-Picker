@@ -37,7 +37,7 @@ class LoginTest(LiveServerTestCase):
         if platform == "win32":
             self.driver = webdriver.Chrome(executable_path="C:\DRIVERS\chromedriver_win32\chromedriver.exe")
         else:
-            self.driver = webdriver.Chrome(executable_path="/usr/lib/chromium-browser/chromedriver")
+            self.driver = webdriver.Chrome(executable_path="/usr/bin/chromedriver")
         self.driver.implicitly_wait(3)
         self.driver.maximize_window()
         self.driver.get(self.live_server_url)
