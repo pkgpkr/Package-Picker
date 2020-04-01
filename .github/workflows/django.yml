@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - 'webserver/pkgpkr/**'
+      - '.github/workflows/django.yml'
   pull_request:
     paths:
       - 'webserver/pkgpkr/**'
+      - '.github/workflows/django.yml'
 
 jobs:
   build:
@@ -49,4 +51,5 @@ jobs:
 
       working-directory: webserver/pkgpkr
       run: |
+        python manage.py collectstatic
         python manage.py test
