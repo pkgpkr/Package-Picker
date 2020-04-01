@@ -10,6 +10,9 @@ from pyspark.sql.functions import col
 from pyspark.sql.functions import collect_list
 from pyspark.sql.functions import lit
 from pyspark.sql import Row
+from pyspark.sql import SparkSession
+from pyspark import SparkContext
+sc = SparkContext("local[2]", "pkgpkr")
 
 # Connect to the database
 user = os.environ.get("DB_USER")
@@ -21,8 +24,12 @@ cur = db.cursor()
 # Load the raw data into Spark
 cur.execute("SELECT * FROM dependencies")
 dependencies = cur.fetchall()
-spark = SparkSession.builder.appName("pkgpkr").getOrCreate()
+spark = SparkSession.builder.master("local[2]").appName("pkgpkr").getOrCreate()
 df = spark.createDataFrame(dependencies).toDF("application_id", "package_id")
+
+# Close the database connection
+cur.close()
+db.close()
 
 # Restructure the dataframe in preparation for one-hot encoding
 grouped = df.groupBy("application_id").agg(collect_list("package_id"))
@@ -48,23 +55,9 @@ similarity = matrix.columnSimilarities()
 entries = similarity.entries.collect()
 similarityDf = spark.createDataFrame(entries).toDF("package_a", "package_b", "similarity")
 
-# Connect to S3
-bucket = os.environ.get("S3_BUCKET")
-path = os.environ.get("S3_MODEL_PATH")
-access_key_id = os.environ.get("S3_ACCESS_KEY_ID")
-secret_access_key = os.environ.get("S3_SECRET_ACCESS_KEY")
-s3 = boto3.client('s3',
-                  aws_access_key_id=access_key_id,
-                  aws_secret_access_key=secret_access_key)
-
-# Write the DataFrame to a Parquet file in preparation for upload
-similarityDf.coalesce(1).write.format("parquet").option("compression", "gzip").option("header", "true").mode("overwrite").save(path.split('/')[-1])
-
-# Upload the model file to S3
-tempFile = glob.glob(path.split('/')[-1] + "/*.parquet")[0]
-with open(tempFile, "r") as fileHandle:
-    s3.put_object(Body=fileHandle, Bucket=bucket, Key=path)
-
-# Close the database connection
-cur.close()
-db.close()
+# Write to the database
+url_connect = f"jdbc:postgresql://{host}/"
+table = "similarity"
+mode = "overwrite"
+properties = {"user":user, "password":password, "driver":"org.postgresql.Driver"}
+similarityDf.write.jdbc(url_connect, table, mode, properties)

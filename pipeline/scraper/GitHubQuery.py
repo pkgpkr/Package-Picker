@@ -1,7 +1,6 @@
 import requests
 import os.path
 import MonthCalculation
-import Log
 import PSQL
 import json
 import re
@@ -9,7 +8,6 @@ import re
 headers = {"Authorization": "Bearer " + os.environ['TOKEN']}
 MAX_NODES_PER_LOOP = 100
 totalRepos = 0
-logPrefix = "./log/"
 numberRegex = re.compile(r'\d+')
 
 query = """
@@ -37,7 +35,8 @@ query = """
     }
     """
 
-searchQuery = "topic:JavaScript stars:>10"
+searchQuery = "topic:JavaScript stars:>1"
+GITHUB_V4_URL = 'https://api.github.com/graphql'
 
 
 # insert name, url, retrieved time
@@ -71,7 +70,7 @@ def writeDB(db, result):
                                 dependencyStr = 'pkg:npm/' + k + "@" + result.group()
                             else:
                                 continue
-                        package_id = PSQL.insertToPackages(db, dependencyStr)
+                        package_id = PSQL.insertToPackages(db, dependencyStr, None, None, None)
                         PSQL.insertToDependencies(db, str(application_id), str(package_id))
                 except:
                     continue
@@ -81,39 +80,29 @@ def writeDB(db, result):
 def runQuery(today):
     # set up database
     db = PSQL.connectToDB()
+
+    # fetch data and write to database
+    lastNode = None
     monthlySearchStr = MonthCalculation.getMonthlySearchStr(today)
-    result = runQueryOnce(MAX_NODES_PER_LOOP, monthlySearchStr)
-    totalRepos = result['data']['search']['repositoryCount']
-    i = 0
-    while i * 100 < totalRepos - MAX_NODES_PER_LOOP:
-        result = runQueryOnce(MAX_NODES_PER_LOOP, monthlySearchStr)
+    while True:
+        result = runQueryOnce(MAX_NODES_PER_LOOP, monthlySearchStr, lastNode)
         writeDB(db, result)
-        i += 1
-        lastNode = result['data']['search']['edges'][-1]['cursor']
-        fileName = logPrefix + "lastNode_" + monthlySearchStr + ".txt"
-        if not os.path.exists(logPrefix):
-            os.mkdir(logPrefix)
-        f = open(fileName, "w")
-        f.write(lastNode)
-        f.close()
-        Log.writeLog(result, today)
-    result = runQueryOnce(totalRepos - i * 100, monthlySearchStr)
-    writeDB(db, result)
-    Log.writeLog(result, today)
-    # today = MonthCalculation.monthDelta(today,1)
+        if len(result['data']['search']['edges']) > 0:
+            lastNode = result['data']['search']['edges'][-1]['cursor']
+        else:
+            break
+    
+    # tear down database connection
+    db.close()
 
 
-def runQueryOnce(nodePerLoop, monthlySearchStr):
-    f = None
-    fileName = logPrefix + "lastNode_" + monthlySearchStr + ".txt"
-    if os.path.exists(fileName):
-        f = open(fileName, "r")
+def runQueryOnce(nodePerLoop, monthlySearchStr, cursor):
     variables = {
         "queryString": f"{searchQuery} {monthlySearchStr}",
-        "maybeAfter": f.read() if f else None,
+        "maybeAfter": cursor,
         "numberOfNodes": nodePerLoop
     }
-    request = requests.post('https://api.github.com/graphql', json={'query': query, 'variables': variables},
+    request = requests.post(GITHUB_V4_URL, json={'query': query, 'variables': variables},
                             headers=headers)
     if request.status_code == 200:
         return request.json()

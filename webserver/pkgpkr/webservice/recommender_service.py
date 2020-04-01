@@ -1,148 +1,64 @@
 import requests
 import random
-import boto3
-import pandas as pd
-from io import BytesIO
-
 import psycopg2
 import os
 import re
 
-from pkgpkr.settings import NPM_DEPENDENCY_META_URL
-from pkgpkr.settings import NPM_LAST_MONTH_DOWNLOADS_META_API_URL
-from pkgpkr.settings import NPM_DEPENDENCY_URL
-from pkgpkr.settings import S3_BUCKET
-from pkgpkr.settings import S3_MODEL_PATH
-from pkgpkr.settings import S3_ACCESS_KEY_ID
-from pkgpkr.settings import S3_SECRET_ACCESS_KEY
 from pkgpkr.settings import DB_HOST
 from pkgpkr.settings import DB_USER
 from pkgpkr.settings import DB_PASSWORD
+from pkgpkr.settings import NPM_DEPENDENCY_BASE_URL
 
 class RecommenderService:
 
     def __init__(self):
 
-        self.reimport_model_from_s3()
         self.majorVersionRegex = re.compile(r'pkg:npm/.*@\d+')
-
-    def reimport_model_from_s3(self):
-
-        # Initialize the S3 client
-        s3 = boto3.client('s3',
-                  aws_access_key_id=S3_ACCESS_KEY_ID,
-                  aws_secret_access_key=S3_SECRET_ACCESS_KEY)
-
-        # Connect to S3 and fetch the model file
-        obj = s3.get_object(Bucket=S3_BUCKET, Key=S3_MODEL_PATH)
-        parquet_bytes = obj['Body'].read()
-
-        # Load it into a Pandas dataframe (requires the `fastparquet` library)
-        self.model = pd.read_parquet(BytesIO(parquet_bytes))
-
-    def get_average_monthly_donwloads(self, daily_donwloads_list):
-
-        total = 0
-        for daily_donwloads in daily_donwloads_list:
-            total += daily_donwloads['downloads']
-
-        return total // len(daily_donwloads_list)
+        self.nameOnlyRegex = re.compile(r'pkg:npm/(.*)@\d+')
 
     def get_recommendations(self, dependencies):
+
+        # Strip everything after the major version
+        packages = []
+        for dependency in dependencies:
+            match = self.majorVersionRegex.search(dependency)
+            if not match:
+                continue
+            packages.append(match.group())
 
         # Connect to our database
         db = psycopg2.connect(f"host={DB_HOST} user={DB_USER} password={DB_PASSWORD}")
         cur = db.cursor()
 
         # Get recommendations from our model
-        recs_per_dep = 10
+        #
+        # 1. Get a list of identifiers for the packages passed into this method
+        # 2. Get the identifier for every package that is similar to those packages
+        # 3. Get the names and similarity scores of those packages
+        cur.execute(f"""
+                    SELECT packages.name, packages.downloads_last_month, packages.categories, packages.modified, s.similarity FROM packages INNER JOIN (
+                        SELECT package_b, MAX(similarity) AS similarity FROM similarity WHERE package_a IN (
+                            SELECT DISTINCT id FROM packages WHERE name in ({str(packages)[1:-1]})
+                        ) GROUP BY package_b
+                    ) s ON s.package_b = packages.id
+                    """)
+
+        # Add recommendations (including metadata) to results
         recommended = []
-        for dependency in dependencies:
-
-            # Strip everything after the major version
-            match = self.majorVersionRegex.search(dependency)
-            if not match:
-                continue
-            packageWithMajorVersion = match.group()
-
-            # Get the corresponding ID
-            cur.execute(f"SELECT id FROM packages WHERE name = '{packageWithMajorVersion}'")
-            result = cur.fetchone()
-            if not result:
-                continue
-            packageId = result[0]
-
-            recommendedIds = self.model[self.model.package_a == packageId].sort_values('similarity', ascending=False)['package_b']
-            for identifier in recommendedIds[:recs_per_dep]:
-                cur.execute("SELECT name FROM packages WHERE id = " + str(identifier))
-                result = cur.fetchone()
-                if not result:
-                    continue
-                recommended.append(result[0])
+        for result in cur.fetchall():
+            recommended.append(
+                {
+                    'name': result[0],
+                    'url': f"{NPM_DEPENDENCY_BASE_URL}/{self.nameOnlyRegex.search(result[0]).group(1)}",
+                    'average_downloads': result[1],
+                    'keywords': result[2],
+                    'date': result[3],
+                    'rate': result[4]
+                }
+            )
 
         # Disconnect from the database
         cur.close()
         db.close()
 
-        # Get metadata for each recommendation
-        recommended_dependencies = []
-        for dependency in recommended:
-
-            at_split = dependency.split('@')
-            dependency_name = at_split[len(at_split)-2].split('/')[len(at_split)-3]
-
-            d = dict()
-
-            d['name'] = dependency
-
-            # Get average downloads
-            res = requests.get(NPM_LAST_MONTH_DOWNLOADS_META_API_URL + f'/{dependency_name}')
-
-            # If there are download counts for the package
-            if 'downloads' in res.json():
-                average_downloads = self.get_average_monthly_donwloads(res.json()['downloads'])
-            else:
-                average_downloads = 0
-
-            # Commas as thousands separators
-            d['average_downloads'] = f'{average_downloads:,}'
-
-            # Get keywords (i.e. categories)
-            res = requests.get(NPM_DEPENDENCY_META_URL + f'/{dependency_name}')
-
-            res_json = res.json()
-
-            # Get lastest version
-            if 'dist-tags' in res_json and\
-                    'latest' in res_json['dist-tags']:
-                dependency_version = res_json['dist-tags']['latest']
-            else:
-                dependency_version = '0.0.0'
-
-            d['keywords'] = None
-            d['date'] = None
-
-            if res_json.get('versions') and \
-                    res_json['versions'].get(dependency_version):
-
-                # If the pakcage contains keywords
-                if res_json['versions'][dependency_version].get('keywords'):
-                    d['keywords'] = res_json['versions'][dependency_version]['keywords']
-
-                # Version Date
-                dateTime = res_json['time'][dependency_version]
-
-                # Convert time format e.g. 2020-03-16T13:03:34Z -> 2020-03-16
-                date = dateTime.split('T')[0]
-
-                d['date'] = date
-
-            # Url to NPM
-            d['url'] = NPM_DEPENDENCY_URL + f'/{dependency_name}'
-
-            # TODO placeholder for the rate
-            d['rate'] = round(random.uniform(1, 5), 1)
-
-            recommended_dependencies.append(d)
-
-        return recommended_dependencies
+        return recommended
