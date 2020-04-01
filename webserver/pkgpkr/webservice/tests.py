@@ -53,7 +53,7 @@ class LoginTest(LiveServerTestCase):
         super(LoginTest, self).tearDown()
 
     def test_work_process(self):
-        # get the login button
+        # get the login buttons
         login_button = self.driver.find_element_by_xpath("//*[@id='navbarBasicExample']/div[2]/div/div")
 
         login_button.click()
