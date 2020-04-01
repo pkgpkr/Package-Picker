@@ -1,5 +1,4 @@
 import os
-import boto3
 import glob
 import psycopg2
 from pyspark.mllib.linalg.distributed import RowMatrix
