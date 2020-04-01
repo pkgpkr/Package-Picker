@@ -32,7 +32,7 @@ def about(request):
 def login(request):
     """ Log user in using Github OAuth"""
 
-    # Create keys if not yet there
+    # Create keys if not yet there!
     if not request.session.get('github_token'):
         request.session['github_token'] = None  # To keep API token
         request.session['github_info'] = None  # To keep user infor (e.g. name, avatar url)
