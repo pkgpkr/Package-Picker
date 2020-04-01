@@ -52,8 +52,8 @@ class RecommenderService:
                     'url': f"{NPM_DEPENDENCY_BASE_URL}/{self.nameOnlyRegex.search(result[0]).group(1)}",
                     'average_downloads': result[1],
                     'keywords': result[2],
-                    'date': result[3],
-                    'rate': result[4]
+                    'date': result[3].date,
+                    'rate': '{:.2f}'.format(round(result[4] * 10, 2))
                 }
             )
 
