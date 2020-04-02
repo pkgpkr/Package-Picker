@@ -33,9 +33,15 @@ NOTE: First set the environment variables listed above.
 
 ## Data scraper
 
-Do not run script in script folder, run it in the main folder!
+Do not run script in scraper folder, run it in the main folder!
 
 `python3 scraper/Script.py`
+
+## Data scraper test
+
+Run these inside the pipeline folder.
+
+`DB_USER=postgres DB_PASSWORD=secret DB_HOST=localhost TOKEN=<your token> python3 -m unittest scraper/test.py -v`
 
 ## Model trainer
 
