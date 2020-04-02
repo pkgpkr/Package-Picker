@@ -1,3 +1,4 @@
+# Our version of PySpark requires Python 3.7
 FROM python:3.7
 
 ARG DB_USER
@@ -17,6 +18,7 @@ RUN mkdir /code
 WORKDIR /code
 COPY requirements.txt /code/
 
+# Our version of PySpark requires Java 8
 RUN echo "deb http://ftp.us.debian.org/debian sid main" > /etc/apt/sources.list
 RUN apt-get update
 RUN apt-get install openjdk-8-jdk -y
