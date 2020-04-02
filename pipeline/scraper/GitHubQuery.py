@@ -108,7 +108,7 @@ def runQueryOnce(nodePerLoop, monthlySearchStr, cursor):
     }
     request = requests.post(GITHUB_V4_URL, json={'query': query, 'variables': variables},
                             headers=headers)
-    if request.status_code == 200:
+    try:
         return request.json()
-    else:
-        raise Exception("Query failed to run by returning code")
+    except:
+        raise Exception("request failed!")
