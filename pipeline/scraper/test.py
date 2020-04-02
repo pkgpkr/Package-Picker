@@ -33,7 +33,7 @@ class TestMyClass(unittest.TestCase):
     @ordered
     def test_runQueryOnce(self):
         monthStr = "created:2020-01-01..2020-02-01"
-        cursor = "Y3Vyc29yOjE="
+        cursor = ""
         for i in [1,10,100]: 
             result = GitHubQuery.runQueryOnce(i, monthStr, cursor)
             json_obj = None
