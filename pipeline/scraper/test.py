@@ -72,7 +72,10 @@ class TestMyClass(unittest.TestCase):
     def test_insertToPackages(self):
         db = PSQL.connectToDB()
         name = "myPkg"
-        id = PSQL.insertToPackages(db, name)
+        downloads_last_month = 200
+        categories = ["critical"]
+        modified = datetime.datetime.now()
+        id = PSQL.insertToPackages(db, name, downloads_last_month, categories, modified)
         self.assertTrue(type(id) == int)
         cur = db.cursor()
         cur.execute(
@@ -80,48 +83,6 @@ class TestMyClass(unittest.TestCase):
         )
         package_name = cur.fetchone()[0]
         self.assertTrue(package_name == name)
-
-
-    @ordered
-    def test_updatePackageMetadata(self):
-        db = PSQL.connectToDB()
-        name = "myPkg"
-        downloads_last_month = 200
-        categories = ["critical", ",,comma", "\\{braces\\}", "\'quoted\""]
-        modified = datetime.datetime.now()
-
-        # Insert package into the table
-        id = PSQL.insertToPackages(db, name)
-        self.assertTrue(type(id) == int)
-
-        # Ensure that the modified field is None
-        cur = db.cursor()
-        cur.execute(
-            "SELECT modified FROM packages WHERE id = %s;" % (id)
-        )
-        modified_date = cur.fetchone()[0]
-        self.assertTrue(modified_date == None)
-
-        # Update metadata in the table
-        PSQL.updatePackageMetadata(db, name, downloads_last_month, categories, modified)
-
-        # Ensure that the modified field is now not None
-        cur.execute(
-            "SELECT modified FROM packages WHERE id = %s;" % (id)
-        )
-        modified_date = cur.fetchone()[0]
-        self.assertTrue(modified_date != None)
-
-        # Upsert the same package into the table again
-        id = PSQL.insertToPackages(db, name)
-        self.assertTrue(type(id) == int)
-
-        # Ensure that the modified field is still not None
-        cur.execute(
-            "SELECT modified FROM packages WHERE id = %s;" % (id)
-        )
-        modified_date = cur.fetchone()[0]
-        self.assertTrue(modified_date != None)
 
 
     @ordered
@@ -133,7 +94,10 @@ class TestMyClass(unittest.TestCase):
         myHash = hash(appName)
         application_id = PSQL.insertToApplication(db,url,followers,appName,myHash)
         name = "myPkg"
-        package_id = PSQL.insertToPackages(db, name)
+        downloads_last_month = 200
+        categories = ["critical"]
+        modified = datetime.datetime.now()
+        package_id = PSQL.insertToPackages(db, name, downloads_last_month, categories, modified)
         PSQL.insertToDependencies(db, application_id, package_id)
         cur = db.cursor()
         cur.execute(
