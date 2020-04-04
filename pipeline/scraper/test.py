@@ -3,10 +3,8 @@
 # DB_USER=postgres DB_PASSWORD=secret DB_HOST=localhost TOKEN=<token> python3 -m unittest scraper/test.py -v in the scraper folder
 
 import sys
-sys.path.append('./scraper')
-
-import PSQL
-import GitHubQuery
+from .PSQL import *
+from .GitHubQuery import *
 import unittest
 import json
 import urllib
@@ -34,8 +32,8 @@ class TestMyClass(unittest.TestCase):
     def test_runQueryOnce(self):
         monthStr = "created:2020-01-01..2020-02-01"
         cursor = ""
-        for i in [1,10,100]: 
-            result = GitHubQuery.runQueryOnce(i, monthStr, cursor)
+        for i in [1,10,100]:
+            result = runQueryOnce(i, monthStr, cursor)
             json_obj = None
             try:
                 json_obj = json.load(result)
@@ -43,22 +41,22 @@ class TestMyClass(unittest.TestCase):
                 self.assertTrue(json_obj is not None)
             except:
                 self.assertFalse(json_obj is not None)
-    
+
 
     @ordered
     def test_connectToDB(self):
-        db = PSQL.connectToDB()
+        db = connectToDB()
         self.assertTrue(db is not None)
 
 
     @ordered
     def test_insertToApplication(self):
-        db = PSQL.connectToDB()
+        db = connectToDB()
         url = "www.pkgpkr.com"
         followers = 314
         appName = "pkgpkr"
         myHash = hash(appName)
-        id = PSQL.insertToApplication(db,url,followers,appName,myHash)
+        id = insertToApplication(db,url,followers,appName,myHash)
         self.assertTrue(type(id) == int)
         cur = db.cursor()
         cur.execute(
@@ -70,12 +68,12 @@ class TestMyClass(unittest.TestCase):
 
     @ordered
     def test_insertToPackages(self):
-        db = PSQL.connectToDB()
+        db = connectToDB()
         name = "myPkg"
         downloads_last_month = 200
         categories = ["critical"]
         modified = datetime.datetime.now()
-        id = PSQL.insertToPackages(db, name, downloads_last_month, categories, modified)
+        id = insertToPackages(db, name, downloads_last_month, categories, modified)
         self.assertTrue(type(id) == int)
         cur = db.cursor()
         cur.execute(
@@ -87,18 +85,18 @@ class TestMyClass(unittest.TestCase):
 
     @ordered
     def test_insertToDependencies(self):
-        db = PSQL.connectToDB()
+        db = connectToDB()
         url = "www.pkgpkr.com"
         followers = 314
         appName = "pkgpkr"
         myHash = hash(appName)
-        application_id = PSQL.insertToApplication(db,url,followers,appName,myHash)
+        application_id = insertToApplication(db,url,followers,appName,myHash)
         name = "myPkg"
         downloads_last_month = 200
         categories = ["critical"]
         modified = datetime.datetime.now()
-        package_id = PSQL.insertToPackages(db, name, downloads_last_month, categories, modified)
-        PSQL.insertToDependencies(db, application_id, package_id)
+        package_id = insertToPackages(db, name, downloads_last_month, categories, modified)
+        insertToDependencies(db, application_id, package_id)
         cur = db.cursor()
         cur.execute(
             "SELECT * FROM dependencies WHERE application_id = %s AND package_id = %s;"
