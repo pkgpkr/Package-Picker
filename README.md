@@ -63,7 +63,7 @@ docker build --build-arg DOMAIN_NAME=$DOMAIN_NAME --build-arg CLIENT_ID=$CLIENT_
 
 2. Run the Docker image (remember the `-p` flag to expose the webserver port)
 
-`docker run -i -t -p 80:80 <id>`
+`docker run -i -t -p 8000:80 <id>`
 
 3. When the web server starts, open your browser to http://localhost:8000
 
