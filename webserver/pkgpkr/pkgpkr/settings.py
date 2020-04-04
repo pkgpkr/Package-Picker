@@ -142,7 +142,7 @@ GITHUB_ALLOW_SIGN_UP = 'false'
 
 # Endpoints
 GITHUB_BASE_URL = 'https://github.com'
-APP_GITHUB_CALLBACK_URI = f"http://{os.environ.get('DOMAIN_NAME')}/callback"
+APP_GITHUB_CALLBACK_URI = f"{os.environ.get('DOMAIN_NAME')}/callback"
 GITHUB_OATH_AUTH_PATH = f'{GITHUB_BASE_URL}/login/oauth/authorize?client_id={GITHUB_CLIENT_ID}&' \
     f'allow_signup={GITHUB_ALLOW_SIGN_UP}&redirect_uri={APP_GITHUB_CALLBACK_URI}&scope={GITHUB_SCOPE}'
 GITHUB_OATH_ACCESS_TOKEN_PATH = f'{GITHUB_BASE_URL}/login/oauth/access_token'
