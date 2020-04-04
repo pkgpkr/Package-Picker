@@ -10,22 +10,21 @@ class LoginTest(LiveServerTestCase):
 
     def setUp(self):
 
-
         # Create chrome sessions depending on OS
         if platform == "win32":
             self.driver = webdriver.Chrome(executable_path="C:\DRIVERS\chromedriver_win32\chromedriver.exe")
         elif platform == "darwin":
             self.driver = webdriver.Chrome(executable_path="/usr/local/bin/chromedriver")
         else:
-            self.driver = webdriver.Chrome(executable_path="/usr/bin/chromedriver")
 
             # Assure no visibility display for Ubuntu CLI to render without UI
             # Assure large enough screen to preven responsive look which hides some buttons
             display = Display(visible=0, size=(1920, 1080))
             display.start()
 
-        self.driver.implicitly_wait(3)
+            self.driver = webdriver.Chrome(executable_path="/usr/bin/chromedriver")
 
+        self.driver.implicitly_wait(3)
 
         self.driver.maximize_window()
         self.driver.get(self.live_server_url)
@@ -73,7 +72,8 @@ class LoginTest(LiveServerTestCase):
         category_order_ele.click()
 
         # The first category
-        first_category_ele = self.driver.find_element_by_xpath("//*[@id='DataTables_Table_0']/tbody/tr[1]/td[2]/div[1]/button")
+        first_category_ele = self.driver.find_element_by_xpath(
+            "//*[@id='DataTables_Table_0']/tbody/tr[1]/td[2]/div[1]/button")
         first_category_ele.click()
 
         # Clear button
