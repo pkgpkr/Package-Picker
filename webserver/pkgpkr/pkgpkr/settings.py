@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import requests
+import re
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,7 +33,7 @@ if os.environ.get('ECS_CONTAINER_METADATA_URI'):
   METADATA_URI = os.environ['ECS_CONTAINER_METADATA_URI']
   container_metadata = requests.get(METADATA_URI).json()
   ALLOWED_HOSTS.append(container_metadata['Networks'][0]['IPv4Addresses'][0])
-  ALLOWED_HOSTS.append(os.environ.get('DOMAIN_NAME'))
+  ALLOWED_HOSTS.append(re.match(r"https?://([^:]*)", os.environ.get("DOMAIN_NAME")).group(1))
 
 # Application definition
 
