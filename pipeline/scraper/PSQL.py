@@ -22,7 +22,7 @@ UPDATE_PACKAGE_METADATA_SQL = """
     downloads_last_month = %s,
     categories = %s,
     modified = %s
-    WHERE name = %s;"
+    WHERE name = %s;
     """
 INSERT_TO_DEPENDENCIES_SQL = """
     INSERT INTO dependencies (application_id, package_id)
