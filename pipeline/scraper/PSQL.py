@@ -3,10 +3,32 @@ import datetime
 import os
 import re
 
-INSERT_TO_APPLICATION_SQL = "INSERT INTO applications (url, name, followers, retrieved, hash) VALUES (%s, %s, %s, %s, %s) ON CONFLICT ON CONSTRAINT unique_url DO UPDATE SET (url, name, followers, retrieved, hash) = (EXCLUDED.url, EXCLUDED.name, EXCLUDED.followers, EXCLUDED.retrieved, EXCLUDED.hash) RETURNING id;"
-INSERT_TO_PACKAGES_SQL = "INSERT INTO packages (name, retrieved) VALUES (%s, %s) ON CONFLICT(name) DO UPDATE SET (name, retrieved) = (EXCLUDED.name, EXCLUDED.retrieved) RETURNING id;"
-UPDATE_PACKAGE_METADATA_SQL = "UPDATE packages SET downloads_last_month = %s, categories = %s, modified = %s WHERE name = %s;"
-INSERT_TO_DEPENDENCIES_SQL = "INSERT INTO dependencies (application_id, package_id) VALUES (%s, %s) ON CONFLICT DO NOTHING;"
+INSERT_TO_APPLICATION_SQL = """
+    INSERT INTO applications (url, name, followers, retrieved, hash)
+    VALUES (%s, %s, %s, %s, %s)
+    ON CONFLICT ON CONSTRAINT unique_url DO UPDATE
+    SET (url, name, followers, retrieved, hash) = (EXCLUDED.url, EXCLUDED.name, EXCLUDED.followers, EXCLUDED.retrieved, EXCLUDED.hash)
+    RETURNING id;
+    """
+INSERT_TO_PACKAGES_SQL = """
+    INSERT INTO packages (name, retrieved)
+    VALUES (%s, %s)
+    ON CONFLICT(name) DO UPDATE
+    SET (name, retrieved) = (EXCLUDED.name, EXCLUDED.retrieved)
+    RETURNING id;
+    """
+UPDATE_PACKAGE_METADATA_SQL = """
+    UPDATE packages SET
+    downloads_last_month = %s,
+    categories = %s,
+    modified = %s
+    WHERE name = %s;"
+    """
+INSERT_TO_DEPENDENCIES_SQL = """
+    INSERT INTO dependencies (application_id, package_id)
+    VALUES (%s, %s)
+    ON CONFLICT DO NOTHING;
+    """
 
 user = os.environ['DB_USER'] or "postgres"
 password = os.environ['DB_PASSWORD'] or "secret"

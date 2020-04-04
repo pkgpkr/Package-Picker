@@ -40,15 +40,15 @@ class TestMyClass(unittest.TestCase):
             try:
                 json_obj = json.load(result)
                 print(json_obj)
-                self.assertTrue(json_obj is not None)
+                self.assertIsNotNone(json_obj)
             except:
-                self.assertFalse(json_obj is not None)
+                self.assertIsNone(json_obj)
     
 
     @ordered
     def test_connectToDB(self):
         db = PSQL.connectToDB()
-        self.assertTrue(db is not None)
+        self.assertIsNotNone(db)
 
 
     @ordered
@@ -59,13 +59,13 @@ class TestMyClass(unittest.TestCase):
         appName = "pkgpkr"
         myHash = hash(appName)
         id = PSQL.insertToApplication(db,url,followers,appName,myHash)
-        self.assertTrue(type(id) == int)
+        self.assertIsInstance(id, int)
         cur = db.cursor()
         cur.execute(
             "SELECT name FROM applications WHERE id = %s;" % (id)
         )
         application_name = cur.fetchone()[0]
-        self.assertTrue(application_name == appName)
+        self.assertEqual(application_name, appName)
 
 
     @ordered
@@ -73,13 +73,13 @@ class TestMyClass(unittest.TestCase):
         db = PSQL.connectToDB()
         name = "myPkg"
         id = PSQL.insertToPackages(db, name)
-        self.assertTrue(type(id) == int)
+        self.assertIsInstance(id, int)
         cur = db.cursor()
         cur.execute(
             "SELECT name FROM packages WHERE id = %s;" % (id)
         )
         package_name = cur.fetchone()[0]
-        self.assertTrue(package_name == name)
+        self.assertEqual(package_name, name)
 
 
     @ordered
@@ -92,7 +92,7 @@ class TestMyClass(unittest.TestCase):
 
         # Insert package into the table
         id = PSQL.insertToPackages(db, name)
-        self.assertTrue(type(id) == int)
+        self.assertIsInstance(id, int)
 
         # Ensure that the modified field is None
         cur = db.cursor()
@@ -100,7 +100,7 @@ class TestMyClass(unittest.TestCase):
             "SELECT modified FROM packages WHERE id = %s;" % (id)
         )
         modified_date = cur.fetchone()[0]
-        self.assertTrue(modified_date == None)
+        self.assertIsNone(modified_date)
 
         # Update metadata in the table
         PSQL.updatePackageMetadata(db, name, downloads_last_month, categories, modified)
@@ -110,18 +110,18 @@ class TestMyClass(unittest.TestCase):
             "SELECT modified FROM packages WHERE id = %s;" % (id)
         )
         modified_date = cur.fetchone()[0]
-        self.assertTrue(modified_date != None)
+        self.assertIsNotNone(modified_date)
 
         # Upsert the same package into the table again
         id = PSQL.insertToPackages(db, name)
-        self.assertTrue(type(id) == int)
+        self.assertIsInstance(id, int)
 
         # Ensure that the modified field is still not None
         cur.execute(
             "SELECT modified FROM packages WHERE id = %s;" % (id)
         )
         modified_date = cur.fetchone()[0]
-        self.assertTrue(modified_date != None)
+        self.assertIsNotNone(modified_date)
 
 
     @ordered
@@ -141,7 +141,7 @@ class TestMyClass(unittest.TestCase):
             % (application_id, package_id)
         )
         result = cur.fetchall()
-        self.assertTrue(result == [(application_id, package_id)])
+        self.assertEqual(result, [(application_id, package_id)])
 
 if __name__ == "__main__":
     unittest.main()
