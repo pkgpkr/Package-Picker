@@ -74,26 +74,27 @@ def writeDB(db, result):
                         PSQL.insertToDependencies(db, str(application_id), str(package_id))
                 except:
                     continue
-    db.commit()
 
 
 def runQuery(today):
+
     # set up database
     db = PSQL.connectToDB()
 
-    # fetch data and write to database
+    # fetch data for the given month and write to database
     lastNode = None
     monthlySearchStr = MonthCalculation.getMonthlySearchStr(today)
+    print(f"Retrieving repositories {monthlySearchStr}")
     while True:
         try:
             result = runQueryOnce(MAX_NODES_PER_LOOP, monthlySearchStr, lastNode)
-            writeDB(db, result)
             if len(result['data']['search']['edges']) > 0:
+                writeDB(db, result)
                 lastNode = result['data']['search']['edges'][-1]['cursor']
             else:
                 break
-        except:
-            print(f"Could not run query starting at {lastNode} for {monthlySearchStr}")
+        except Exception as Argument:
+            print(f"Exception: {Argument} in result {result}")
             break
     
     # tear down database connection
