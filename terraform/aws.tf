@@ -136,7 +136,7 @@ resource "aws_sfn_state_machine" "run_ml_pipeline" {
       "Resource": "arn:aws:states:::ecs:runTask.sync",
       "Parameters": {
         "LaunchType": "FARGATE",
-        "Cluster": "arn:aws:ecs:us-east-1:392133285793:cluster/default",
+        "Cluster": "${aws_ecs_cluster.pkgpkr.arn}",
         "TaskDefinition": "arn:aws:ecs:us-east-1:392133285793:task-definition/pkgpkr-ml-task-definition",
         "NetworkConfiguration": {
           "AwsvpcConfiguration": {
@@ -180,6 +180,7 @@ resource "aws_ecs_service" "web" {
     security_groups = [
       "sg-0d4030427b648e2bd"
     ]
+    assign_public_ip = true
   }
 
   load_balancer {
