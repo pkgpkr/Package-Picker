@@ -70,8 +70,8 @@ def writeDB(db, result):
                                 dependencyStr = 'pkg:npm/' + k + "@" + result.group()
                             else:
                                 continue
-                        package_id = PSQL.insertToPackages(db, dependencyStr)
-                        PSQL.insertToDependencies(db, str(application_id), str(package_id))
+                        package_id = insertToPackages(db, dependencyStr)
+                        insertToDependencies(db, str(application_id), str(package_id))
                 except:
                     continue
     db.commit()

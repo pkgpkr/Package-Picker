@@ -45,7 +45,7 @@ class TestMyClass(unittest.TestCase):
 
     @ordered
     def test_connectToDB(self):
-        db = PSQL.connectToDB()
+        db = connectToDB()
         self.assertIsNotNone(db)
 
 
@@ -56,7 +56,7 @@ class TestMyClass(unittest.TestCase):
         followers = 314
         appName = "pkgpkr"
         myHash = hash(appName)
-        id = PSQL.insertToApplication(db,url,followers,appName,myHash)
+        id = insertToApplication(db,url,followers,appName,myHash)
         self.assertIsInstance(id, int)
         cur = db.cursor()
         cur.execute(
@@ -70,7 +70,7 @@ class TestMyClass(unittest.TestCase):
     def test_insertToPackages(self):
         db = connectToDB()
         name = "myPkg"
-        id = PSQL.insertToPackages(db, name)
+        id = insertToPackages(db, name)
         self.assertIsInstance(id, int)
         cur = db.cursor()
         cur.execute(
@@ -82,14 +82,14 @@ class TestMyClass(unittest.TestCase):
 
     @ordered
     def test_updatePackageMetadata(self):
-        db = PSQL.connectToDB()
+        db = connectToDB()
         name = "myPkg"
         downloads_last_month = 200
         categories = ["critical", ",,comma", "\\{braces\\}", "\'quoted\""]
         modified = datetime.datetime.now()
 
         # Insert package into the table
-        id = PSQL.insertToPackages(db, name)
+        id = insertToPackages(db, name)
         self.assertIsInstance(id, int)
 
         # Ensure that the modified field is None
@@ -101,7 +101,7 @@ class TestMyClass(unittest.TestCase):
         self.assertIsNone(modified_date)
 
         # Update metadata in the table
-        PSQL.updatePackageMetadata(db, name, downloads_last_month, categories, modified)
+        updatePackageMetadata(db, name, downloads_last_month, categories, modified)
 
         # Ensure that the modified field is now not None
         cur.execute(
@@ -111,7 +111,7 @@ class TestMyClass(unittest.TestCase):
         self.assertIsNotNone(modified_date)
 
         # Upsert the same package into the table again
-        id = PSQL.insertToPackages(db, name)
+        id = insertToPackages(db, name)
         self.assertIsInstance(id, int)
 
         # Ensure that the modified field is still not None
@@ -131,8 +131,8 @@ class TestMyClass(unittest.TestCase):
         myHash = hash(appName)
         application_id = insertToApplication(db,url,followers,appName,myHash)
         name = "myPkg"
-        package_id = PSQL.insertToPackages(db, name)
-        PSQL.insertToDependencies(db, application_id, package_id)
+        package_id = insertToPackages(db, name)
+        insertToDependencies(db, application_id, package_id)
         cur = db.cursor()
         cur.execute(
             "SELECT * FROM dependencies WHERE application_id = %s AND package_id = %s;"
