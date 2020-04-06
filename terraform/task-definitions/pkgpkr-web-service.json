@@ -1,0 +1,24 @@
+[
+    {
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": "/ecs/pkgpkr-web",
+                "awslogs-region": "us-east-1",
+                "awslogs-stream-prefix": "ecs"
+            }
+        },
+        "portMappings": [
+            {
+                "hostPort": 80,
+                "protocol": "tcp",
+                "containerPort": 80
+            }
+        ],
+        "cpu": 256,
+        "memoryReservation": 512,
+        "image": "nginx:latest",
+        "essential": true,
+        "name": "nginx"
+    }
+]
