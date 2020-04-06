@@ -1,5 +1,9 @@
 .idea/
 
+# Ignore Terraform state
+.terraform
+*.tfstate*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
