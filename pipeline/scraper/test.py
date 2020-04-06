@@ -38,15 +38,15 @@ class TestMyClass(unittest.TestCase):
             try:
                 json_obj = json.load(result)
                 print(json_obj)
-                self.assertTrue(json_obj is not None)
+                self.assertIsNotNone(json_obj)
             except:
-                self.assertFalse(json_obj is not None)
+                self.assertIsNone(json_obj)
 
 
     @ordered
     def test_connectToDB(self):
-        db = connectToDB()
-        self.assertTrue(db is not None)
+        db = PSQL.connectToDB()
+        self.assertIsNotNone(db)
 
 
     @ordered
@@ -56,31 +56,70 @@ class TestMyClass(unittest.TestCase):
         followers = 314
         appName = "pkgpkr"
         myHash = hash(appName)
-        id = insertToApplication(db,url,followers,appName,myHash)
-        self.assertTrue(type(id) == int)
+        id = PSQL.insertToApplication(db,url,followers,appName,myHash)
+        self.assertIsInstance(id, int)
         cur = db.cursor()
         cur.execute(
             "SELECT name FROM applications WHERE id = %s;" % (id)
         )
         application_name = cur.fetchone()[0]
-        self.assertTrue(application_name == appName)
+        self.assertEqual(application_name, appName)
 
 
     @ordered
     def test_insertToPackages(self):
         db = connectToDB()
         name = "myPkg"
-        downloads_last_month = 200
-        categories = ["critical"]
-        modified = datetime.datetime.now()
-        id = insertToPackages(db, name, downloads_last_month, categories, modified)
-        self.assertTrue(type(id) == int)
+        id = PSQL.insertToPackages(db, name)
+        self.assertIsInstance(id, int)
         cur = db.cursor()
         cur.execute(
             "SELECT name FROM packages WHERE id = %s;" % (id)
         )
         package_name = cur.fetchone()[0]
-        self.assertTrue(package_name == name)
+        self.assertEqual(package_name, name)
+
+
+    @ordered
+    def test_updatePackageMetadata(self):
+        db = PSQL.connectToDB()
+        name = "myPkg"
+        downloads_last_month = 200
+        categories = ["critical", ",,comma", "\\{braces\\}", "\'quoted\""]
+        modified = datetime.datetime.now()
+
+        # Insert package into the table
+        id = PSQL.insertToPackages(db, name)
+        self.assertIsInstance(id, int)
+
+        # Ensure that the modified field is None
+        cur = db.cursor()
+        cur.execute(
+            "SELECT modified FROM packages WHERE id = %s;" % (id)
+        )
+        modified_date = cur.fetchone()[0]
+        self.assertIsNone(modified_date)
+
+        # Update metadata in the table
+        PSQL.updatePackageMetadata(db, name, downloads_last_month, categories, modified)
+
+        # Ensure that the modified field is now not None
+        cur.execute(
+            "SELECT modified FROM packages WHERE id = %s;" % (id)
+        )
+        modified_date = cur.fetchone()[0]
+        self.assertIsNotNone(modified_date)
+
+        # Upsert the same package into the table again
+        id = PSQL.insertToPackages(db, name)
+        self.assertIsInstance(id, int)
+
+        # Ensure that the modified field is still not None
+        cur.execute(
+            "SELECT modified FROM packages WHERE id = %s;" % (id)
+        )
+        modified_date = cur.fetchone()[0]
+        self.assertIsNotNone(modified_date)
 
 
     @ordered
@@ -92,18 +131,15 @@ class TestMyClass(unittest.TestCase):
         myHash = hash(appName)
         application_id = insertToApplication(db,url,followers,appName,myHash)
         name = "myPkg"
-        downloads_last_month = 200
-        categories = ["critical"]
-        modified = datetime.datetime.now()
-        package_id = insertToPackages(db, name, downloads_last_month, categories, modified)
-        insertToDependencies(db, application_id, package_id)
+        package_id = PSQL.insertToPackages(db, name)
+        PSQL.insertToDependencies(db, application_id, package_id)
         cur = db.cursor()
         cur.execute(
             "SELECT * FROM dependencies WHERE application_id = %s AND package_id = %s;"
             % (application_id, package_id)
         )
         result = cur.fetchall()
-        self.assertTrue(result == [(application_id, package_id)])
+        self.assertEqual(result, [(application_id, package_id)])
 
 if __name__ == "__main__":
     unittest.main()
