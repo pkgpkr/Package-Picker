@@ -25,7 +25,6 @@ class TestRecommenderService(TestCase):
             self.assertIsNotNone(recommendation['name'])
             self.assertIsNotNone(recommendation['url'])
             # TODO this not always passing due to known issue in DB
-            #self.assertIsNotNone(recommendation['average_downloads'])
-            #self.assertIsNotNone(recommendation['date'])
+            # self.assertIsNotNone(recommendation['average_downloads'])
+            # self.assertIsNotNone(recommendation['date'])
             self.assertIsNotNone(recommendation['rate'])
-

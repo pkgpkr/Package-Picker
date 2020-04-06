@@ -3,78 +3,110 @@ from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import AnonymousUser, User
 
 from webservice import github_util
-from ..views import index, about, login, callback, logout, repositories
+from ..views import index, about, login, callback, logout, repositories, recommendations
 
 import os
 
+
 class SimpleTest(TestCase):
     def setUp(self):
-        # Every test needs access to the request factory.
+        """
+        Preapares request factory for every test
+        :return: Nothing
+        """
         self.factory = RequestFactory()
 
-
-    def prep_not_githib_auth_request(self, path):
+    def prep_not_github_auth_request(self, path):
+        """
+        Prepares request without Github authentication in session
+        :param path: Path to which request will be sent
+        :return: Request to pass to views function
+        """
         # Create an instance of a GET request.
         request = self.factory.get(path)
         request.user = AnonymousUser()
         request.session = dict()
         return request
 
-
-
-    def prep_with_githib_auth_request(self, path):
+    def prep_with_github_auth_request(self, path):
+        """
+        Prepares request with Github authentication in session already
+        :param path: Path to which request will be sent
+        :return: Request to pass to views function
+        """
         # Create an instance of a GET request.
         request = self.factory.get(path)
         request.user = AnonymousUser()
+
+        # Set session tokean
         request.session = dict()
         request.session['github_token'] = os.environ.get('TOKEN')
         request.session['github_info'] = github_util.get_user_info(request.session['github_token'])
         return request
 
-
-    def prep_request_and_call_method(self, request, method, exp_status_code=200):
-
-
-        # Test my_view() as if it were deployed at /customer/details
+    def call_method_and_assert(self, request, method, exp_status_code=200):
+        """
+        Calls method supplied and evaluate response code
+        :param request: Request object prepared for this evaluation
+        :param method: Methdo in views to call
+        :param exp_status_code: Expected status code
+        :return: Response, in case more evaluation are needed (e.g. on Url)
+        """
         response = method(request)
-
         self.assertEqual(response.status_code, exp_status_code)
-
+        return response
 
     def test_index(self):
-        request = self.prep_not_githib_auth_request('/')
-        self.prep_request_and_call_method(request, index)
+        # Test success
+        request = self.prep_not_github_auth_request('/')
+        self.call_method_and_assert(request, index)
 
     def test_about(self):
-        request = self.prep_not_githib_auth_request('/about')
-        self.prep_request_and_call_method(request, about)
+        # Test success
+        request = self.prep_not_github_auth_request('/about')
+        self.call_method_and_assert(request, about)
 
     def test_login(self):
-        request = self.prep_not_githib_auth_request('/login')
-        self.prep_request_and_call_method(request, login, 302)
+        # Test proper redirect at normal functionality
+        os.environ['SELENIUM_TEST'] = ''
+        request = self.prep_not_github_auth_request('/login')
+        response = self.call_method_and_assert(request, login, 302)
+        self.assertIn('https://github.com/login/oauth/authorize?', response.url)
 
-        # TODO try with proper token should not redirect
+        # Test bypassing feature for Selenium
+        os.environ['SELENIUM_TEST'] = '1'
+        request = self.prep_with_github_auth_request('/login')
+        response = self.call_method_and_assert(request, login, 302)
+        self.assertEqual('/', response.url)
 
-    # TODO revisit after MS2
-    # def test_callback(self):
-    #     self.prep_request_and_call_method('/callback', callback)
+    def test_callback(self):
+        # Test Exception thrown
+        request = self.prep_not_github_auth_request('/callback')
+        self.assertRaises(KeyError, self.call_method_and_assert, request, callback)
 
     def test_logout(self):
-        request = self.prep_not_githib_auth_request('/logout')
-        self.prep_request_and_call_method(request, logout, 302)
-
+        # Test redirect
+        request = self.prep_not_github_auth_request('/logout')
+        self.call_method_and_assert(request, logout, 302)
 
     def test_repositories(self):
-        request = self.prep_not_githib_auth_request('/repositories')
-        self.prep_request_and_call_method(request, repositories, 302)
+        # Test redirect
+        request = self.prep_not_github_auth_request('/repositories')
+        self.call_method_and_assert(request, repositories, 302)
 
-        request = self.prep_with_githib_auth_request('/repositories')
-        self.prep_request_and_call_method(request, repositories, 200)
-
+        # Test success
+        request = self.prep_with_github_auth_request('/repositories')
+        self.call_method_and_assert(request, repositories, 200)
 
         # TODO try with proper token should not redirect
 
-
     def test_recommendations(self):
-         #, name
-        pass
+        # Test redirect
+        request = self.prep_not_github_auth_request('/repositories')
+        response = recommendations(request, 'pkgpkr1/express')
+        self.assertEqual(response.status_code, 302)
+
+        # Test success
+        request = self.prep_with_github_auth_request('/repositories')
+        response = recommendations(request, 'pkgpkr1/express')
+        self.assertEqual(response.status_code, 200)

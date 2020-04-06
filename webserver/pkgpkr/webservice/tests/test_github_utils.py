@@ -6,7 +6,6 @@ from webservice.github_util import depenencies_name_to_purl, parse_dependencies,
 from .samples.sample_package_json import sample_package_json
 
 import os
-import json
 
 
 class TestGithubUtil(TestCase):
@@ -71,8 +70,7 @@ class TestGithubUtil(TestCase):
         self.assertTrue(includes_package)
 
     def test_parse_dependencies(self):
-        # set localhost if not passed to DOMAIN NAME
-
+        # Get dependencies
         dependencies = parse_dependencies(sample_package_json)
 
         # Assure at least 5 predictions
@@ -80,6 +78,7 @@ class TestGithubUtil(TestCase):
 
         count = 0
 
+        # Count how ofter npm dependency is found
         for dependency in dependencies:
             if 'pkg:npm/' in dependency:
                 count += 1
