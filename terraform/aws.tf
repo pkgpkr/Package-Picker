@@ -18,7 +18,7 @@ resource "aws_iam_role_policy" "invoke_step_function" {
             "Sid": "VisualEditor0",
             "Effect": "Allow",
             "Action": "states:StartExecution",
-            "Resource": "arn:aws:states:us-east-1:392133285793:stateMachine:MyStateMachine"
+            "Resource": "${aws_sfn_state_machine.run_ml_pipeline.id}"
         }
     ]
 }
