@@ -41,7 +41,7 @@ def get_package_metadata(dependency):
     d['categories'] = None
     if res_json.get('keywords'):
         d['categories'] = res_json.get('keywords')
-    
+
     d['modified'] = None
     if res_json.get('time') and res_json.get('time')['modified']:
         d['modified'] = res_json.get('time')['modified']
@@ -49,9 +49,9 @@ def get_package_metadata(dependency):
     return d
 
 def runQuery():
-    
+
     # Connect to the database
-    db = PSQL.connectToDB()
+    db = connectToDB()
     cur = db.cursor()
 
     # Fetch all package names from the database
@@ -62,7 +62,7 @@ def runQuery():
     for result in results:
         print(f"Fetching metadata for {result}")
         metadata = get_package_metadata(result)
-        PSQL.updatePackageMetadata(db, metadata['name'], metadata['downloads_last_month'], metadata['categories'], metadata['modified'])
+        updatePackageMetadata(db, metadata['name'], metadata['downloads_last_month'], metadata['categories'], metadata['modified'])
 
         # Commit the changes to the database
         db.commit()
