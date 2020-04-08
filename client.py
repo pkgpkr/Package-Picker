@@ -2,11 +2,11 @@
 Spin up a new database for testing and run scraper tests
 """
 
-import test
 import os
 import sys
 import psycopg2
 sys.path.append('./pipeline/scraper')
+import test
 
 try:
     USER = 'postgres'
