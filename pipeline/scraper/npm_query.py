@@ -3,7 +3,7 @@ Fetch package metadata from the npmjs registry API
 """
 
 import requests
-from PSQL import connectToDB, updatePackageMetadata
+from psql import connect_to_db, update_package_metadata
 
 NPM_DEPENDENCY_META_URL = 'https://registry.npmjs.org'
 NPM_DEPENDENCY_URL = 'https://npmjs.com/package'
@@ -63,7 +63,7 @@ def run_query():
     """
 
     # Connect to the database
-    database = connectToDB()
+    database = connect_to_db()
     cur = database.cursor()
 
     # Fetch all package names from the database
@@ -74,7 +74,7 @@ def run_query():
     for result in results:
         print(f"Fetching metadata for {result}")
         metadata = get_package_metadata(result)
-        updatePackageMetadata(database,
+        update_package_metadata(database,
                               metadata['name'],
                               metadata['downloads_last_month'],
                               metadata['categories'],

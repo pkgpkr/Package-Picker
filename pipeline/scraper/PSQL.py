@@ -1,7 +1,11 @@
-import psycopg2
+"""
+Insert application, package, and dependency data into a PostgreSQL database
+"""
+
 import datetime
 import os
 import re
+import psycopg2
 
 INSERT_TO_APPLICATION_SQL = """
     INSERT INTO applications (url, name, followers, retrieved, hash)
@@ -30,51 +34,72 @@ INSERT_TO_DEPENDENCIES_SQL = """
     ON CONFLICT DO NOTHING;
     """
 
-user = os.environ['DB_USER'] or "postgres"
-password = os.environ['DB_PASSWORD'] or "secret"
-host = os.environ['DB_HOST'] or "localhost"
-conn_string = f"host={host} user={user} password={password}"
+USER = os.environ['DB_USER'] or "postgres"
+PASSWORD = os.environ['DB_PASSWORD'] or "secret"
+HOST = os.environ['DB_HOST'] or "localhost"
+CONN_STRING = f"host={HOST} user={USER} password={PASSWORD}"
 
-def connectToDB():
+def connect_to_db():
+    """
+    Connect to the database
+    """
 
-    # Connect to the database
-    db = psycopg2.connect(conn_string)
-    return db
+    database = psycopg2.connect(CONN_STRING)
+    return database
 
 
-def insertToApplication(db, url, followers, appName, hash):
+def insert_to_app(database, url, followers, app_name, app_hash):
+    """
+    Upsert a row into the applications table
+    """
 
-    # Upsert a row into the applications table
-    cur = db.cursor()
-    cur.execute(INSERT_TO_APPLICATION_SQL, (url, appName, followers, datetime.datetime.now(), hash))
+    cur = database.cursor()
+    cur.execute(INSERT_TO_APPLICATION_SQL, (url,
+                                            app_name,
+                                            followers,
+                                            datetime.datetime.now(),
+                                            app_hash))
     application_id = cur.fetchone()[0]
     return application_id
 
 
-def insertToPackages(db, name):
+def insert_to_package(database, name):
+    """
+    Upsert a row into the packages table
+    """
 
-    # Upsert a row into the packages table
-    cur = db.cursor()
-    cur.execute(INSERT_TO_PACKAGES_SQL, (name, datetime.datetime.now()))
+    cur = database.cursor()
+    cur.execute(INSERT_TO_PACKAGES_SQL, (name,
+                                         datetime.datetime.now()))
     package_id = cur.fetchone()[0]
     return package_id
 
-def updatePackageMetadata(db, name, downloads_last_month, categories, modified):
+def update_package_metadata(database, name, downloads_last_month, categories, modified):
+    """
+    Update metadata for a particular package
+    """
 
     # Reformat the category array to a string literal for PostgreSQL
-    cur = db.cursor()
-    categoryString = None
+    cur = database.cursor()
+    category_string = None
     if categories and len(categories) > 0:
 
         # Remove any commas, curly braces, single quotes, and double quotes in the categories
         temp = [re.sub(r"[\,\{\}\'\"]", "", category) for category in categories]
 
         # Convert to an array literal for PostgreSQL
-        categoryString = str(temp).replace("'", "").replace("[", "{").replace("]", "}")
+        category_string = str(temp).replace("'", "").replace("[", "{").replace("]", "}")
 
-    # Update package metadata
-    cur.execute(UPDATE_PACKAGE_METADATA_SQL, (downloads_last_month, categoryString, modified, name))
+    cur.execute(UPDATE_PACKAGE_METADATA_SQL, (downloads_last_month,
+                                              category_string,
+                                              modified,
+                                              name))
 
-def insertToDependencies(db, application_id, package_id):
-    cur = db.cursor()
-    cur.execute(INSERT_TO_DEPENDENCIES_SQL, (application_id, package_id))
+def insert_to_dependencies(database, application_id, package_id):
+    """
+    Upsert a row into the dependency table
+    """
+
+    cur = database.cursor()
+    cur.execute(INSERT_TO_DEPENDENCIES_SQL, (application_id,
+                                             package_id))

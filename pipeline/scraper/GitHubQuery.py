@@ -1,7 +1,11 @@
+"""
+Fetch npm dependency information from the GitHub v4 API
+"""
+
 import requests
 import os.path
 from month_calculation import *
-from PSQL import *
+from psql import *
 import json
 import re
 
@@ -57,7 +61,7 @@ def writeDB(db, result):
             if 'dependencies' in packageJSON:
                 # insert applications table only if dependencies exist in package.json
                 hashValue = hash(packageStr)
-                application_id = insertToApplication(db, url, followers, name, hashValue)
+                application_id = insert_to_app(db, url, followers, name, hashValue)
                 dependencies = packageJSON['dependencies']
                 try:
                     for k, v in dependencies.items():
@@ -70,8 +74,8 @@ def writeDB(db, result):
                                 dependencyStr = 'pkg:npm/' + k + "@" + result.group()
                             else:
                                 continue
-                        package_id = insertToPackages(db, dependencyStr)
-                        insertToDependencies(db, str(application_id), str(package_id))
+                        package_id = insert_to_package(db, dependencyStr)
+                        insert_to_dependencies(db, str(application_id), str(package_id))
                 except:
                     continue
     db.commit()
@@ -79,7 +83,7 @@ def writeDB(db, result):
 
 def runQuery(today):
     # set up database
-    db = connectToDB()
+    db = connect_to_db()
 
     # fetch data and write to database
     lastNode = None

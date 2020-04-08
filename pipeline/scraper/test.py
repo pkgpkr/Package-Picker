@@ -11,11 +11,11 @@ DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD DB_HOST=$DB_HOST TOKEN=$TOKEN \
 
 import unittest
 import datetime
-from PSQL import connectToDB
-from PSQL import insertToApplication
-from PSQL import insertToDependencies
-from PSQL import insertToPackages
-from PSQL import updatePackageMetadata
+from psql import connect_to_db
+from psql import insert_to_app
+from psql import insert_to_dependencies
+from psql import insert_to_package
+from psql import update_package_metadata
 from GitHubQuery import runQueryOnce
 
 def make_orderer():
@@ -64,7 +64,7 @@ class TestMyClass(unittest.TestCase):
         Try connecting to the database
         """
 
-        database = connectToDB()
+        database = connect_to_db()
         self.assertIsNotNone(database)
 
 
@@ -74,12 +74,12 @@ class TestMyClass(unittest.TestCase):
         Try inserting an application into the application table
         """
 
-        database = connectToDB()
+        database = connect_to_db()
         url = "www.pkgpkr.com"
         followers = 314
         app_name = "pkgpkr"
         my_hash = hash(app_name)
-        app_id = insertToApplication(database, url, followers, app_name, my_hash)
+        app_id = insert_to_app(database, url, followers, app_name, my_hash)
         self.assertIsInstance(app_id, int)
         cur = database.cursor()
         cur.execute(
@@ -95,9 +95,9 @@ class TestMyClass(unittest.TestCase):
         Try inserting a package into the package table
         """
 
-        database = connectToDB()
+        database = connect_to_db()
         name = "myPkg"
-        package_id = insertToPackages(database, name)
+        package_id = insert_to_package(database, name)
         self.assertIsInstance(package_id, int)
         cur = database.cursor()
         cur.execute(
@@ -113,14 +113,14 @@ class TestMyClass(unittest.TestCase):
         Try to update the metadata associated with a package
         """
 
-        database = connectToDB()
+        database = connect_to_db()
         name = "myPkg"
         downloads_last_month = 200
         categories = ["critical", ",,comma", "\\{braces\\}", "\'quoted\""]
         modified = datetime.datetime.now()
 
         # Insert package into the table
-        package_id = insertToPackages(database, name)
+        package_id = insert_to_package(database, name)
         self.assertIsInstance(package_id, int)
 
         # Ensure that the modified field is None
@@ -132,7 +132,7 @@ class TestMyClass(unittest.TestCase):
         self.assertIsNone(modified_date)
 
         # Update metadata in the table
-        updatePackageMetadata(database, name, downloads_last_month, categories, modified)
+        update_package_metadata(database, name, downloads_last_month, categories, modified)
 
         # Ensure that the modified field is now not None
         cur.execute(
@@ -142,7 +142,7 @@ class TestMyClass(unittest.TestCase):
         self.assertIsNotNone(modified_date)
 
         # Upsert the same package into the table again
-        package_id = insertToPackages(database, name)
+        package_id = insert_to_package(database, name)
         self.assertIsInstance(package_id, int)
 
         # Ensure that the modified field is still not None
@@ -159,15 +159,15 @@ class TestMyClass(unittest.TestCase):
         Try to insert a dependency into the dependency table
         """
 
-        database = connectToDB()
+        database = connect_to_db()
         url = "www.pkgpkr.com"
         followers = 314
         app_name = "pkgpkr"
         my_hash = hash(app_name)
-        application_id = insertToApplication(database, url, followers, app_name, my_hash)
+        application_id = insert_to_app(database, url, followers, app_name, my_hash)
         name = "myPkg"
-        package_id = insertToPackages(database, name)
-        insertToDependencies(database, application_id, package_id)
+        package_id = insert_to_package(database, name)
+        insert_to_dependencies(database, application_id, package_id)
         cur = database.cursor()
         cur.execute(
             "SELECT * FROM dependencies WHERE application_id = %s AND package_id = %s;"
