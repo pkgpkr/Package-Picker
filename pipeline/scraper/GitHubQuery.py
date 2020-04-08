@@ -1,6 +1,6 @@
 import requests
 import os.path
-from MonthCalculation import *
+from month_calculation import *
 from PSQL import *
 import json
 import re
@@ -83,7 +83,7 @@ def runQuery(today):
 
     # fetch data and write to database
     lastNode = None
-    monthlySearchStr = getMonthlySearchStr(today)
+    monthlySearchStr = get_monthly_search_str(today)
     while True:
         try:
             result = runQueryOnce(MAX_NODES_PER_LOOP, monthlySearchStr, lastNode)
