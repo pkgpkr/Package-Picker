@@ -2,13 +2,7 @@ name: Scraper Test CI
 on:
   push:
     paths:
-      - 'pipeline/**'
-      - 'client.py'
-      - '.github/workflows/scraper.yml'
-  pull_request:
-    paths:
-      - 'pipeline/**'
-      - 'client.py'
+      - 'pipeline/scraper/**'
       - '.github/workflows/scraper.yml'
 
 jobs:
@@ -45,7 +39,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Python run script
-        run: python client.py
+        run: cd ./pipeline/scraper && python client.py
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
