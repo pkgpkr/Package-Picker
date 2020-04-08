@@ -16,7 +16,7 @@ from psql import insert_to_app
 from psql import insert_to_dependencies
 from psql import insert_to_package
 from psql import update_package_metadata
-from GitHubQuery import runQueryOnce
+from github_query import run_query_once
 
 def make_orderer():
     """
@@ -52,7 +52,7 @@ class TestMyClass(unittest.TestCase):
         cursor = None
         for i in [1, 10, 100]:
             try:
-                result = runQueryOnce(i, month_str, cursor)
+                result = run_query_once(i, month_str, cursor)
                 self.assertIsNotNone(result['data']['search']['edges'])
             except ValueError:
                 self.assertIsNone(result['data']['search']['edges'])
