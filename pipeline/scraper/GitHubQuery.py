@@ -1,7 +1,7 @@
 import requests
 import os.path
-from .MonthCalculation import *
-from .PSQL import *
+from MonthCalculation import *
+from PSQL import *
 import json
 import re
 

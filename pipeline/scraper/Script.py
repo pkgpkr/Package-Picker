@@ -1,7 +1,7 @@
 import MonthCalculation
 import datetime
 import GitHubQuery
-import NpmQuery
+import npm_query
 import os
 
 
@@ -14,6 +14,6 @@ def main():
         GitHubQuery.runQuery(MonthCalculation.monthDelta(today, i))
     
     # Fetch package metadata from npmjs.com
-    NpmQuery.runQuery()
+    npm_query.run_query()
 
 main()
