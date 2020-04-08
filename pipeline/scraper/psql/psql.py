@@ -34,9 +34,9 @@ INSERT_TO_DEPENDENCIES_SQL = """
     ON CONFLICT DO NOTHING;
     """
 
-USER = os.environ['DB_USER'] or "postgres"
-PASSWORD = os.environ['DB_PASSWORD'] or "secret"
-HOST = os.environ['DB_HOST'] or "localhost"
+USER = os.environ.get('DB_USER') or "postgres"
+PASSWORD = os.environ.get('DB_PASSWORD') or "secret"
+HOST = os.environ.get('DB_HOST') or "localhost"
 CONN_STRING = f"host={HOST} user={USER} password={PASSWORD}"
 
 def connect_to_db():
