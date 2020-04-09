@@ -39,7 +39,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Python run script
-        run: python ./pipeline/scraper/client.py
+        run: cd ./pipeline/scraper && python client.py
         env:
           DB_USER: postgres
           DB_PASSWORD: postgres

@@ -1,26 +1,23 @@
-"""
-Spin up a new database for testing and run scraper tests
-"""
-
-import test
+import psycopg2
 import os
 import sys
-import psycopg2
+import test
 
-try:
-    USER = 'postgres'
-    PASSWORD = 'postgres'
-    DATABASE = 'postgres'
-    REAL_TOKEN = os.environ['TOKEN']
-    HOST = 'localhost'
-    RESULT = None
-    CONNECTION = psycopg2.connect(user=USER,
-                                  password=PASSWORD,
-                                  host=HOST,
-                                  port=5432,
-                                  database=DATABASE)
-    CURSOR = CONNECTION.cursor()
-    APPLICATIONS_TABLE = """
+try: 
+    user = 'postgres'
+    password = 'postgres'
+    database = 'postgres'
+    real_token = os.environ['TOKEN']
+    host = 'localhost'
+    connection = None
+    result = None
+    connection = psycopg2.connect(user = user,
+                                  password = password,
+                                  host = host,
+                                  port = 5432,
+                                  database = database)
+    cursor = connection.cursor()
+    applications_table = """
         CREATE TABLE applications (
             id SERIAL PRIMARY KEY,
             url TEXT NOT NULL,
@@ -32,7 +29,7 @@ try:
         );
     """
 
-    PACKAGES_TABLE = """
+    packages_table = """
         CREATE TABLE packages (
             id SERIAL PRIMARY KEY,
             name TEXT UNIQUE NOT NULL,
@@ -43,32 +40,29 @@ try:
         );
     """
 
-    DEPENDENCIES_TABLE = """
+    dependencies_table = """
         CREATE TABLE dependencies (
             application_id INTEGER REFERENCES applications (id),
             package_id INTEGER REFERENCES packages (id),
             CONSTRAINT unique_app_to_pkg UNIQUE (application_id, package_id)
         );
     """
-    CURSOR.execute(APPLICATIONS_TABLE)
-    CURSOR.execute(PACKAGES_TABLE)
-    CURSOR.execute(DEPENDENCIES_TABLE)
-    CONNECTION.commit()
-    RESULT = os.system("""
-cd pipeline &&
-pwd &&
-DB_USER=%s DB_PASSWORD=%s DB_HOST=%s TOKEN=%s python3 -m unittest scraper/test.py -v
-""" % (USER, PASSWORD, HOST, REAL_TOKEN))
-
-except psycopg2.Error as error:
-    print("Error while connecting to PostgreSQL", error)
+    cursor.execute(applications_table)
+    cursor.execute(packages_table)
+    cursor.execute(dependencies_table)
+    connection.commit()  
+    result = os.system("DB_USER=%s DB_PASSWORD=%s DB_HOST=%s TOKEN=%s python3 -m unittest test.py -v" % (user,password,host,real_token))
+     
+except (Exception, psycopg2.Error) as error :
+    print ("Error while connecting to PostgreSQL", error)
 finally:
     #closing database connection.
-    if CONNECTION:
-        CURSOR.close()
-        CONNECTION.close()
+    if (connection):
+        cursor.close()
+        connection.close()
         print("PostgreSQL connection is closed")
-    if RESULT is None:
+    if (result == None):
         raise Exception("Database cannot be created!")
-    if RESULT != 0:
+    elif (result != 0):
         raise Exception("Test failed!")
+    
