@@ -10,7 +10,7 @@ def main():
     months = int(os.environ.get('MONTH') or '120')
 
     # Fetch applications from GitHub in a multi-threaded way
-    for i in range(0, months):
+    for i in range(months):
         GitHubQuery.runQuery(MonthCalculation.monthDelta(today, i))
     
     # Fetch package metadata from npmjs.com
