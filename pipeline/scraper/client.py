@@ -1,7 +1,6 @@
 import psycopg2
 import os
 import sys
-sys.path.append('./pipeline/scraper')
 import test
 
 try: 
