@@ -1,7 +1,7 @@
 import requests
 import os.path
-import MonthCalculation
-import PSQL
+from MonthCalculation import *
+from PSQL import *
 import json
 import re
 
@@ -57,7 +57,7 @@ def writeDB(db, result):
             if 'dependencies' in packageJSON:
                 # insert applications table only if dependencies exist in package.json
                 hashValue = hash(packageStr)
-                application_id = PSQL.insertToApplication(db, url, followers, name, hashValue)
+                application_id = insertToApplication(db, url, followers, name, hashValue)
                 dependencies = packageJSON['dependencies']
                 try:
                     for k, v in dependencies.items():
@@ -70,8 +70,8 @@ def writeDB(db, result):
                                 dependencyStr = 'pkg:npm/' + k + "@" + result.group()
                             else:
                                 continue
-                        package_id = PSQL.insertToPackages(db, dependencyStr)
-                        PSQL.insertToDependencies(db, str(application_id), str(package_id))
+                        package_id = insertToPackages(db, dependencyStr)
+                        insertToDependencies(db, str(application_id), str(package_id))
                 except:
                     continue
 
@@ -79,11 +79,11 @@ def writeDB(db, result):
 def runQuery(today):
 
     # set up database
-    db = PSQL.connectToDB()
+    db = connectToDB()
 
     # fetch data for the given month and write to database
     lastNode = None
-    monthlySearchStr = MonthCalculation.getMonthlySearchStr(today)
+    monthlySearchStr = getMonthlySearchStr(today)
     print(f"Retrieving repositories {monthlySearchStr}")
     while True:
         try:
@@ -96,7 +96,7 @@ def runQuery(today):
         except Exception as Argument:
             print(f"Exception: {Argument} in result {result}")
             break
-    
+
     # tear down database connection
     db.close()
 
