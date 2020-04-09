@@ -2,13 +2,7 @@ name: Scraper Test CI
 on:
   push:
     paths:
-      - 'pipeline/**'
-      - 'client.py'
-      - '.github/workflows/scraper.yml'
-  pull_request:
-    paths:
-      - 'pipeline/**'
-      - 'client.py'
+      - 'pipeline/scraper/**'
       - '.github/workflows/scraper.yml'
 
 jobs:
@@ -47,8 +41,8 @@ jobs:
       - name: Python run script
         run: cd ./pipeline/scraper && python client.py
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
-          POSTGRES_HOST: localhost
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: postgres
+          DB_HOST: localhost
           TOKEN: ${{ secrets.TOKEN }}
