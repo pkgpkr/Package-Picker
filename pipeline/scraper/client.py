@@ -1,7 +1,6 @@
 import psycopg2
 import os
 import sys
-sys.path.append('./pipeline/scraper')
 import test
 
 try: 
@@ -52,7 +51,7 @@ try:
     cursor.execute(packages_table)
     cursor.execute(dependencies_table)
     connection.commit()  
-    result = os.system("cd pipeline && pwd && DB_USER=%s DB_PASSWORD=%s DB_HOST=%s TOKEN=%s python3 -m unittest scraper/test.py -v" % (user,password,host,real_token))
+    result = os.system("DB_USER=%s DB_PASSWORD=%s DB_HOST=%s TOKEN=%s python3 -m unittest test.py -v" % (user,password,host,real_token))
      
 except (Exception, psycopg2.Error) as error :
     print ("Error while connecting to PostgreSQL", error)

@@ -30,10 +30,12 @@ INSERT_TO_DEPENDENCIES_SQL = """
     ON CONFLICT DO NOTHING;
     """
 
-user = os.environ['DB_USER'] or "postgres"
-password = os.environ['DB_PASSWORD'] or "secret"
-host = os.environ['DB_HOST'] or "localhost"
-conn_string = f"host={host} user={user} password={password}"
+user = os.environ.get('DB_USER', default="postgres")
+password = os.environ.get('DB_PASSWORD', default=None)
+host = os.environ.get('DB_HOST', default="localhost")
+conn_string = f"host={host} user={user}"
+if password:
+    conn_string += f" password={password}"
 
 def connectToDB():
 
@@ -48,6 +50,7 @@ def insertToApplication(db, url, followers, appName, hash):
     cur = db.cursor()
     cur.execute(INSERT_TO_APPLICATION_SQL, (url, appName, followers, datetime.datetime.now(), hash))
     application_id = cur.fetchone()[0]
+    db.commit()
     return application_id
 
 
@@ -57,6 +60,7 @@ def insertToPackages(db, name):
     cur = db.cursor()
     cur.execute(INSERT_TO_PACKAGES_SQL, (name, datetime.datetime.now()))
     package_id = cur.fetchone()[0]
+    db.commit()
     return package_id
 
 def updatePackageMetadata(db, name, downloads_last_month, categories, modified):
@@ -74,7 +78,9 @@ def updatePackageMetadata(db, name, downloads_last_month, categories, modified):
 
     # Update package metadata
     cur.execute(UPDATE_PACKAGE_METADATA_SQL, (downloads_last_month, categoryString, modified, name))
+    db.commit()
 
 def insertToDependencies(db, application_id, package_id):
     cur = db.cursor()
     cur.execute(INSERT_TO_DEPENDENCIES_SQL, (application_id, package_id))
+    db.commit()

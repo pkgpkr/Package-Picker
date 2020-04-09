@@ -3,8 +3,8 @@
 # DB_USER=postgres DB_PASSWORD=secret DB_HOST=localhost TOKEN=<token> python3 -m unittest scraper/test.py -v in the scraper folder
 
 import sys
-from .PSQL import *
-from .GitHubQuery import *
+from PSQL import *
+from GitHubQuery import *
 import unittest
 import json
 import urllib

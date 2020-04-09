@@ -7,10 +7,10 @@ import os
 
 def main():
     today = datetime.datetime.now()
+    months = int(os.environ.get('MONTH') or '120')
 
-    # Fetch applications from GitHub
-    for i in range(0, int(os.environ['MONTH'])):
-        print("Fetching month " + str(i) + " of " + os.environ['MONTH'])
+    # Fetch applications from GitHub in a multi-threaded way
+    for i in range(months):
         GitHubQuery.runQuery(MonthCalculation.monthDelta(today, i))
     
     # Fetch package metadata from npmjs.com
