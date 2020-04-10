@@ -1,139 +1,174 @@
-# Test Script
-# To run test, use the command under the pipeline folder
-# DB_USER=postgres DB_PASSWORD=secret DB_HOST=localhost TOKEN=<token> python3 -m unittest scraper/test.py -v in the scraper folder
+"""
+Test script for the ML pipeline scraper
 
-import sys
-from .PSQL import *
-from .GitHubQuery import *
+To run the test, use the following command under the pipeline/ folder:
+
+```
+DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD DB_HOST=$DB_HOST TOKEN=$TOKEN \
+    python3 -m unittest scraper/test.py -v
+```
+"""
+
 import unittest
-import json
-import urllib
 import datetime
+from psql import connect_to_db
+from psql import insert_to_app
+from psql import insert_to_dependencies
+from psql import insert_to_package
+from psql import update_package_metadata
+from github_query import run_query_once
 
 def make_orderer():
+    """
+    Create helper functions for sorting and comparing objects
+    """
+
     order = {}
 
-    def ordered(f):
-        order[f.__name__] = len(order)
-        return f
+    def orderer(obj):
+        order[obj.__name__] = len(order)
+        return obj
 
-    def compare(a, b):
-        return [1, -1][order[a] < order[b]]
+    def comparator(obj_a, obj_b):
+        return [1, -1][order[obj_a] < order[obj_b]]
 
-    return ordered, compare
+    return orderer, comparator
 
-ordered, compare = make_orderer()
-unittest.defaultTestLoader.sortTestMethodsUsing = compare
+ORDERED, COMPARE = make_orderer()
+unittest.defaultTestLoader.sortTestMethodsUsing = COMPARE
 
 class TestMyClass(unittest.TestCase):
+    """
+    Tests for the ML pipeline scraper
+    """
 
+    @ORDERED
+    def test_run_query_once(self):
+        """
+        Try fetching data from the GitHub API
+        """
 
-    @ordered
-    def test_runQueryOnce(self):
-        monthStr = "created:2020-01-01..2020-02-01"
-        cursor = ""
-        for i in [1,10,100]:
-            result = runQueryOnce(i, monthStr, cursor)
-            json_obj = None
+        month_str = "created:2020-01-01..2020-02-01"
+        cursor = None
+        for i in [1, 10, 100]:
             try:
-                json_obj = json.load(result)
-                print(json_obj)
-                self.assertIsNotNone(json_obj)
-            except:
-                self.assertIsNone(json_obj)
+                result = run_query_once(i, month_str, cursor)
+                self.assertIsNotNone(result['data']['search']['edges'])
+            except ValueError:
+                self.assertIsNone(result['data']['search']['edges'])
 
 
-    @ordered
-    def test_connectToDB(self):
-        db = connectToDB()
-        self.assertIsNotNone(db)
+    @ORDERED
+    def test_connect_to_db(self):
+        """
+        Try connecting to the database
+        """
+
+        database = connect_to_db()
+        self.assertIsNotNone(database)
 
 
-    @ordered
-    def test_insertToApplication(self):
-        db = connectToDB()
+    @ORDERED
+    def test_insert_to_application(self):
+        """
+        Try inserting an application into the application table
+        """
+
+        database = connect_to_db()
         url = "www.pkgpkr.com"
         followers = 314
-        appName = "pkgpkr"
-        myHash = hash(appName)
-        id = insertToApplication(db,url,followers,appName,myHash)
-        self.assertIsInstance(id, int)
-        cur = db.cursor()
+        app_name = "pkgpkr"
+        my_hash = hash(app_name)
+        app_id = insert_to_app(database, url, followers, app_name, my_hash)
+        self.assertIsInstance(app_id, int)
+        cur = database.cursor()
         cur.execute(
-            "SELECT name FROM applications WHERE id = %s;" % (id)
+            "SELECT name FROM applications WHERE id = %s;" % (app_id)
         )
         application_name = cur.fetchone()[0]
-        self.assertEqual(application_name, appName)
+        self.assertEqual(application_name, app_name)
 
 
-    @ordered
-    def test_insertToPackages(self):
-        db = connectToDB()
+    @ORDERED
+    def test_insert_to_packages(self):
+        """
+        Try inserting a package into the package table
+        """
+
+        database = connect_to_db()
         name = "myPkg"
-        id = insertToPackages(db, name)
-        self.assertIsInstance(id, int)
-        cur = db.cursor()
+        package_id = insert_to_package(database, name)
+        self.assertIsInstance(package_id, int)
+        cur = database.cursor()
         cur.execute(
-            "SELECT name FROM packages WHERE id = %s;" % (id)
+            "SELECT name FROM packages WHERE id = %s;" % (package_id)
         )
         package_name = cur.fetchone()[0]
         self.assertEqual(package_name, name)
 
 
-    @ordered
-    def test_updatePackageMetadata(self):
-        db = connectToDB()
+    @ORDERED
+    def test_update_package_metadata(self):
+        """
+        Try to update the metadata associated with a package
+        """
+
+        database = connect_to_db()
         name = "myPkg"
         downloads_last_month = 200
         categories = ["critical", ",,comma", "\\{braces\\}", "\'quoted\""]
         modified = datetime.datetime.now()
 
         # Insert package into the table
-        id = insertToPackages(db, name)
-        self.assertIsInstance(id, int)
+        package_id = insert_to_package(database, name)
+        self.assertIsInstance(package_id, int)
 
         # Ensure that the modified field is None
-        cur = db.cursor()
+        cur = database.cursor()
         cur.execute(
-            "SELECT modified FROM packages WHERE id = %s;" % (id)
+            "SELECT modified FROM packages WHERE id = %s;" % (package_id)
         )
         modified_date = cur.fetchone()[0]
         self.assertIsNone(modified_date)
 
         # Update metadata in the table
-        updatePackageMetadata(db, name, downloads_last_month, categories, modified)
+        update_package_metadata(database, name, downloads_last_month, categories, modified)
 
         # Ensure that the modified field is now not None
         cur.execute(
-            "SELECT modified FROM packages WHERE id = %s;" % (id)
+            "SELECT modified FROM packages WHERE id = %s;" % (package_id)
         )
         modified_date = cur.fetchone()[0]
         self.assertIsNotNone(modified_date)
 
         # Upsert the same package into the table again
-        id = insertToPackages(db, name)
-        self.assertIsInstance(id, int)
+        package_id = insert_to_package(database, name)
+        self.assertIsInstance(package_id, int)
 
         # Ensure that the modified field is still not None
         cur.execute(
-            "SELECT modified FROM packages WHERE id = %s;" % (id)
+            "SELECT modified FROM packages WHERE id = %s;" % (package_id)
         )
         modified_date = cur.fetchone()[0]
         self.assertIsNotNone(modified_date)
 
 
-    @ordered
-    def test_insertToDependencies(self):
-        db = connectToDB()
+    @ORDERED
+    def test_insert_to_dependencies(self):
+        """
+        Try to insert a dependency into the dependency table
+        """
+
+        database = connect_to_db()
         url = "www.pkgpkr.com"
         followers = 314
-        appName = "pkgpkr"
-        myHash = hash(appName)
-        application_id = insertToApplication(db,url,followers,appName,myHash)
+        app_name = "pkgpkr"
+        my_hash = hash(app_name)
+        application_id = insert_to_app(database, url, followers, app_name, my_hash)
         name = "myPkg"
-        package_id = insertToPackages(db, name)
-        insertToDependencies(db, application_id, package_id)
-        cur = db.cursor()
+        package_id = insert_to_package(database, name)
+        insert_to_dependencies(database, application_id, package_id)
+        cur = database.cursor()
         cur.execute(
             "SELECT * FROM dependencies WHERE application_id = %s AND package_id = %s;"
             % (application_id, package_id)
