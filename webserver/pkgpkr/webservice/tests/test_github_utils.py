@@ -60,7 +60,7 @@ class TestGithubUtil(TestCase):
         self.assertLessEqual(len(repos), 100)
         self.assertIn('pkgpkr1/express', [repo['nameWithOwner'] for repo in repos])
 
-    def test_depenencies_name_to_purl(self):
+    def test_dependencies_name_to_purl(self):
         """
         Ensure that we can convert dependency names to PURL format
         """

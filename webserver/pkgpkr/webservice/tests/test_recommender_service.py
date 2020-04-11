@@ -4,7 +4,7 @@ Test the recommender service
 
 from unittest import TestCase
 import json
-from webservice.github_util import depenencies_name_to_purl
+from webservice.github_util import dependencies_name_to_purl
 from webservice.recommender_service import RecommenderService
 from .samples.sample_package_json import SAMPLE_PACKAGE_JSON
 
@@ -17,7 +17,7 @@ class TestRecommenderService(TestCase):
     def setUp(self):
         recommender_service = RecommenderService()
 
-        purl_dependencies = depenencies_name_to_purl(
+        purl_dependencies = dependencies_name_to_purl(
             json.loads(SAMPLE_PACKAGE_JSON)['dependencies'])
 
         self.recommendations = recommender_service.get_recommendations(purl_dependencies)
