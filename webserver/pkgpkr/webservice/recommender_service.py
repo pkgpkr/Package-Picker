@@ -12,31 +12,44 @@ from pkgpkr.settings import DB_PASSWORD
 from pkgpkr.settings import NPM_DEPENDENCY_BASE_URL
 
 class RecommenderService:
+    """
+    Recommender engine for the web server
+    """
 
     def __init__(self):
 
-        self.majorVersionRegex = re.compile(r'pkg:npm/.*@\d+')
-        self.nameOnlyRegex = re.compile(r'pkg:npm/(.*)@\d+')
+        self.major_version_regex = re.compile(r'pkg:npm/.*@\d+')
+        self.name_only_regex = re.compile(r'pkg:npm/(.*)@\d+')
 
-    def get_recommendations(self, dependencies):
+    def strip_to_major_version(self, dependencies):
+        """
+        Strip everything after the major version in each dependency
+        """
 
-        # Strip everything after the major version
         packages = []
         for dependency in dependencies:
-            match = self.majorVersionRegex.search(dependency)
+            match = self.major_version_regex.search(dependency)
             if not match:
                 continue
             packages.append(match.group())
 
+        return packages
+
+    def get_recommendations(self, dependencies):
+        """
+        Return a list of package recommendations and metadata given a set of dependencies
+        """
+
         # Connect to our database
-        db = psycopg2.connect(f"host={DB_HOST} user={DB_USER} password={DB_PASSWORD}")
-        cur = db.cursor()
+        database = psycopg2.connect(f"host={DB_HOST} user={DB_USER} password={DB_PASSWORD}")
+        cur = database.cursor()
 
         # Get recommendations from our model
         #
         # 1. Get a list of identifiers for the packages passed into this method
         # 2. Get a list of all similarity scores involving those packages
         # 3. Get the names and similarity scores of those packages
+        packages = self.strip_to_major_version(dependencies)
         cur.execute(f"""
                     SELECT a.name, b.name, s.similarity, b.downloads_last_month, b.categories, b.modified
                     FROM similarity s
@@ -54,7 +67,7 @@ class RecommenderService:
             # Format metadata
             package = result[0].replace("pkg:npm/", "", 1)
             recommendation = result[1].replace("pkg:npm/", "", 1)
-            url = f"{NPM_DEPENDENCY_BASE_URL}/{self.nameOnlyRegex.search(result[1]).group(1)}"
+            url = f"{NPM_DEPENDENCY_BASE_URL}/{self.name_only_regex.search(result[1]).group(1)}"
             similarity = math.ceil(10 * result[2])
             day = result[5]
             if day:
@@ -75,6 +88,6 @@ class RecommenderService:
 
         # Disconnect from the database
         cur.close()
-        db.close()
+        database.close()
 
         return recommended
