@@ -22,7 +22,7 @@ $(document).ready( function () {
     });
 
     $('#categoryName').keyup( function() {
-        table.column(1).search($(this).val()).draw();
+        table.column(3).search($(this).val()).draw();
     });
 
     $('#recommendationFilter').keyup( function() {
