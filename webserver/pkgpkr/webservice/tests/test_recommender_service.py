@@ -19,12 +19,13 @@ class TestRecommenderService(TestCase):
 
     def test_get_recommendation_content(self):
         for recommendation in self.recommendations:
-            self.assertCountEqual({'name', 'url', 'average_downloads', 'keywords', 'date', 'rate'},
+            self.assertCountEqual({'package', 'recommendation', 'url', 'similarity', 'average_downloads', 'keywords', 'date'},
                                   recommendation.keys())
 
-            self.assertIsNotNone(recommendation['name'])
+            self.assertIsNotNone(recommendation['package'])
+            self.assertIsNotNone(recommendation['recommendation'])
             self.assertIsNotNone(recommendation['url'])
+            self.assertIsNotNone(recommendation['similarity'])
             self.assertIsNotNone(recommendation['average_downloads'])
             # TODO this not always passing
             # self.assertIsNotNone(recommendation['date'])
-            self.assertIsNotNone(recommendation['rate'])

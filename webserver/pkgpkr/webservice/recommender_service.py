@@ -1,8 +1,10 @@
-import requests
-import random
-import psycopg2
-import os
+"""
+Get package recommendations from our database
+"""
+
+import math
 import re
+import psycopg2
 
 from pkgpkr.settings import DB_HOST
 from pkgpkr.settings import DB_USER
@@ -33,27 +35,41 @@ class RecommenderService:
         # Get recommendations from our model
         #
         # 1. Get a list of identifiers for the packages passed into this method
-        # 2. Get the identifier for every package that is similar to those packages
+        # 2. Get a list of all similarity scores involving those packages
         # 3. Get the names and similarity scores of those packages
         cur.execute(f"""
-                    SELECT packages.name, packages.downloads_last_month, packages.categories, packages.modified, s.similarity FROM packages INNER JOIN (
-                        SELECT package_b, MAX(similarity) AS similarity FROM similarity WHERE package_a IN (
-                            SELECT DISTINCT id FROM packages WHERE name in ({str(packages)[1:-1]})
-                        ) GROUP BY package_b
-                    ) s ON s.package_b = packages.id
+                    SELECT a.name, b.name, s.similarity, b.downloads_last_month, b.categories, b.modified
+                    FROM similarity s
+                    INNER JOIN packages a ON s.package_a = a.id
+                    INNER JOIN packages b ON s.package_b = b.id
+                    WHERE s.package_a IN (
+                        SELECT DISTINCT id FROM packages WHERE name in ({str(packages)[1:-1]})
+                    )
                     """)
 
         # Add recommendations (including metadata) to results
         recommended = []
         for result in cur.fetchall():
+
+            # Format metadata
+            package = result[0].replace("pkg:npm/", "", 1)
+            recommendation = result[1].replace("pkg:npm/", "", 1)
+            url = f"{NPM_DEPENDENCY_BASE_URL}/{self.nameOnlyRegex.search(result[1]).group(1)}"
+            similarity = math.ceil(10 * result[2])
+            day = result[5]
+            if day:
+                day = day.strftime('%Y-%m-%d')
+
+            # Add to the list of recommendations
             recommended.append(
                 {
-                    'name': result[0],
-                    'url': f"{NPM_DEPENDENCY_BASE_URL}/{self.nameOnlyRegex.search(result[0]).group(1)}",
-                    'average_downloads': result[1],
-                    'keywords': result[2],
-                    'date': result[3],
-                    'rate': result[4]
+                    'package': package,
+                    'recommendation': recommendation,
+                    'url': url,
+                    'similarity': similarity,
+                    'average_downloads': result[3],
+                    'keywords': result[4],
+                    'date': day
                 }
             )
 
