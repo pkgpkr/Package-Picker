@@ -42,10 +42,6 @@ jobs:
         DB_HOST: package-picker-test.c7etfrntf9yq.us-east-1.rds.amazonaws.com
         CLIENT_ID: ${{ secrets.CLIENT_ID }}
         CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-        S3_BUCKET: pkgpkr-models
-        S3_MODEL_PATH: 1/pkgpkr-model.parquet
-        S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
-        S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
         SELENIUM_TEST: ${{ secrets.SELENIUM_TEST }}
         TOKEN: ${{ secrets.TOKEN }}
 

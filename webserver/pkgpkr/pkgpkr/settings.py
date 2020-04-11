@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-import requests
 import re
+import requests
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -30,12 +30,12 @@ ALLOWED_HOSTS = []
 
 # Add the container IP address as an allowed host if it exists
 if os.environ.get('ECS_CONTAINER_METADATA_URI'):
-  allowedDomain = re.match(r"https?://([^:]*)", os.environ.get("DOMAIN_NAME")).group(1)
-  METADATA_URI = os.environ['ECS_CONTAINER_METADATA_URI']
-  container_metadata = requests.get(METADATA_URI).json()
-  ALLOWED_HOSTS.append(container_metadata['Networks'][0]['IPv4Addresses'][0])
-  ALLOWED_HOSTS.append(allowedDomain)
-  ALLOWED_HOSTS.append(f"www.{allowedDomain}")
+    ALLOWED_DOMAIN = re.match(r"https?://([^:]*)", os.environ.get("DOMAIN_NAME")).group(1)
+    METADATA_URI = os.environ['ECS_CONTAINER_METADATA_URI']
+    CONTAINER_METADATA = requests.get(METADATA_URI).json()
+    ALLOWED_HOSTS.append(CONTAINER_METADATA['Networks'][0]['IPv4Addresses'][0])
+    ALLOWED_HOSTS.append(ALLOWED_DOMAIN)
+    ALLOWED_HOSTS.append(f"www.{ALLOWED_DOMAIN}")
 
 # Application definition
 
@@ -146,10 +146,14 @@ GITHUB_ALLOW_SIGN_UP = 'false'
 # Endpoints
 GITHUB_BASE_URL = 'https://github.com'
 APP_GITHUB_CALLBACK_URI = f"{os.environ.get('DOMAIN_NAME')}/callback"
-GITHUB_OATH_AUTH_PATH = f'{GITHUB_BASE_URL}/login/oauth/authorize?client_id={GITHUB_CLIENT_ID}&' \
-    f'allow_signup={GITHUB_ALLOW_SIGN_UP}&redirect_uri={APP_GITHUB_CALLBACK_URI}&scope={GITHUB_SCOPE}'
+GITHUB_OATH_AUTH_PATH = f'{GITHUB_BASE_URL}/login/oauth/authorize?' \
+                        f'client_id={GITHUB_CLIENT_ID}&' \
+                        f'allow_signup={GITHUB_ALLOW_SIGN_UP}&' \
+                        f'redirect_uri={APP_GITHUB_CALLBACK_URI}&' \
+                        f'scope={GITHUB_SCOPE}'
 GITHUB_OATH_ACCESS_TOKEN_PATH = f'{GITHUB_BASE_URL}/login/oauth/access_token'
-GITHUB_OATH_REVIEW_AUTHORIZATIONS_PATH = f'{GITHUB_BASE_URL}/settings/connections/applications/{GITHUB_CLIENT_ID}'
+GITHUB_OATH_REVIEW_AUTHORIZATIONS_PATH = \
+        f'{GITHUB_BASE_URL}/settings/connections/applications/{GITHUB_CLIENT_ID}'
 
 GITHUB_BASE_API_URL = 'https://api.github.com'
 GITHUB_USER_INFO_URL = f'{GITHUB_BASE_API_URL}/user'
