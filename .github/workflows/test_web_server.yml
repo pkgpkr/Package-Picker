@@ -1,14 +1,10 @@
-name: Webserver Django CI
+name: Web Server Tests
 
 on:
   push:
     paths:
       - 'webserver/pkgpkr/**'
-      - '.github/workflows/django.yml'
-  pull_request:
-    paths:
-      - 'webserver/pkgpkr/**'
-      - '.github/workflows/django.yml'
+      - '.github/workflows/test_web_server.yml'
 
 jobs:
   build:
