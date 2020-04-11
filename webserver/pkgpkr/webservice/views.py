@@ -1,22 +1,24 @@
+"""
+Views for the web service
+"""
+
+import os
+import urllib.parse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.http import HttpResponse
 from django.urls import reverse
-import os
 
 import requests
-import urllib.parse
-import json
 
 from webservice.github_util import parse_dependencies
+from pkgpkr.settings import GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, \
+    GITHUB_OATH_AUTH_PATH, GITHUB_OATH_ACCESS_TOKEN_PATH
 from . import github_util
 from .recommender_service import RecommenderService
 
-from pkgpkr.settings import GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, \
-    GITHUB_OATH_AUTH_PATH, GITHUB_OATH_ACCESS_TOKEN_PATH
 
 # Instantiate service class
-recommender_service = RecommenderService()
+RECOMMENDER_SERVICE = RecommenderService()
 
 
 def index(request):
@@ -98,10 +100,10 @@ def repositories(request):
 
     for repo in repos:
         # Updated Date
-        dateTime = repo['updatedAt']
+        date_time = repo['updatedAt']
 
         # Convert time format e.g. 2020-03-16T13:03:34Z -> 2020-03-16
-        date = dateTime.split('T')[0]
+        date = date_time.split('T')[0]
 
         repo['date'] = date
 
@@ -144,7 +146,7 @@ def recommendations(request, name):
     dependencies = github_util.get_dependencies(request.session['github_token'], name)
 
     # Get predicitons
-    recommended_dependencies = recommender_service.get_recommendations(dependencies)
+    recommended_dependencies = RECOMMENDER_SERVICE.get_recommendations(dependencies)
 
     return render(request, "webservice/recommendations.html", {
         'repository_name': name,

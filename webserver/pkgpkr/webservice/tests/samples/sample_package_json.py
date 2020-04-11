@@ -1,4 +1,8 @@
-sample_package_json = """
+"""
+Mock data used in unit tests
+"""
+
+SAMPLE_PACKAGE_JSON = """
 {
     "name": "express",
     "description": "Fast, unopinionated, minimalist web framework",
