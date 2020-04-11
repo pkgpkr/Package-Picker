@@ -65,7 +65,7 @@ class LoginTest(LiveServerTestCase):
         self.assertEqual("Recommendations", self.driver.title)
 
         # Category border
-        category_order_ele = self.driver.find_element_by_xpath("//*[@id='DataTables_Table_0']/thead/tr/th[2]")
+        category_order_ele = self.driver.find_element_by_xpath("//*[@id='DataTables_Table_0']/thead/tr/th[4]")
 
         # Click it twice to make sure the first recommendation has at least one category
         category_order_ele.click()
@@ -73,7 +73,7 @@ class LoginTest(LiveServerTestCase):
 
         # The first category
         first_category_ele = self.driver.find_element_by_xpath(
-            "//*[@id='DataTables_Table_0']/tbody/tr[1]/td[2]/div[1]/button")
+            "//*[@id='DataTables_Table_0']/tbody/tr[1]/td[4]/div[1]/button")
         first_category_ele.click()
 
         # Clear button
@@ -86,7 +86,7 @@ class LoginTest(LiveServerTestCase):
         search_ele.clear()
 
         # The first element from the recommendation list
-        first_recommendation_ele = self.driver.find_element_by_xpath("//*[@id='DataTables_Table_0']/tbody/tr/td[1]/a")
+        first_recommendation_ele = self.driver.find_element_by_xpath("//*[@id='DataTables_Table_0']/tbody/tr/td[2]/a")
         first_recommendation_ele.click()
 
         # Logout button
