@@ -1,8 +1,9 @@
-import requests
-import random
-import psycopg2
-import os
+"""
+Get package recommendations from our database
+"""
+
 import re
+import psycopg2
 
 from pkgpkr.settings import DB_HOST
 from pkgpkr.settings import DB_USER
@@ -10,31 +11,44 @@ from pkgpkr.settings import DB_PASSWORD
 from pkgpkr.settings import NPM_DEPENDENCY_BASE_URL
 
 class RecommenderService:
+    """
+    Recommender engine for the web server
+    """
 
     def __init__(self):
 
-        self.majorVersionRegex = re.compile(r'pkg:npm/.*@\d+')
-        self.nameOnlyRegex = re.compile(r'pkg:npm/(.*)@\d+')
+        self.major_version_regex = re.compile(r'pkg:npm/.*@\d+')
+        self.name_only_regex = re.compile(r'pkg:npm/(.*)@\d+')
 
-    def get_recommendations(self, dependencies):
+    def strip_to_major_version(self, dependencies):
+        """
+        Strip everything after the major version in each dependency
+        """
 
-        # Strip everything after the major version
         packages = []
         for dependency in dependencies:
-            match = self.majorVersionRegex.search(dependency)
+            match = self.major_version_regex.search(dependency)
             if not match:
                 continue
             packages.append(match.group())
 
+        return packages
+
+    def get_recommendations(self, dependencies):
+        """
+        Return a list of package recommendations and metadata given a set of dependencies
+        """
+
         # Connect to our database
-        db = psycopg2.connect(f"host={DB_HOST} user={DB_USER} password={DB_PASSWORD}")
-        cur = db.cursor()
+        database = psycopg2.connect(f"host={DB_HOST} user={DB_USER} password={DB_PASSWORD}")
+        cur = database.cursor()
 
         # Get recommendations from our model
         #
         # 1. Get a list of identifiers for the packages passed into this method
         # 2. Get the identifier for every package that is similar to those packages
         # 3. Get the names and similarity scores of those packages
+        packages = self.strip_to_major_version(dependencies)
         cur.execute(f"""
                     SELECT packages.name, packages.downloads_last_month, packages.categories, packages.modified, s.similarity FROM packages INNER JOIN (
                         SELECT package_b, MAX(similarity) AS similarity FROM similarity WHERE package_a IN (
@@ -46,10 +60,11 @@ class RecommenderService:
         # Add recommendations (including metadata) to results
         recommended = []
         for result in cur.fetchall():
+            url = f"{NPM_DEPENDENCY_BASE_URL}/{self.name_only_regex.search(result[0]).group(1)}"
             recommended.append(
                 {
                     'name': result[0],
-                    'url': f"{NPM_DEPENDENCY_BASE_URL}/{self.nameOnlyRegex.search(result[0]).group(1)}",
+                    'url': url,
                     'average_downloads': result[1],
                     'keywords': result[2],
                     'date': result[3],
@@ -59,6 +74,6 @@ class RecommenderService:
 
         # Disconnect from the database
         cur.close()
-        db.close()
+        database.close()
 
         return recommended
