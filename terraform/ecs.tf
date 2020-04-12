@@ -72,7 +72,7 @@ resource "local_file" "web-task-definition" {
   content = <<PATTERN
 {
   "executionRoleArn": "${aws_iam_role.execute_task.arn}",
-  "containerDefinitions": ${file("task-definitions/pkgpkr-pipeline-container.json")},
+  "containerDefinitions": ${file("task-definitions/pkgpkr-web-container.json")},
   "memory": "512",
   "family": "pkgpkr-web-task-definition",
   "requiresCompatibilities": [
@@ -89,7 +89,7 @@ resource "local_file" "pipeline-task-definition" {
   content = <<PATTERN
 {
   "executionRoleArn": "${aws_iam_role.execute_task.arn}",
-  "containerDefinitions": ${file("task-definitions/pkgpkr-web-container.json")},
+  "containerDefinitions": ${file("task-definitions/pkgpkr-pipeline-container.json")},
   "memory": "4096",
   "family": "pkgpkr-ml-task-definition",
   "requiresCompatibilities": [
