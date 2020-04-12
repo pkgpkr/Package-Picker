@@ -31,11 +31,22 @@ TOKEN                 # Your GitHub API token
 
 # Database
 
-Terraform does NOT provision a database for you, so you'll need to create a PostgreSQL instance in RDS.
+Terraform will provision a database for you (see the AWS section below), otherwise you will need to manually create a PostgreSQL instance in RDS.
 
 > NOTE: Make sure the database is publically accessible if you want to access it from your local developer setup.
 
-Create new tables with the following SQL commands:
+## Load data
+
+If you want to start with some data in the database so you don't have to run the ML pipeline first, run the following commands:
+
+```
+wget https://pkgpkr-models.s3.amazonaws.com/database.dump
+psql -h <DB host> -U <DB user> <DB name> < database.dump
+```
+
+## Fresh start
+
+If you want to populate the database with data from scratch, create new tables with the following SQL commands before running the ML pipeline:
 
 ```
 CREATE TABLE applications (
