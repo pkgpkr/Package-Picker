@@ -9,6 +9,28 @@
   <div class="container">
     <div class="content is-medium">
       <h2>Package recommendations for {{ repository_name }}</h2>
+
+      <div class="dropdown is-hoverable">
+          <div class="dropdown-trigger">
+            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+              <span>{{ current_branch }}</span>
+              <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+              </span>
+            </button>
+          </div>
+          <div class="dropdown-menu" id="dropdown-menu" role="menu">
+              <div class="dropdown-content">
+                  {% for branch_name in branch_names %}
+
+                      <a href="?branch={{ branch_name }}" class="dropdown-item">
+                        {{ branch_name }}
+                      </a>
+                  {% endfor %}
+              </div>
+          </div>
+        </div>
+
       <p>
         This tool recommends packages that frequently appear alongside the packages
         in {{ repository_name }}. A score of 10 indicates that the packages are

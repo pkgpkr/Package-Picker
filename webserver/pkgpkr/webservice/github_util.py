@@ -62,6 +62,11 @@ def get_repositories(token):
                 user(login: $userString) {
                     repositories(first:100) {
                       nodes {
+                        refs(first: 100, refPrefix: "refs/heads/") {
+                          nodes {
+                            name
+                          }
+                        }
                         updatedAt
                         nameWithOwner
                         object(expression: "master:package.json") {
@@ -104,23 +109,29 @@ def dependencies_name_to_purl(dependencies):
     return purl_dependencies
 
 
-
-
-def get_dependencies(token, repo_full_name):
+def get_dependencies(token, repo_full_name, branch_name):
     """
     Gets repository info for a specific repo (from package.json)
-    :param repo_full_name:
-    :return:
+    :param token: GitHub token for auth
+    :param repo_full_name: repo name with user name
+    :param branch_name: specific branch to fetch dependencies for, or MASTER (default)
+    :return: dependencies and all branch names
     """
+
     # Split qualified repo name into user nae and repo name
     user_name, repo_name = repo_full_name.split('/')
 
     # Query to get package info
     query = """
-                query GetDependencies($userString: String!, $repositoryString: String!) {
+                  query GetDependencies($userString: String!, $repositoryString: String!, $expression: String!) {
                   repository(name:$repositoryString, owner:$userString){
                     name
-                    object(expression:"master:package.json"){
+                    refs(first: 100, refPrefix: "refs/heads/") {
+                          nodes {
+                            name
+                          }
+                    }
+                    object(expression:$expression){
                       ... on Blob {
                         text
                       }
@@ -129,8 +140,11 @@ def get_dependencies(token, repo_full_name):
                 }
                 """
 
+    # Creat expression with branch name in it
+    expression = f"{branch_name}:package.json"
+
     # Vars for the query
-    variables = f'{{"userString": "{user_name}", "repositoryString": "{repo_name}"}}'
+    variables = f'{{"userString": "{user_name}", "repositoryString": "{repo_name}", "expression": "{expression}"}}'
 
     # Construct payload for graphql
     payload = {'query': query,
@@ -144,8 +158,10 @@ def get_dependencies(token, repo_full_name):
     # Fetch the text that contains the package.json inner text
     text_response = res.json()['data']['repository']['object']['text']
 
+    # Fetch branch names
+    branch_names = [x['name'] for x in res.json()['data']['repository']['refs']['nodes']]
 
-    return parse_dependencies(text_response)
+    return parse_dependencies(text_response), branch_names
 
 
 def parse_dependencies(text_response):
