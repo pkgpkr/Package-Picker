@@ -20,8 +20,7 @@ resource "aws_sfn_state_machine" "run_ml_pipeline" {
       "Parameters": {
         "LaunchType": "FARGATE",
         "Cluster": "${aws_ecs_cluster.pkgpkr.arn}",
-        "TaskDefinition": "${aws_ecs_task_definition.pipeline.arn}",
-        "TaskDefinition": "arn:aws:ecs:${data.aws_region.current}:${data.aws_caller_identity.current}:task-definition/${aws_ecs_task_definition.pipeline.family}",
+        "TaskDefinition": "${format("arn:aws:ecs:%s:%s:task-definition/%s", data.aws_region.current.name, data.aws_caller_identity.current.account_id, aws_ecs_task_definition.pipeline.family)}",
         "NetworkConfiguration": {
           "AwsvpcConfiguration": {
             "Subnets": [
