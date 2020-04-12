@@ -21,7 +21,7 @@ GITHUB_V4_URL = 'https://api.github.com/graphql'
 
 def write_db(database, result):
     """
-    Write a set of repositories and their dependencies to the database
+    Write a set of repositories and their dependencies to the database for JS packages
     """
 
     nodes = [edge['node'] for edge in result['data']['search']['edges']]
@@ -61,6 +61,36 @@ def write_db(database, result):
     database.commit()
 
 
+def write_db_python(database, result):
+    """
+    Write a set of repositories and their dependencies to the database for python packages
+    """
+
+    nodes = [edge['node'] for edge in result['data']['search']['edges']]
+    for node in nodes:
+        if not node['object']:
+            continue
+        package_str = node['object']['text']
+        packages = package_str.splitlines()
+        hash_value = hash(package_str)
+        application_id = insert_to_app(database,
+                                       node['url'],
+                                       node['watchers']['totalCount'],
+                                       node['nameWithOwner'],
+                                       hash_value)
+        for package in packages:
+            try:
+                line = package.split("==")
+                package_name = line[0]
+                package_version = line[1]
+                dependency_str = 'pkg:npm/' + package_name + "@" + package_version
+                package_id = insert_to_package(database, dependency_str)
+                insert_to_dependencies(database, str(application_id), str(package_id))
+            except:
+                continue
+    database.commit()
+
+
 def run_query(today, language='JavaScript'):
     """
     Fetch all repositories for the given month
@@ -75,7 +105,7 @@ def run_query(today, language='JavaScript'):
     while True:
         try:
             result = run_query_once(MAX_NODES_PER_LOOP, monthly_search_str, last_node, language)
-            write_db(database, result)
+            write_db(database, result) if language == "JavaScript" else write_db_python(database, result)
             if len(result['data']['search']['edges']) > 0:
                 last_node = result['data']['search']['edges'][-1]['cursor']
             else:
@@ -129,9 +159,6 @@ def run_query_once(node_per_loop, monthly_search_str, cursor, language):
     request = requests.post(GITHUB_V4_URL, json={'query': query, 'variables': variables},
                             headers=HEADERS)
     try:
-        if language == "JavaScript":
-            return request.json()
-        else:
-            return request
+        return request.json()
     except:
         raise Exception("request failed!")

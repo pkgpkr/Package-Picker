@@ -91,6 +91,11 @@ class TestMyClass(unittest.TestCase):
             try:
                 result = run_query_once(i, month_str, cursor, "JavaScript")
                 self.assertIsNotNone(result['data']['search']['edges'])
+                print("\nJS query finished")
+                result = None
+                result = run_query_once(i, month_str, cursor, "Python")
+                self.assertIsNotNone(result['data']['search']['edges'])
+                print("\nPython query finished")
             except ValueError:
                 self.assertIsNone(result['data']['search']['edges'])
 
