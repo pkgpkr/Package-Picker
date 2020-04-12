@@ -23,7 +23,7 @@ CLIENT_SECRET         # Secret for the GitHub app
 DB_HOST               # Database URL
 DB_PASSWORD           # Database password
 DB_USER               # Database user
-DOMAIN_NAME           # The domain name where the site is hosted
+DOMAIN_NAME           # The domain name where the site is hosted (e.g. http://pkgpkr.com)
 MONTH                 # How many months of data to scrape
 SELENIUM_TEST         # Set if running Selenium tests
 TOKEN                 # Your GitHub API token
@@ -89,7 +89,7 @@ terraform init
 
 1. `terraform apply` (don't provide a value for `DOMAIN_NAME`)
 2. Create a new GitHub OAuth application with a `http://<ELB DNS name>/callback` URL that maps to the load balancer DNS name that was just provisioned
-3. Update your CLIENT_ID and CLIENT_SECRET secrets in GitHub
+3. Update your CLIENT_ID, CLIENT_SECRET, and DOMAIN_NAME secrets in GitHub
 4. Commit the changes from step 1 to trigger a new image deployment
 5. Open the load balancer DNS name in your browser
 
