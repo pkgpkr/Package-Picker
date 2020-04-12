@@ -77,7 +77,7 @@ jobs:
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
-        task-definition: ./pipeline/task-definition-ecs.json
+        task-definition: ./terraform/task-definitions/pkgpkr-pipeline.json
         container-name: nginx
         image: ${{ steps.build-image.outputs.image }}
 
