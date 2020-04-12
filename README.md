@@ -81,6 +81,9 @@ SELENIUM_TEST=1 CLIENT_ID=$CLIENT_ID CLIENT_SECRET=$CLIENT_SECRET DB_HOST=$DB_HO
 1. Run `terraform apply`
 2. Don't provide a value for 'DOMAIN_NAME'
 3. Create a new GitHub OAuth application with a callback URL that maps to the load balancer DNS name that was just provisioned
+4. Update the following task definition files with the execution role ARN created by Terraform
+  1. pipeline/task-definition-ecs.json
+  2. webserver/pkgpkr/task-definition-ecs.json
 4. Commit something to the pipeline/ and webserver/pkgpkr/ folders to trigger a new image deployment
 
 # Pull Request
