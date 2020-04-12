@@ -88,14 +88,17 @@ terraform init
 ## No custom domain
 
 1. `terraform apply` (don't provide a value for `DOMAIN_NAME`)
-2. Create a new GitHub OAuth application with a callback URL that maps to the load balancer DNS name that was just provisioned
-3. Commit the changes from step 1 to trigger a new image deployment
+2. Create a new GitHub OAuth application with a `http://<ELB DNS name>/callback` URL that maps to the load balancer DNS name that was just provisioned
+3. Update your CLIENT_ID and CLIENT_SECRET secrets in GitHub
+4. Commit the changes from step 1 to trigger a new image deployment
+5. Open the load balancer DNS name in your browser
 
 ## pkgpkr.com domain only
 
-1. Run `terraform apply` (provide `pkgpkr.com` for `DOMAIN_NAME`)
-2. Update the `pkgpkr.com` and `*.pkgpkr.com` entries in the `pkgpkr.com` hosted zone to point at the ELB DNS name.
+1. `terraform apply` (provide `pkgpkr.com` for `DOMAIN_NAME`)
+2. Update the `pkgpkr.com` and `*.pkgpkr.com` entries in the `pkgpkr.com` hosted zone to point at the ELB DNS name
 3. Commit the changes from step 1 to trigger a new image deployment
+4. Open pkgpkr.com in your web browser (it may take up to 5 minutes for the TTL on pkgpkr.com to expire)
 
 # Pull Request
 
