@@ -9,7 +9,7 @@ resource "aws_ecs_cluster" "pkgpkr" {
 resource "aws_ecs_service" "web" {
   name = "pkgpkr-web"
   cluster = aws_ecs_cluster.pkgpkr.id
-  task_definition = aws_ecs_task_definition.web.arn
+  task_definition = format("arn:aws:ecs:%s:%s:task-definition/%s", data.aws_region.current.name, data.aws_caller_identity.current.account_id, aws_ecs_task_definition.web.family)
   desired_count = 1
   launch_type = "FARGATE"
 

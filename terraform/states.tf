@@ -2,9 +2,6 @@
  * Set up daily trigger of the ML pipeline
  */
 
-data "aws_region" "current" {}
-data "aws_caller_identity" "current" {}
-
 // State machine which manages the execution of our ML pipeline
 resource "aws_sfn_state_machine" "run_ml_pipeline" {
   name = "RunMLPipelineDaily"
