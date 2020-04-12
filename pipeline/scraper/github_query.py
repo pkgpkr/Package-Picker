@@ -16,32 +16,6 @@ HEADERS = {"Authorization": "Bearer " + os.environ['TOKEN']}
 MAX_NODES_PER_LOOP = 100
 NUMBER_REGEX = re.compile(r'\d+')
 
-QUERY = """
-    query SearchMostTop10Star($queryString: String!, $maybeAfter: String, $numberOfNodes: Int) {
-    search(query: $queryString, type: REPOSITORY, first: $numberOfNodes, after: $maybeAfter) {
-        edges {
-        node {
-            ... on Repository {
-            nameWithOwner
-            url
-            watchers {
-                totalCount
-            }
-            object(expression: "master:package.json") {
-                ... on Blob {
-                text
-                }
-            }
-            }
-        }
-        cursor
-        }
-        repositoryCount
-    }
-    }
-    """
-
-SEARCH_QUERY = "topic:JavaScript stars:>1"
 GITHUB_V4_URL = 'https://api.github.com/graphql'
 
 
@@ -87,7 +61,7 @@ def write_db(database, result):
     database.commit()
 
 
-def run_query(today):
+def run_query(today, language='JavaScript'):
     """
     Fetch all repositories for the given month
     """
@@ -100,7 +74,7 @@ def run_query(today):
     monthly_search_str = get_monthly_search_str(today)
     while True:
         try:
-            result = run_query_once(MAX_NODES_PER_LOOP, monthly_search_str, last_node)
+            result = run_query_once(MAX_NODES_PER_LOOP, monthly_search_str, last_node, language)
             write_db(database, result)
             if len(result['data']['search']['edges']) > 0:
                 last_node = result['data']['search']['edges'][-1]['cursor']
@@ -114,17 +88,45 @@ def run_query(today):
     database.close()
 
 
-def run_query_once(node_per_loop, monthly_search_str, cursor):
+def run_query_once(node_per_loop, monthly_search_str, cursor, language):
     """
     Fetch a single page of repositories for the given month
     """
 
+    expressionStr = "master:package.json" if language == "JavaScript" else "master:requirements.txt"
+    query = """
+        query SearchMostTop10Star($queryString: String!, $maybeAfter: String, $numberOfNodes: Int, $expressionStr: String!) {
+        search(query: $queryString, type: REPOSITORY, first: $numberOfNodes, after: $maybeAfter) {
+            edges {
+            node {
+                ... on Repository {
+                nameWithOwner
+                url
+                watchers {
+                    totalCount
+                }
+                object(expression: $expressionStr) {
+                    ... on Blob {
+                    text
+                    }
+                }
+                }
+            }
+            cursor
+            }
+            repositoryCount
+        }
+        }
+        """
+
     variables = {
-        "queryString": f"{SEARCH_QUERY} {monthly_search_str}",
+        "queryString": f"topic:{language} stars:>1 {monthly_search_str}",
         "maybeAfter": cursor,
-        "numberOfNodes": node_per_loop
+        "numberOfNodes": node_per_loop,
+        "expressionStr": expressionStr
     }
-    request = requests.post(GITHUB_V4_URL, json={'query': QUERY, 'variables': variables},
+    
+    request = requests.post(GITHUB_V4_URL, json={'query': query, 'variables': variables},
                             headers=HEADERS)
     try:
         return request.json()
