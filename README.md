@@ -29,11 +29,19 @@ SELENIUM_TEST         # Set if running Selenium tests
 TOKEN                 # Your GitHub API token
 ```
 
-# Run locally
+# Database
+
+Terraform does NOT provision a database for you, so you'll need to create a PostgreSQL instance in RDS.
+
+> NOTE: Make sure the database is publically accessible if you want to access it from your local developer setup.
+
+# Run
+
+## Local development
 
 NOTE: Before running any of the components, set the environment variables listed above and install Docker.
 
-## Data scraper
+### Data scraper
 
 1. Switch to the `pipeline/` folder and build the Docker image.
 
@@ -46,13 +54,13 @@ docker build --build-arg TOKEN=$TOKEN --build-arg MONTH=$MONTH --build-arg DB_US
 
 `docker run -i -t <id>`
 
-### Testing
+#### Testing
 
 Run this inside the `pipeline/` folder.
 
 `DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD DB_HOST=$DB_HOST TOKEN=$TOKEN python3 -m unittest scraper/test.py -v`
 
-## Web server
+### Web server
 
 1. Switch to the `webserver/pkgpkr/` folder and build the Docker image.
 
@@ -67,7 +75,7 @@ docker build --build-arg DOMAIN_NAME=$DOMAIN_NAME --build-arg CLIENT_ID=$CLIENT_
 
 3. When the web server starts, open your browser to http://localhost:8000
 
-### Testing
+#### Testing
 
 Run this inside the `webserver/pkgpkr` folder.
 
@@ -76,7 +84,7 @@ python3 manage.py collectstatic
 SELENIUM_TEST=1 CLIENT_ID=$CLIENT_ID CLIENT_SECRET=$CLIENT_SECRET DB_HOST=$DB_HOST DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD python3 manage.py test
 ```
 
-# Run on AWS
+## AWS
 
 Install Terraform and initialize it within the `terraform/` folder.
 
@@ -85,7 +93,7 @@ cd terraform
 terraform init
 ```
 
-## No custom domain
+### No custom domain
 
 1. `terraform apply` (don't provide a value for `DOMAIN_NAME`)
 2. Create a new GitHub OAuth application with a `http://<ELB DNS name>/callback` URL that maps to the load balancer DNS name that was just provisioned
@@ -93,7 +101,7 @@ terraform init
 4. Commit the changes from step 1 to trigger a new image deployment
 5. Open the load balancer DNS name in your browser
 
-## pkgpkr.com domain only
+### pkgpkr.com domain only
 
 1. `terraform apply` (provide `pkgpkr.com` for `DOMAIN_NAME`)
 2. Update the `pkgpkr.com` and `*.pkgpkr.com` entries in the `pkgpkr.com` hosted zone to point at the ELB DNS name

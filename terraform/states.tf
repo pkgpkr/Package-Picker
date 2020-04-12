@@ -2,6 +2,9 @@
  * Set up daily trigger of the ML pipeline
  */
 
+data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
+
 // State machine which manages the execution of our ML pipeline
 resource "aws_sfn_state_machine" "run_ml_pipeline" {
   name = "RunMLPipelineDaily"
@@ -18,6 +21,7 @@ resource "aws_sfn_state_machine" "run_ml_pipeline" {
         "LaunchType": "FARGATE",
         "Cluster": "${aws_ecs_cluster.pkgpkr.arn}",
         "TaskDefinition": "${aws_ecs_task_definition.pipeline.arn}",
+        "TaskDefinition": "arn:aws:ecs:${data.aws_region.current}:${data.aws_caller_identity.current}:task-definition/${aws_ecs_task_definition.pipeline.family}",
         "NetworkConfiguration": {
           "AwsvpcConfiguration": {
             "Subnets": [
