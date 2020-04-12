@@ -32,7 +32,8 @@ resource "aws_ecs_service" "web" {
   }
 
   depends_on = [
-    aws_lb_listener.web
+    aws_lb_listener.http,
+    aws_lb_listener.https
   ]
 }
 
