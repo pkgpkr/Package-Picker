@@ -117,6 +117,18 @@ resource "aws_iam_role_policy" "run_ml_pipeline" {
 PATTERN
 }
 
+resource "aws_ecs_task_definition" "pipeline" {
+  execution_role_arn = "arn:aws:iam::392133285793:role/ecsTaskExecutionRole"
+  container_definitions = file("task-definitions/pkgpkr-pipeline.json")
+  memory = "4096"
+  family = "pkgpkr-ml-task-definition"
+  requires_compatibilities = [
+    "FARGATE"
+  ]
+  network_mode = "awsvpc"
+  cpu = "2048"
+}
+
 // State machine which manages the execution of our ML pipeline
 resource "aws_sfn_state_machine" "run_ml_pipeline" {
   name = "RunMLPipelineDaily"
@@ -132,7 +144,7 @@ resource "aws_sfn_state_machine" "run_ml_pipeline" {
       "Parameters": {
         "LaunchType": "FARGATE",
         "Cluster": "${aws_ecs_cluster.pkgpkr.arn}",
-        "TaskDefinition": "arn:aws:ecs:us-east-1:392133285793:task-definition/pkgpkr-ml-task-definition",
+        "TaskDefinition": "${aws_ecs_task_definition.pipeline.arn}",
         "NetworkConfiguration": {
           "AwsvpcConfiguration": {
             "Subnets": [
