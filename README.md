@@ -1,4 +1,4 @@
-![ML Pipeline Tests](https://github.com/pkgpkr/Package-Picker/workflows/Scraper%20Test%20CI/badge.svg) ![ML Pipeline Deploy](https://github.com/pkgpkr/Package-Picker/workflows/Deploy%20ML%20Pipeline%20to%20Amazon%20ECS/badge.svg) ![Webserver Tests](https://github.com/pkgpkr/Package-Picker/workflows/Webserver%20Django%20CI/badge.svg) ![Webserver Deploy](https://github.com/pkgpkr/Package-Picker/workflows/Deploy%20to%20Amazon%20ECS/badge.svg)
+![Pipeline Tests](https://github.com/pkgpkr/Package-Picker/workflows/Scraper%20Test%20CI/badge.svg) ![Pipeline Deploy](https://github.com/pkgpkr/Package-Picker/workflows/Pipeline%20Deploy/badge.svg) ![Web Server Tests](https://github.com/pkgpkr/Package-Picker/workflows/Web%20Server%20Tests/badge.svg) ![Web Server Deploy](https://github.com/pkgpkr/Package-Picker/workflows/Web%20Server%20Deploy/badge.svg)
 
 # Intro
 
