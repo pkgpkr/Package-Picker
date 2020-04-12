@@ -16,7 +16,7 @@
       }
     ],
     "cpu": 2048,
-    "memoryReservation": 512,
+    "memoryReservation": 4096,
     "image": "nginx:latest",
     "essential": true,
     "name": "nginx"
