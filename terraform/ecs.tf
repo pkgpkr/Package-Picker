@@ -41,7 +41,7 @@ resource "aws_ecs_service" "web" {
 
 resource "aws_ecs_task_definition" "web" {
   execution_role_arn = aws_iam_role.execute_task.arn
-  container_definitions = file("task-definitions/pkgpkr-web-service.json")
+  container_definitions = file("task-definitions/pkgpkr-web-container.json")
   memory = "512"
   family = "pkgpkr-web-task-definition"
   requires_compatibilities = [
@@ -55,7 +55,7 @@ resource "aws_ecs_task_definition" "web" {
 
 resource "aws_ecs_task_definition" "pipeline" {
   execution_role_arn = aws_iam_role.execute_task.arn
-  container_definitions = file("task-definitions/pkgpkr-pipeline.json")
+  container_definitions = file("task-definitions/pkgpkr-pipeline-container.json")
   memory = "4096"
   family = "pkgpkr-ml-task-definition"
   requires_compatibilities = [
@@ -63,4 +63,40 @@ resource "aws_ecs_task_definition" "pipeline" {
   ]
   network_mode = "awsvpc"
   cpu = "2048"
+}
+
+// Write task definitions to local files for use by GitHub Actions
+
+resource "local_file" "web-task-definition" {
+  filename = "../webserver/pkgpkr/task-definition-ecs.json"
+  content = <<PATTERN
+{
+  "executionRoleArn": "${aws_iam_role.execute_task.arn}",
+  "containerDefinitions": ${file("task-definitions/pkgpkr-pipeline-container.json")},
+  "memory": "512",
+  "family": "pkgpkr-web-task-definition",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "networkMode": "awsvpc",
+  "cpu": "256"
+}
+PATTERN
+}
+
+resource "local_file" "pipeline-task-definition" {
+  filename = "../pipeline/task-definition-ecs.json"
+  content = <<PATTERN
+{
+  "executionRoleArn": "${aws_iam_role.execute_task.arn}",
+  "containerDefinitions": ${file("task-definitions/pkgpkr-web-container.json")},
+  "memory": "4096",
+  "family": "pkgpkr-ml-task-definition",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "networkMode": "awsvpc",
+  "cpu": "2048"
+}
+PATTERN
 }

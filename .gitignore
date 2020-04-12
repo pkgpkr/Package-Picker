@@ -4,6 +4,7 @@
 .terraform
 *.tfstate*
 
+# Ignore static files
 webserver/pkgpkr/staticfiles/
 
 # Byte-compiled / optimized / DLL files

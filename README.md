@@ -78,13 +78,24 @@ SELENIUM_TEST=1 CLIENT_ID=$CLIENT_ID CLIENT_SECRET=$CLIENT_SECRET DB_HOST=$DB_HO
 
 # Run on AWS
 
-1. Run `terraform apply`
-2. Don't provide a value for 'DOMAIN_NAME'
-3. Create a new GitHub OAuth application with a callback URL that maps to the load balancer DNS name that was just provisioned
-4. Update the following task definition files with the execution role ARN created by Terraform
-  1. pipeline/task-definition-ecs.json
-  2. webserver/pkgpkr/task-definition-ecs.json
-4. Commit something to the pipeline/ and webserver/pkgpkr/ folders to trigger a new image deployment
+Install Terraform and initialize it within the `terraform/` folder.
+
+```
+cd terraform
+terraform init
+```
+
+## No custom domain
+
+1. `terraform apply` (don't provide a value for `DOMAIN_NAME`)
+2. Create a new GitHub OAuth application with a callback URL that maps to the load balancer DNS name that was just provisioned
+3. Commit the changes from step 1 to trigger a new image deployment
+
+## pkgpkr.com domain only
+
+1. Run `terraform apply` (provide `pkgpkr.com` for `DOMAIN_NAME`)
+2. Update the `pkgpkr.com` and `*.pkgpkr.com` entries in the `pkgpkr.com` hosted zone to point at the ELB DNS name.
+3. Commit the changes from step 1 to trigger a new image deployment
 
 # Pull Request
 

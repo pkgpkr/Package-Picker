@@ -17,7 +17,7 @@
         ],
         "cpu": 256,
         "memoryReservation": 512,
-        "image": "392133285793.dkr.ecr.us-east-1.amazonaws.com/pkgpkr:web",
+        "image": "nginx:latest",
         "essential": true,
         "name": "nginx"
     }

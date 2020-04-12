@@ -3,7 +3,7 @@
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
-        "awslogs-group": "/ecs/first-run-task-definition",
+        "awslogs-group": "/ecs/pkgpkr-web",
         "awslogs-region": "us-east-1",
         "awslogs-stream-prefix": "ecs"
       }
@@ -17,7 +17,7 @@
     ],
     "cpu": 2048,
     "memoryReservation": 512,
-    "image": "392133285793.dkr.ecr.us-east-1.amazonaws.com/pkgpkr:pipeline",
+    "image": "nginx:latest",
     "essential": true,
     "name": "nginx"
   }
