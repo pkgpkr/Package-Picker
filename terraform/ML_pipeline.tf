@@ -55,6 +55,47 @@ resource "aws_cloudwatch_event_target" "run_ml_pipeline" {
   role_arn = aws_iam_role.run_ml_pipeline.arn
 }
 
+resource "aws_iam_role" "execute_task" {
+  assume_role_policy = <<PATTERN
+{
+  "Version": "2008-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+PATTERN
+}
+
+resource "aws_iam_role_policy" "execute_task" {
+  role = aws_iam_role.execute_task.id
+  policy = <<PATTERN
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ecr:GetAuthorizationToken",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+PATTERN
+}
+
 // Role which allows our state machine to manage a task in ECS
 resource "aws_iam_role" "run_ml_pipeline" {
   assume_role_policy = <<PATTERN
@@ -118,7 +159,7 @@ PATTERN
 }
 
 resource "aws_ecs_task_definition" "pipeline" {
-  execution_role_arn = "arn:aws:iam::392133285793:role/ecsTaskExecutionRole"
+  execution_role_arn = aws_iam_role.execute_task.arn
   container_definitions = file("task-definitions/pkgpkr-pipeline.json")
   memory = "4096"
   family = "pkgpkr-ml-task-definition"

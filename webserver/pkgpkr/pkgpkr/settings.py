@@ -36,6 +36,7 @@ if os.environ.get('ECS_CONTAINER_METADATA_URI'):
     ALLOWED_HOSTS.append(CONTAINER_METADATA['Networks'][0]['IPv4Addresses'][0])
     ALLOWED_HOSTS.append(ALLOWED_DOMAIN)
     ALLOWED_HOSTS.append(f"www.{ALLOWED_DOMAIN}")
+    ALLOWED_HOSTS.append("*.amazonaws.com")
 
 # Application definition
 

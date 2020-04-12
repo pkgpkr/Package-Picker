@@ -37,7 +37,7 @@ resource "aws_ecs_service" "web" {
 }
 
 resource "aws_ecs_task_definition" "web" {
-  execution_role_arn = "arn:aws:iam::392133285793:role/ecsTaskExecutionRole"
+  execution_role_arn = aws_iam_role.execute_task.arn
   container_definitions = file("task-definitions/pkgpkr-web-service.json")
   memory = "512"
   family = "pkgpkr-web-task-definition"
