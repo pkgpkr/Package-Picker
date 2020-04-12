@@ -1,0 +1,34 @@
+{
+  "executionRoleArn": "arn:aws:iam::392133285793:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/first-run-task-definition",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "protocol": "tcp",
+          "containerPort": 80
+        }
+      ],
+      "cpu": 2048,
+      "memoryReservation": 512,
+      "image": "nginx:latest",
+      "essential": true,
+      "name": "nginx"
+    }
+  ],
+  "memory": "4096",
+  "family": "pkgpkr-ml-task-definition",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "networkMode": "awsvpc",
+  "cpu": "2048"
+}
