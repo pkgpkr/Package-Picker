@@ -72,7 +72,7 @@ CREATE TABLE similarity (
 
 ## Local development
 
-NOTE: Before running any of the components, set the environment variables listed above and install Docker.
+> NOTE: Before running any of the components, set the environment variables listed above and install Docker.
 
 ### Data scraper
 
@@ -119,11 +119,12 @@ SELENIUM_TEST=1 CLIENT_ID=$CLIENT_ID CLIENT_SECRET=$CLIENT_SECRET DB_HOST=$DB_HO
 
 ## AWS
 
-Install Terraform and initialize it within the `terraform/` folder.
+Install Terraform and initialize it within the `terraform/` folder. You'll also need to have the AWS CLI installed and configured.
 
 ```
 cd terraform
 terraform init
+aws configure
 ```
 
 ### No custom domain
