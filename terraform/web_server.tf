@@ -12,7 +12,7 @@ resource "aws_ecs_service" "web" {
   task_definition = aws_ecs_task_definition.web.arn
   desired_count = 1
   launch_type = "FARGATE"
-  
+
   network_configuration {
     subnets = [
       aws_subnet.main_1a.id,
@@ -96,4 +96,3 @@ resource "aws_cloudwatch_log_stream" "web" {
   name = "pkgpkr-web"
   log_group_name = aws_cloudwatch_log_group.web.name
 }
-

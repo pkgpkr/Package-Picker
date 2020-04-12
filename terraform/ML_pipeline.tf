@@ -133,6 +133,7 @@ resource "aws_iam_role_policy" "run_ml_pipeline" {
             ],
             "Resource": "*"
         },
+        /**
         {
             "Effect": "Allow",
             "Action": [
@@ -144,13 +145,14 @@ resource "aws_iam_role_policy" "run_ml_pipeline" {
                 "arn:aws:events:us-east-1:392133285793:rule/StepFunctionsGetEventsForECSTaskRule"
             ]
         },
+        */
         {
             "Effect": "Allow",
             "Action": [
                 "iam:PassRole"
             ],
             "Resource": [
-                "arn:aws:iam::392133285793:role/ecsTaskExecutionRole"
+                "${aws_iam_role.execute_task.id}"
             ]
         }
     ]
