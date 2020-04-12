@@ -40,6 +40,9 @@ resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.web.id
   port = "443"
   protocol = "HTTPS"
+  ssl_policy = "ELBSecurityPolicy-2016-08"
+  certificate_arn = "arn:aws:acm:us-east-1:392133285793:certificate/8968fe98-ba47-4736-ba06-498d18ef1a8d"
+
   // Only create an HTTPS listener if DOMAIN_NAME is defined
   count = var.DOMAIN_NAME == "pkgpkr.com" ? 1 : 0
 
