@@ -1,5 +1,5 @@
 {
-  "executionRoleArn": "arn:aws:iam::392133285793:role/ecsTaskExecutionRole",
+  "executionRoleArn": "arn:aws:iam::392133285793:role/terraform-20200412181925518000000002",
   "containerDefinitions": [
     {
       "logConfiguration": {
