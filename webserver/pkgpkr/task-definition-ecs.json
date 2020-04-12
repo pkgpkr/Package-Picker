@@ -59,7 +59,7 @@
   "placementConstraints": [],
   "memory": "512",
   "taskRoleArn": null,
-  "family": "first-run-task-definition",
+  "family": "pkgpkr-web-task-definition",
   "pidMode": null,
   "requiresCompatibilities": [
     "FARGATE"
