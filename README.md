@@ -35,6 +35,39 @@ Terraform does NOT provision a database for you, so you'll need to create a Post
 
 > NOTE: Make sure the database is publically accessible if you want to access it from your local developer setup.
 
+Create new tables with the following SQL commands:
+
+```
+CREATE TABLE applications (
+  id SERIAL PRIMARY KEY,
+  url TEXT NOT NULL,
+  name TEXT NOT NULL,
+  followers INTEGER,
+  hash TEXT NOT NULL,
+  retrieved TIMESTAMPTZ NOT NULL,
+  CONSTRAINT unique_url UNIQUE (url)
+);
+CREATE TABLE packages (
+  id SERIAL PRIMARY KEY,
+  name TEXT UNIQUE NOT NULL,
+  downloads_last_month INTEGER,
+  categories TEXT[],
+  modified TIMESTAMPTZ,
+  retrieved TIMESTAMPTZ NOT NULL
+);
+CREATE TABLE dependencies (
+  application_id INTEGER REFERENCES applications (id),
+  package_id INTEGER REFERENCES packages (id),
+  CONSTRAINT unique_app_to_pkg UNIQUE (application_id, package_id)
+);
+CREATE TABLE similarity (
+  package_a INTEGER REFERENCES packages (id),
+  package_b INTEGER REFERENCES packages (id),
+  similarity FLOAT(4) NOT NULL,
+  CONSTRAINT unique_pkg_to_pkg UNIQUE (package_a, package_b)
+);
+```
+
 # Run
 
 ## Local development
