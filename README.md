@@ -78,68 +78,10 @@ SELENIUM_TEST=1 CLIENT_ID=$CLIENT_ID CLIENT_SECRET=$CLIENT_SECRET DB_HOST=$DB_HO
 
 # Run on AWS
 
-## Relational Database Service (RDS)
-
-1. Create a new PostgreSQL instance.
-
-2. If you want to use this database for local testing.
-
-    1. Make sure it's in a security group that allows inbound traffic (if you want to use the database while testing locally).
-    
-    2. Configure the database to have public accessibly.
-
-
-## Elastic Container Service (ECS)
-
-1. Create an Elastic Container Registry (ECR) named `pkgpkr`.
-
-`aws ecr create-repository --repository-name pkgpkr --region us-east-1`
-
-2. Create a ECS cluster named `default` and a service named `pkgpkr-web`. The service must support Fargate and have a Load Balancer assigned to it. Follow the [Getting Started](https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east-1#/firstRun) guide for a nice wizard to guide you through the process.
-
-3. Ensure that your IAM user has permission to register images with ECR, upload task definitions to ECS, and deploy images to ECS.
-
-## Step Functions
-
-1. Create a new State Machine with the following definition.
-
-```
-{
-  "StartAt": "RunTask",
-  "Comment": "Run ML Pipeline",
-  "States": {
-    "RunTask": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::ecs:runTask.sync",
-      "Parameters": {
-        "LaunchType": "FARGATE",
-        "Cluster": "arn:aws:ecs:us-east-1:<ACCOUNT_ID>:cluster/default",
-        "TaskDefinition": "arn:aws:ecs:us-east-1:<ACCOUNT_ID>:task-definition/pkgpkr-ml-task-definition",
-        "NetworkConfiguration": {
-          "AwsvpcConfiguration": {
-            "Subnets": [
-              <SUBNET_LIST>
-            ],
-            "AssignPublicIp": "ENABLED",
-            "SecurityGroups": [
-              <SECURITY_GROUP_LIST>
-            ]
-          }
-        }
-      },
-      "End": true
-    }
-  }
-}
-```
-
-2. Create a new IAM Role that will allow the State Machine to execute tasks in our ECS cluster.
-
-## CloudWatch
-
-1. Create a new Rule that is scheduled to run daily and execute the State Machine you created.
-
-2. Create a new IAM Role that will allow the Rule to execute the State Machine.
+1. Run `terraform apply`
+2. Don't provide a value for 'DOMAIN_NAME'
+3. Create a new GitHub OAuth application with a callback URL that maps to the load balancer DNS name that was just provisioned
+4. Commit something to the pipeline/ and webserver/pkgpkr/ folders to trigger a new image deployment
 
 # Pull Request
 

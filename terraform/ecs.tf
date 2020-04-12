@@ -32,9 +32,12 @@ resource "aws_ecs_service" "web" {
   }
 
   depends_on = [
-    aws_lb_listener.web
+    aws_lb_listener.http,
+    aws_lb_listener.https
   ]
 }
+
+// Task definition for web service
 
 resource "aws_ecs_task_definition" "web" {
   execution_role_arn = aws_iam_role.execute_task.arn
@@ -48,51 +51,16 @@ resource "aws_ecs_task_definition" "web" {
   cpu = "256"
 }
 
-resource "aws_lb" "web" {
-  subnets = [
-    aws_subnet.main_1a.id,
-    aws_subnet.main_1b.id
+// Task definition for ML pipeline service
+
+resource "aws_ecs_task_definition" "pipeline" {
+  execution_role_arn = aws_iam_role.execute_task.arn
+  container_definitions = file("task-definitions/pkgpkr-pipeline.json")
+  memory = "4096"
+  family = "pkgpkr-ml-task-definition"
+  requires_compatibilities = [
+    "FARGATE"
   ]
-
-  security_groups = [
-    aws_security_group.alb.id
-  ]
-}
-
-resource "aws_lb_target_group" "web" {
-  target_type = "ip"
-  port = 80
-  protocol = "HTTP"
-  vpc_id = aws_vpc.main.id
-}
-
-resource "aws_lb_listener" "web" {
-  load_balancer_arn = aws_lb.web.id
-  port = "80"
-  protocol = "HTTP"
-
-  // TODO: Set up SSL and a separate listener on 443, then redirect this to 443
-  /*default_action {
-    type = "redirect"
-
-    redirect {
-      port = "443"
-      protocol = "HTTPS"
-      status_code = "HTTP_301"
-    }
-  }*/
-  default_action {
-    type = "forward"
-    target_group_arn = aws_lb_target_group.web.arn
-  }
-}
-
-resource "aws_cloudwatch_log_group" "web" {
-  name = "/ecs/pkgpkr-web"
-  retention_in_days = 30
-}
-
-resource "aws_cloudwatch_log_stream" "web" {
-  name = "pkgpkr-web"
-  log_group_name = aws_cloudwatch_log_group.web.name
+  network_mode = "awsvpc"
+  cpu = "2048"
 }
