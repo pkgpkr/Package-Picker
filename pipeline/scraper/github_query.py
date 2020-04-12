@@ -125,10 +125,13 @@ def run_query_once(node_per_loop, monthly_search_str, cursor, language):
         "numberOfNodes": node_per_loop,
         "expressionStr": expressionStr
     }
-    
+
     request = requests.post(GITHUB_V4_URL, json={'query': query, 'variables': variables},
                             headers=HEADERS)
     try:
-        return request.json()
+        if language == "JavaScript":
+            return request.json()
+        else:
+            return request
     except:
         raise Exception("request failed!")

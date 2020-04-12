@@ -88,7 +88,7 @@ class TestMyClass(unittest.TestCase):
         cursor = None
         for i in [1, 10, 100]:
             try:
-                result = run_query_once(i, month_str, cursor)
+                result = run_query_once(i, month_str, cursor, "JavaScript")
                 self.assertIsNotNone(result['data']['search']['edges'])
             except ValueError:
                 self.assertIsNone(result['data']['search']['edges'])
