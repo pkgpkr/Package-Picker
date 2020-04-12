@@ -1,5 +1,5 @@
 /**
- * Set up daily trigger of the ML pipeline
+ * Roles and permissions
  */
 
 // Policy permitting someone to invoke a step function
@@ -39,20 +39,6 @@ resource "aws_iam_role" "invoke_step_function" {
   ]
 }
 PATTERN
-}
-
-// Rule to trigger a run of our ML pipeline once per day
-resource "aws_cloudwatch_event_rule" "run_ml_pipeline" {
-  role_arn = aws_iam_role.invoke_step_function.arn
-  description = "Run the pkgpkr ML Pipeline every day"
-  schedule_expression = "rate(1 day)"
-}
-
-// Event target which glues our CloudWatch rule to our State Machine
-resource "aws_cloudwatch_event_target" "run_ml_pipeline" {
-  rule = aws_cloudwatch_event_rule.run_ml_pipeline.name
-  arn = aws_sfn_state_machine.run_ml_pipeline.id
-  role_arn = aws_iam_role.run_ml_pipeline.arn
 }
 
 resource "aws_iam_role" "execute_task" {
@@ -129,81 +115,23 @@ resource "aws_iam_role_policy" "run_ml_pipeline" {
             "Action": [
                 "ecs:RunTask",
                 "ecs:StopTask",
-                "ecs:DescribeTasks"
-            ],
-            "Resource": "*"
-        },
-        /**
-        {
-            "Effect": "Allow",
-            "Action": [
+                "ecs:DescribeTasks",
                 "events:PutTargets",
                 "events:PutRule",
                 "events:DescribeRule"
             ],
-            "Resource": [
-                "arn:aws:events:us-east-1:392133285793:rule/StepFunctionsGetEventsForECSTaskRule"
-            ]
+            "Resource": "*"
         },
-        */
         {
             "Effect": "Allow",
             "Action": [
                 "iam:PassRole"
             ],
             "Resource": [
-                "${aws_iam_role.execute_task.id}"
+                "${aws_iam_role.execute_task.arn}"
             ]
         }
     ]
-}
-PATTERN
-}
-
-resource "aws_ecs_task_definition" "pipeline" {
-  execution_role_arn = aws_iam_role.execute_task.arn
-  container_definitions = file("task-definitions/pkgpkr-pipeline.json")
-  memory = "4096"
-  family = "pkgpkr-ml-task-definition"
-  requires_compatibilities = [
-    "FARGATE"
-  ]
-  network_mode = "awsvpc"
-  cpu = "2048"
-}
-
-// State machine which manages the execution of our ML pipeline
-resource "aws_sfn_state_machine" "run_ml_pipeline" {
-  name = "RunMLPipelineDaily"
-  role_arn = aws_iam_role.run_ml_pipeline.arn
-  definition = <<PATTERN
-{
-  "StartAt": "RunTask",
-  "Comment": "Run ML Pipeline",
-  "States": {
-    "RunTask": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::ecs:runTask.sync",
-      "Parameters": {
-        "LaunchType": "FARGATE",
-        "Cluster": "${aws_ecs_cluster.pkgpkr.arn}",
-        "TaskDefinition": "${aws_ecs_task_definition.pipeline.arn}",
-        "NetworkConfiguration": {
-          "AwsvpcConfiguration": {
-            "Subnets": [
-              "${aws_subnet.main_1a.id}",
-              "${aws_subnet.main_1b.id}"
-            ],
-            "AssignPublicIp": "ENABLED",
-            "SecurityGroups": [
-              "${aws_security_group.ecs.id}"
-            ]
-          }
-        }
-      },
-      "End": true
-    }
-  }
 }
 PATTERN
 }
