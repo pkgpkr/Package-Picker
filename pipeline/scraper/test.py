@@ -11,11 +11,13 @@ DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD DB_HOST=$DB_HOST TOKEN=$TOKEN \
 
 import unittest
 import datetime
+import month_calculation
 from psql import connect_to_db
 from psql import insert_to_app
 from psql import insert_to_dependencies
 from psql import insert_to_package
 from psql import update_package_metadata
+from github_query import run_query
 from github_query import run_query_once
 
 def make_orderer():
@@ -41,6 +43,15 @@ class TestMyClass(unittest.TestCase):
     """
     Tests for the ML pipeline scraper
     """
+
+    @ORDERED
+    def test_run_query(self):
+        """
+        Try fetching a month of data from the GitHub API
+        """
+
+        distant_past = datetime.date(2011, 1, 1)
+        run_query(distant_past)
 
     @ORDERED
     def test_run_query_once(self):
