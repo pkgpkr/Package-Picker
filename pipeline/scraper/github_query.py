@@ -71,7 +71,7 @@ def write_db(database, result):
             dependencies = package_json['dependencies']
             try:
                 for key, value in dependencies.items():
-                    if isinstance(value) is not str:
+                    if not isinstance(value, str):
                         continue
 
                     # Extract the major version number from the version string
