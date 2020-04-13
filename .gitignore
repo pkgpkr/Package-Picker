@@ -1,6 +1,14 @@
 .idea/
 
+# Ignore Terraform state
+.terraform
+*.tfstate*
+
+# Ignore static files
 webserver/pkgpkr/staticfiles/
+
+# Ignore database dump
+database.dump
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
