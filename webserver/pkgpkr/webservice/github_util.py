@@ -61,7 +61,7 @@ def get_repositories(token):
             query GetUserRepositories($userString: String!) {
                 user(login: $userString) {
                     repositories(first:100) {
-                      nodes {                    
+                      nodes {
                         updatedAt
                         nameWithOwner
                         object(expression: "master:package.json") {
@@ -139,7 +139,10 @@ def get_dependencies(token, repo_full_name, branch_name):
     expression = f"{branch_name}:package.json"
 
     # Vars for the query
-    variables = f'{{"userString": "{user_name}", "repositoryString": "{repo_name}", "expression": "{expression}"}}'
+    variables = f"""{{"userString": "{user_name}",
+                      "repositoryString": "{repo_name}",
+                      "expression": "{expression}"}}'
+                 """
 
     # Construct payload for graphql
     payload = {'query': query,

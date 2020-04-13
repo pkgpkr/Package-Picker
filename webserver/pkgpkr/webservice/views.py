@@ -38,8 +38,6 @@ def login(request):
         request.session['github_token'] = None  # To keep API token
         request.session['github_info'] = None  # To keep user infor (e.g. name, avatar url)
 
-    x = os.environ.get('SELENIUM_TEST')
-
     # For Selenium testing
     if os.environ.get('SELENIUM_TEST'):
         request.session['github_token'] = os.environ.get('TOKEN')
@@ -147,7 +145,9 @@ def recommendations(request, name):
     branch_name = request.GET.get('branch', default='master')
 
     # Get depencies for current repo, and branch names for the repo
-    dependencies, branch_names = github_util.get_dependencies(request.session['github_token'], repo_name, branch_name)
+    dependencies, branch_names = github_util.get_dependencies(request.session['github_token'],
+                                                              repo_name,
+                                                              branch_name)
 
     # Get predicitons
     recommended_dependencies = RECOMMENDER_SERVICE.get_recommendations(dependencies)
