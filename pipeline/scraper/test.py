@@ -11,11 +11,13 @@ DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD DB_HOST=$DB_HOST TOKEN=$TOKEN \
 
 import unittest
 import datetime
+import month_calculation
 from psql import connect_to_db
 from psql import insert_to_app
 from psql import insert_to_dependencies
 from psql import insert_to_package
 from psql import update_package_metadata
+from github_query import run_query
 from github_query import run_query_once
 
 def make_orderer():
@@ -41,6 +43,40 @@ class TestMyClass(unittest.TestCase):
     """
     Tests for the ML pipeline scraper
     """
+
+    @ORDERED
+    def test_month_delta(self):
+        """
+        Try to calculate month offsets from a given date
+        """
+
+        # Test no offset
+        november = datetime.date(2018, 10, 31)
+        self.assertEqual(month_calculation.month_delta(november, 0), datetime.date(2018, 10, 31))
+
+        # Test one offset
+        self.assertEqual(month_calculation.month_delta(november, 1), datetime.date(2018, 9, 30))
+
+        # Test 12 offset
+        self.assertEqual(month_calculation.month_delta(november, 12), datetime.date(2017, 10, 31))
+
+        # Test 60 offset
+        self.assertEqual(month_calculation.month_delta(november, 60), datetime.date(2013, 10, 31))
+
+        # Test leap year
+        self.assertEqual(month_calculation.month_delta(november, 224), datetime.date(2000, 2, 29))
+
+        # Test non-leap year
+        self.assertEqual(month_calculation.month_delta(november, 8), datetime.date(2018, 2, 28))
+
+    @ORDERED
+    def test_run_query(self):
+        """
+        Try fetching a month of data from the GitHub API
+        """
+
+        distant_past = datetime.date(2011, 1, 1)
+        run_query(distant_past)
 
     @ORDERED
     def test_run_query_once(self):
