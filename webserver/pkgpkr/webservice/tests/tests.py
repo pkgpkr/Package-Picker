@@ -83,6 +83,20 @@ class LoginTest(LiveServerTestCase):
         # Check if the user at recommendations page
         self.assertEqual("Recommendations", self.driver.title)
 
+        # Check if text in branch selector is `master`
+        branch_span = self.driver.find_element_by_xpath("//*[@class='dropdown-trigger']/button/span")
+        self.assertEqual("master", branch_span.get_attribute('textContent'))
+
+        # Click on dropdown and another branch in the Dropdown
+        branch_to_click = self.driver.find_element_by_xpath("//*[@class='dropdown-menu']/div/a[@href='?branch=test']")
+        branch_dropdown = self.driver.find_element_by_xpath("//*[@class='dropdown-trigger']/button")
+        branch_dropdown.click()
+        branch_to_click.click()
+
+        # Assure that we are looking at another branch
+        branch_span = self.driver.find_element_by_xpath("//*[@class='dropdown-trigger']/button/span")
+        self.assertEqual("test", branch_span.get_attribute('textContent'))
+
         # Category border
         category_order_ele = self.driver.find_element_by_xpath(
             "//*[@id='DataTables_Table_0']/thead/tr/th[4]")
