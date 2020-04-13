@@ -142,8 +142,8 @@ aws configure
 
 1. `terraform apply` (don't provide a value for `DOMAIN_NAME`)
 2. Create a new GitHub OAuth application with a `http://<ELB DNS name>/callback` callback URL and `http://<ELB DNS name>` homepage URL that maps to the load balancer DNS name that was just provisioned
-3. Load data into your databse if desired (see instructions above)
-4. Make sure all environment variables are set as secrets on your GitHub repository (see list above)
+3. Load data into your databse if desired (see "Database" section above)
+4. Make sure all environment variables are set as secrets on your GitHub repository (see "Set environment variables" section above)
 5. Commit the changes from step 1 to trigger a new image deployment
 6. Open the load balancer DNS name in your browser (it may take a few minutes for the deploy to finish)
 
@@ -151,8 +151,8 @@ aws configure
 
 1. `terraform apply` (provide `pkgpkr.com` for `DOMAIN_NAME`)
 2. Update the `pkgpkr.com` and `*.pkgpkr.com` entries in the `pkgpkr.com` hosted zone to point at the ELB DNS name
-3. Load data into your databse if desired (see instructions above)
-4. Make sure all environment variables are set as secrets on your GitHub repository (see list above)
+3. Load data into your databse if desired (see "Database" section above)
+4. Make sure all environment variables are set as secrets on your GitHub repository (see "Set environment variables" section above)
 5. Commit the changes from step 1 to trigger a new image deployment
 6. Open pkgpkr.com in your web browser (it may take up to 5 minutes for the TTL on pkgpkr.com to expire)
 
