@@ -16,7 +16,7 @@ NOTE: If you do not know the git CLI commands, recommend to use [sourcetree](htt
 # Set environment variables
 
 ```
-AWS_ACCESS_KEY_ID.    # Your AWS account's access key
+AWS_ACCESS_KEY_ID     # Your AWS account's access key
 AWS_SECRET_ACCESS_KEY # Your AWS account's secret access key
 CLIENT_ID             # ID of the GitHub app used by the web server
 CLIENT_SECRET         # Secret for the GitHub app

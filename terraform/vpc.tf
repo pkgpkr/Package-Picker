@@ -5,6 +5,8 @@ provider "aws" {
 
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
+  enable_dns_support = true
+  enable_dns_hostnames = true
 }
 
 /**
@@ -23,6 +25,11 @@ resource "aws_subnet" "main_1b" {
   availability_zone = "us-east-1b"
 }
 
+resource "aws_db_subnet_group" "default" {
+  name       = "main"
+  subnet_ids = ["${aws_subnet.main_1a.id}", "${aws_subnet.main_1b.id}"]
+}
+
 /**
  * Define internet gateway for the VPC
  */
@@ -38,10 +45,6 @@ resource "aws_internet_gateway" "gw" {
 
 resource "aws_route_table" "table" {
   vpc_id = aws_vpc.main.id
-
-  /*route {
-    cidr_block = "10.0.0.0/16"
-  }*/
 
   route {
     cidr_block = "0.0.0.0/0"
