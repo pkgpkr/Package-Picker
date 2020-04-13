@@ -1,9 +1,9 @@
-name: Scraper Test CI
+name: Pipeline Tests
 on:
   push:
     paths:
       - 'pipeline/scraper/**'
-      - '.github/workflows/scraper.yml'
+      - '.github/workflows/test_pipeline.yml'
 
 jobs:
   test:

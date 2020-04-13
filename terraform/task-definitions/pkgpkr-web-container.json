@@ -1,6 +1,4 @@
-{
-  "executionRoleArn": "arn:aws:iam::392133285793:role/terraform-20200413001728773100000001",
-  "containerDefinitions": [
+[
     {
         "logConfiguration": {
             "logDriver": "awslogs",
@@ -24,12 +22,3 @@
         "name": "nginx"
     }
 ]
-,
-  "memory": "512",
-  "family": "pkgpkr-web-task-definition",
-  "requiresCompatibilities": [
-    "FARGATE"
-  ],
-  "networkMode": "awsvpc",
-  "cpu": "256"
-}

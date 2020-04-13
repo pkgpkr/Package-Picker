@@ -29,8 +29,9 @@ on:
       - dev
     paths:
       - 'pipeline/**'
+      - '.github/workflows/deploy_pipeline.yml'
 
-name: Deploy ML Pipeline to Amazon ECS
+name: Pipeline Deploy
 
 jobs:
   deploy:
@@ -57,11 +58,11 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: pkgpkr
-        IMAGE_TAG: ${{ github.sha }}
+        IMAGE_TAG: pipeline
       run: |
         # Build a docker container and
         # push it to ECR so that it can
-        # be deployed to ECS.
+        # be deployed to ECS registry.
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --build-arg DB_USER=${{ secrets.DB_USER }} --build-arg DB_HOST=${{ secrets.DB_HOST }} --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }} --build-arg TOKEN=${{ secrets.TOKEN }} --build-arg MONTH=${{ secrets.MONTH }} ./pipeline
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"

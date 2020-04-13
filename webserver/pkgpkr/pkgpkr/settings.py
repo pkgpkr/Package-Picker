@@ -26,16 +26,7 @@ SECRET_KEY = '2@)h)0oz7su2wdinjl9ni5w%wa7+4l9s1c)!3%a1#ya6quow-3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-# Add the container IP address as an allowed host if it exists
-if os.environ.get('ECS_CONTAINER_METADATA_URI'):
-    ALLOWED_DOMAIN = re.match(r"https?://([^:]*)", os.environ.get("DOMAIN_NAME")).group(1)
-    METADATA_URI = os.environ['ECS_CONTAINER_METADATA_URI']
-    CONTAINER_METADATA = requests.get(METADATA_URI).json()
-    ALLOWED_HOSTS.append(CONTAINER_METADATA['Networks'][0]['IPv4Addresses'][0])
-    ALLOWED_HOSTS.append(ALLOWED_DOMAIN)
-    ALLOWED_HOSTS.append(f"www.{ALLOWED_DOMAIN}")
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
