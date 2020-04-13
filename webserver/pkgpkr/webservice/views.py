@@ -38,6 +38,8 @@ def login(request):
         request.session['github_token'] = None  # To keep API token
         request.session['github_info'] = None  # To keep user infor (e.g. name, avatar url)
 
+    x = os.environ.get('SELENIUM_TEST')
+
     # For Selenium testing
     if os.environ.get('SELENIUM_TEST'):
         request.session['github_token'] = os.environ.get('TOKEN')
@@ -156,8 +158,3 @@ def recommendations(request, name):
         'branch_names': branch_names,
         'current_branch': branch_name
     })
-
-
-# TODO revise selenium tests
-# TODO revise unittests
-# TODO revise commnets if needed

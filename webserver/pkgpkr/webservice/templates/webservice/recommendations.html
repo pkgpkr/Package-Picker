@@ -5,85 +5,92 @@
 {% endblock %}
 
 {% block body %}
-<section class="section">
-  <div class="container">
-    <div class="content is-medium">
-      <h2>Package recommendations for {{ repository_name }}</h2>
-
-      <div class="dropdown is-hoverable">
-          <div class="dropdown-trigger">
-            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-              <span>{{ current_branch }}</span>
-              <span class="icon is-small">
+    <section class="section">
+        <div class="container">
+            <div class="content is-medium">
+                <h2>Package recommendations for {{ repository_name }}</h2>
+                <p>
+                    This tool recommends packages that frequently appear alongside the packages
+                    in {{ repository_name }}. A score of 10 indicates that the packages are
+                    <em>always</em> used together.
+                </p>
+                <p>Choose a branch:</p>
+                <div class="dropdown is-hoverable">
+                    <div class="dropdown-trigger">
+                        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                            <span>{{ current_branch }}</span>
+                            <span class="icon is-small">
                 <i class="fas fa-angle-down" aria-hidden="true"></i>
               </span>
-            </button>
-          </div>
-          <div class="dropdown-menu" id="dropdown-menu" role="menu">
-              <div class="dropdown-content">
-                  {% for branch_name in branch_names %}
+                        </button>
+                    </div>
+                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                        <div class="dropdown-content">
+                            {% for branch_name in branch_names %}
 
-                      <a href="?branch={{ branch_name }}" class="dropdown-item">
-                        {{ branch_name }}
-                      </a>
-                  {% endfor %}
-              </div>
-          </div>
-        </div>
+                                <a href="?branch={{ branch_name }}" class="dropdown-item">
+                                    {{ branch_name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
 
-      <p>
-        This tool recommends packages that frequently appear alongside the packages
-        in {{ repository_name }}. A score of 10 indicates that the packages are
-        <em>always</em> used together.
-      </p>
-      <table>
-        <tr>
-          <td id="selected-category">Selected Category: </td>
-          <td id="selected-category-input"><input type="text" id="categoryName" name="categoryName" disabled></td>
-          <td><button id="categoryClear" class="button is-light is-small" onclick="categoryClear()">Clear</button></td>
-        </tr>
-      </table>
-      <div class="recommendation-filter">
-        <p class="control has-icons-right">
-          <input id="recommendationFilter" class="input" type="text" placeholder="Search">
-          <span class="icon is-small is-right">
+                <table>
+                    <tr>
+                        <td id="selected-category">Selected Category:</td>
+                        <td id="selected-category-input"><input type="text" id="categoryName" name="categoryName"
+                                                                disabled></td>
+                        <td>
+                            <button id="categoryClear" class="button is-light is-small" onclick="categoryClear()">
+                                Clear
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+                <div class="recommendation-filter">
+                    <p class="control has-icons-right">
+                        <input id="recommendationFilter" class="input" type="text" placeholder="Search">
+                        <span class="icon is-small is-right">
             <i class="fas fa-search"></i>
           </span>
-        </p>
-      </div>
-      <div class="table-container">
-        <table class="display-data-tables">
-          <thead>
-            <tr>
-              <th>Package</th>
-              <th>Recommendation</th>
-              <th>Score</th>
-              <th>Category</th>
-              <th>Downloads</th>
-              <th id="version-date-header">Version Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for recommendation in recommendations %}
-              <tr>
-                <td>{{ recommendation.package }}</td>
-                <td><a target="_blank" href="{{ recommendation.url }}">{{ recommendation.recommendation }}</td>
-                <td>{{ recommendation.similarity }}</td>
-                <td>
-                  {% for keyword in recommendation.keywords %}
-                  <div class="buttons" style="margin-bottom: 0; display:inline-block;">
-                    <button class="button is-info is-light is-small is-hovered" onclick="categoryClick('{{ keyword }}')">{{ keyword }}</button>
-                  </div>
-                  {% endfor %}
-                </td>
-                <td>{{ recommendation.average_downloads }}</td>
-                <td>{{ recommendation.date }}</td>
-              </tr>
-            {% endfor %}
-          <tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</section>
+                    </p>
+                </div>
+                <div class="table-container">
+                    <table class="display-data-tables">
+                        <thead>
+                        <tr>
+                            <th>Package</th>
+                            <th>Recommendation</th>
+                            <th>Score</th>
+                            <th>Category</th>
+                            <th>Downloads</th>
+                            <th id="version-date-header">Version Date</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for recommendation in recommendations %}
+                            <tr>
+                                <td>{{ recommendation.package }}</td>
+                                <td><a target="_blank"
+                                       href="{{ recommendation.url }}">{{ recommendation.recommendation }}</td>
+                                <td>{{ recommendation.similarity }}</td>
+                                <td>
+                                    {% for keyword in recommendation.keywords %}
+                                        <div class="buttons" style="margin-bottom: 0; display:inline-block;">
+                                            <button class="button is-info is-light is-small is-hovered"
+                                                    onclick="categoryClick('{{ keyword }}')">{{ keyword }}</button>
+                                        </div>
+                                    {% endfor %}
+                                </td>
+                                <td>{{ recommendation.average_downloads }}</td>
+                                <td>{{ recommendation.date }}</td>
+                            </tr>
+                        {% endfor %}
+                        <tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}

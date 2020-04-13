@@ -61,12 +61,7 @@ def get_repositories(token):
             query GetUserRepositories($userString: String!) {
                 user(login: $userString) {
                     repositories(first:100) {
-                      nodes {
-                        refs(first: 100, refPrefix: "refs/heads/") {
-                          nodes {
-                            name
-                          }
-                        }
+                      nodes {                    
                         updatedAt
                         nameWithOwner
                         object(expression: "master:package.json") {
