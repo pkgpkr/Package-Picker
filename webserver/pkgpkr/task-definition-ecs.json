@@ -1,5 +1,5 @@
 {
-  "executionRoleArn": "arn:aws:iam::392133285793:role/terraform-20200412223212341900000002",
+  "executionRoleArn": "arn:aws:iam::392133285793:role/terraform-20200413001728773100000001",
   "containerDefinitions": [
     {
         "logConfiguration": {

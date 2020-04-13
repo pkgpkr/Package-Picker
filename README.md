@@ -141,7 +141,7 @@ aws configure
 ### No custom domain
 
 1. `terraform apply` (don't provide a value for `DOMAIN_NAME`)
-2. Create a new GitHub OAuth application with a `http://<ELB DNS name>/callback` URL that maps to the load balancer DNS name that was just provisioned
+2. Create a new GitHub OAuth application with a `http://<ELB DNS name>/callback` callback URL and `http://<ELB DNS name>` homepage URL that maps to the load balancer DNS name that was just provisioned
 3. Update your CLIENT_ID, CLIENT_SECRET, and DOMAIN_NAME secrets in GitHub
 4. Commit the changes from step 1 to trigger a new image deployment
 5. Open the load balancer DNS name in your browser
