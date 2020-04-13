@@ -141,7 +141,7 @@ def get_dependencies(token, repo_full_name, branch_name):
     # Vars for the query
     variables = f"""{{"userString": "{user_name}",
                       "repositoryString": "{repo_name}",
-                      "expression": "{expression}"}}'
+                      "expression": "{expression}"}}
                  """
 
     # Construct payload for graphql
