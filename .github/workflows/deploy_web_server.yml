@@ -32,12 +32,6 @@ on:
     paths:
       - 'webserver/pkgpkr/**'
       - '.github/workflows/deploy_web_server.yml'
-  pull_request:
-    branches:
-      - dev
-    paths:
-      - 'webserver/pkgpkr/**'
-      - '.github/workflows/deploy_web_server.yml'
 
 jobs:
   deploy:

@@ -30,12 +30,6 @@ on:
     paths:
       - 'pipeline/**'
       - '.github/workflows/deploy_pipeline.yml'
-  pull_request:
-    branches:
-      - dev
-    paths:
-      - 'pipeline/**'
-      - '.github/workflows/deploy_pipeline.yml'
 
 name: Pipeline Deploy
 
