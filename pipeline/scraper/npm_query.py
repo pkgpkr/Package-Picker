@@ -75,10 +75,10 @@ def run_query():
         print(f"Fetching metadata for {result}")
         metadata = get_package_metadata(result)
         update_package_metadata(database,
-                              metadata['name'],
-                              metadata['downloads_last_month'],
-                              metadata['categories'],
-                              metadata['modified'])
+                                metadata['name'],
+                                metadata['downloads_last_month'],
+                                metadata['categories'],
+                                metadata['modified'])
 
         # Commit the changes to the database
         database.commit()

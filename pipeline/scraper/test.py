@@ -86,7 +86,6 @@ class TestMyClass(unittest.TestCase):
 
         month_str = "created:2020-01-01..2020-02-01"
         cursor = None
-        result = None
         for i in [1, 10, 100]:
             try:
                 result = run_query_once(i, month_str, cursor, "JavaScript")
@@ -94,10 +93,11 @@ class TestMyClass(unittest.TestCase):
                 print("\nJS query finished")
                 result = None
                 result = run_query_once(i, month_str, cursor, "Python")
+                print(result)
                 self.assertIsNotNone(result['data']['search']['edges'])
                 print("\nPython query finished")
             except ValueError:
-                self.assertIsNone(result['data']['search']['edges'])
+                self.assertIsNone(result)
 
 
     @ORDERED
