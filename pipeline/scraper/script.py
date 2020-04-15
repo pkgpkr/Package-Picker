@@ -6,7 +6,6 @@ import datetime
 import os
 import month_calculation
 from github_query import run_query
-from github_query import fetch_repos
 import npm_query
 
 
@@ -18,15 +17,12 @@ def main():
     2) Scrape package metadata from npmjs.com
     """
 
-    #today = datetime.datetime.now()
+    today = datetime.datetime.now()
 
     # Fetch applications from GitHub
-    #for i in range(0, int(os.environ['MONTH'])):
-    #    print("Fetching month " + str(i) + " of " + os.environ['MONTH'])
-    #    run_query(month_calculation.month_delta(today, i))
-
-    # Fetch Express
-    fetch_repos(['expressjs/express'])
+    for i in range(0, int(os.environ['MONTH'])):
+        print("Fetching month " + str(i) + " of " + os.environ['MONTH'])
+        run_query(month_calculation.month_delta(today, i))
 
     # Fetch package metadata from npmjs.com
     npm_query.run_query()
