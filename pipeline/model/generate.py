@@ -9,8 +9,12 @@ from pyspark.mllib.linalg import Vectors
 from pyspark.ml.feature import CountVectorizer
 from pyspark.sql.functions import col
 from pyspark.sql.functions import collect_list
+from pyspark.sql.functions import create_map
+from pyspark.sql.functions import lit
 from pyspark.sql import SparkSession
 from pyspark import SparkContext
+from itertools import chain
+
 SC = SparkContext("local[2]", "pkgpkr")
 
 # Connect to the database
@@ -52,7 +56,13 @@ SIMILARITY = MATRIX.columnSimilarities()
 
 # Convert the matrix to a DataFrame
 ENTRIES = SIMILARITY.entries.collect()
-SIMILARITY_DF = SPARK.createDataFrame(ENTRIES).toDF("package_a", "package_b", "similarity")
+SIMILARITY_DF = SPARK.createDataFrame(ENTRIES).toDF("a", "b", "similarity")
+
+# Map the package identifiers back to their pre-vectorized values
+MAPPING = create_map([lit(x) for x in chain(*enumerate(VECTORIZER_MODEL.vocabulary))])
+SIMILARITY_DF = SIMILARITY_DF.withColumn("package_a", MAPPING.getItem(col("a"))) \
+                             .withColumn("package_b", MAPPING.getItem(col("b")))
+SIMILARITY_DF = SIMILARITY_DF.drop(col("a")).drop(col("b"))
 
 # Write to the database
 URL_CONNECT = f"jdbc:postgresql://{HOST}/"
