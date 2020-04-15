@@ -64,6 +64,10 @@ SIMILARITY_DF = SIMILARITY_DF.withColumn("package_a", MAPPING.getItem(col("a")).
                              .withColumn("package_b", MAPPING.getItem(col("b")).cast("integer"))
 SIMILARITY_DF = SIMILARITY_DF.drop(col("a")).drop(col("b"))
 
+# Mirror the columns and append to the existing dataframe so we need only query the first column
+SIMILARITY_DF = SIMILARITY_DF.select('package_a', 'package_b', 'similarity') \
+                             .union(SIMILARITY_DF.select('package_b', 'package_a', 'similarity'))
+
 # Write to the database
 URL_CONNECT = f"jdbc:postgresql://{HOST}/"
 TABLE = "similarity"
