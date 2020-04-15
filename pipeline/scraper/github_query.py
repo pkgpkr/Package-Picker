@@ -81,6 +81,74 @@ def write_db(database, result):
                 continue
     database.commit()
 
+def fetch_repos(repos):
+
+    # Query string
+    repo_query = """
+        query SearchMostTop10Star($queryString: String!, $maybeAfter: String, $numberOfNodes: Int) {
+            search(query: $queryString, type: REPOSITORY, first: $numberOfNodes, after: $maybeAfter) {
+                edges {
+                    node {
+                        ... on Repository {
+                            nameWithOwner
+                            url
+                            watchers {
+                                totalCount
+                            }
+                            object(expression: "master:package.json") {
+                                ... on Blob {
+                                text
+                                }
+                            }
+                        }
+                    }
+                    cursor
+                }
+            }
+        }
+    """
+
+    # Fetch up to 100 repositories
+    repo_query_vars = {
+        "queryString": ' '.join([f"repo:{repo}" for repo in repos[:100]]),
+        "maybeAfter": None,
+        "numberOfNodes": MAX_NODES_PER_LOOP
+    }
+
+    # Connect to database
+    database = connect_to_db()
+
+    # Get Express
+    request = requests.post(GITHUB_V4_URL, json={'query': repo_query, 'variables': repo_query_vars},
+                            headers=HEADERS)
+    result = request.json()
+
+    # Parse the package.json
+    nodes = [edge['node'] for edge in result['data']['search']['edges']]
+    for node in nodes:
+        package_str = node['object']['text'].replace('\n', '').replace('\"', '"')
+        package_json = json.loads(package_str)
+
+        # Insert into database
+        hash_value = hash(package_str)
+        application_id = insert_to_app(database,
+                                       node['url'],
+                                       node['watchers']['totalCount'],
+                                       node['nameWithOwner'],
+                                       hash_value)
+        dependencies = package_json['dependencies']
+
+        for key, value in dependencies.items():
+            if not isinstance(value, str):
+                continue
+
+            dependency_str = 'pkg:npm/' + key
+            package_id = insert_to_package(database, dependency_str)
+            insert_to_dependencies(database, str(application_id), str(package_id))
+
+    # Commit changes and close the database connection
+    database.commit()
+    database.close()
 
 def run_query(today):
     """
