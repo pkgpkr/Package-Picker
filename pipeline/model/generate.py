@@ -60,8 +60,8 @@ SIMILARITY_DF = SPARK.createDataFrame(ENTRIES).toDF("a", "b", "similarity")
 
 # Map the package identifiers back to their pre-vectorized values
 MAPPING = create_map([lit(x) for x in chain(*enumerate(VECTORIZER_MODEL.vocabulary))])
-SIMILARITY_DF = SIMILARITY_DF.withColumn("package_a", MAPPING.getItem(col("a"))) \
-                             .withColumn("package_b", MAPPING.getItem(col("b")))
+SIMILARITY_DF = SIMILARITY_DF.withColumn("package_a", MAPPING.getItem(col("a")).cast("integer")) \
+                             .withColumn("package_b", MAPPING.getItem(col("b")).cast("integer"))
 SIMILARITY_DF = SIMILARITY_DF.drop(col("a")).drop(col("b"))
 
 # Write to the database
