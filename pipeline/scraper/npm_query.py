@@ -26,8 +26,9 @@ def get_package_metadata(dependency):
     Retrieve the downloads, categories, and modified date for a package
     """
 
+    version_symbol_index = dependency.rfind('@')
     name_index = dependency.find('/') + 1
-    dependency_name = dependency[name_index:]
+    dependency_name = dependency[name_index:version_symbol_index]
 
     entry = dict()
 

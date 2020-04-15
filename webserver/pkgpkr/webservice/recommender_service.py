@@ -18,20 +18,20 @@ class RecommenderService:
 
     def __init__(self):
 
-        self.strip_after_version_regex = re.compile(r'(pkg:npm/.*)@\d+')
-        self.name_only_regex = re.compile(r'pkg:npm/(.*)')
+        self.major_version_regex = re.compile(r'pkg:npm/.*@\d+')
+        self.name_only_regex = re.compile(r'pkg:npm/(.*)@\d+')
 
-    def strip_to_name(self, dependencies):
+    def strip_to_major_version(self, dependencies):
         """
-        Strip everything after the name in each dependency
+        Strip everything after the major version in each dependency
         """
 
         packages = []
         for dependency in dependencies:
-            match = self.strip_after_version_regex.search(dependency)
+            match = self.major_version_regex.search(dependency)
             if not match:
                 continue
-            packages.append(match.group(1))
+            packages.append(match.group())
 
         return packages
 
@@ -49,7 +49,7 @@ class RecommenderService:
         # 1. Get a list of identifiers for the packages passed into this method
         # 2. Get a list of all similarity scores involving those packages
         # 3. Get the names and similarity scores of those packages
-        packages = self.strip_to_name(dependencies)
+        packages = self.strip_to_major_version(dependencies)
         cur.execute(f"""
                     SELECT DISTINCT ON (b.name) a.name, b.name, s.similarity, b.downloads_last_month, b.categories, b.modified
                     FROM similarity s
