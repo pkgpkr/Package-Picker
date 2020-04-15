@@ -74,12 +74,7 @@ def write_db(database, result):
                     if not isinstance(value, str):
                         continue
 
-                    # Extract the major version number from the version string
-                    result = NUMBER_REGEX.search(value)
-                    if not result:
-                        continue
-
-                    dependency_str = 'pkg:npm/' + key + "@" + result.group()
+                    dependency_str = 'pkg:npm/' + key# + "@" + result.group()
                     package_id = insert_to_package(database, dependency_str)
                     insert_to_dependencies(database, str(application_id), str(package_id))
             except AttributeError:
