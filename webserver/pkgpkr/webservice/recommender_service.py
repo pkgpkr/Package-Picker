@@ -51,13 +51,14 @@ class RecommenderService:
         # 3. Get the names and similarity scores of those packages
         packages = self.strip_to_name(dependencies)
         cur.execute(f"""
-                    SELECT a.name, b.name, s.similarity, b.downloads_last_month, b.categories, b.modified
+                    SELECT DISTINCT ON (b.name) a.name, b.name, s.similarity, b.downloads_last_month, b.categories, b.modified
                     FROM similarity s
                     INNER JOIN packages a ON s.package_a = a.id
                     INNER JOIN packages b ON s.package_b = b.id
                     WHERE s.package_a IN (
                         SELECT DISTINCT id FROM packages WHERE name in ({str(packages)[1:-1]})
                     )
+                    ORDER BY b.name, s.similarity DESC
                     """)
 
         # Add recommendations (including metadata) to results
