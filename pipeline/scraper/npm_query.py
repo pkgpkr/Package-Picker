@@ -41,8 +41,7 @@ def get_package_metadata(dependency):
 
         entry['downloads_last_month'] = 0
         if res_json.get('downloads'):
-            downloads_last_month = get_average_monthly_donwloads(res_json.get('downloads'))
-            entry['downloads_last_month'] = downloads_last_month
+            entry['downloads_last_month'] = get_average_monthly_donwloads(res_json.get('downloads'))
     except requests.exceptions.RequestException as exc:
         print(f"Could not request {NPM_LAST_MONTH_DOWNLOADS_META_API_URL}/{dependency_name}: {exc}")
         entry['downloads_last_month'] = None
