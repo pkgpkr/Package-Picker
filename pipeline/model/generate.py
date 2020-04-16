@@ -3,17 +3,14 @@ Train an item-to-item collaborative filtering model based on similarity matrices
 """
 
 import os
+from itertools import chain
 import psycopg2
 from pyspark.mllib.linalg.distributed import RowMatrix
 from pyspark.mllib.linalg import Vectors
 from pyspark.ml.feature import CountVectorizer
-from pyspark.sql.functions import col
-from pyspark.sql.functions import collect_list
-from pyspark.sql.functions import create_map
-from pyspark.sql.functions import lit
+from pyspark.sql.functions import col, collect_list, create_map, lit
 from pyspark.sql import SparkSession
 from pyspark import SparkContext
-from itertools import chain
 
 SC = SparkContext("local[2]", "pkgpkr")
 
