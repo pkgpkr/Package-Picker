@@ -35,25 +35,33 @@ def get_package_metadata(dependency):
     entry['name'] = dependency
 
     # Get average downloads
-    res = requests.get(NPM_LAST_MONTH_DOWNLOADS_META_API_URL + f'/{dependency_name}')
-    res_json = res.json()
+    try:
+        res = requests.get(f'{NPM_LAST_MONTH_DOWNLOADS_META_API_URL}/{dependency_name}')
+        res_json = res.json()
 
-    entry['downloads_last_month'] = 0
-    if res_json.get('downloads'):
-        downloads_last_month = get_average_monthly_donwloads(res_json.get('downloads'))
-        entry['downloads_last_month'] = downloads_last_month
+        entry['downloads_last_month'] = 0
+        if res_json.get('downloads'):
+            entry['downloads_last_month'] = get_average_monthly_donwloads(res_json.get('downloads'))
+    except requests.exceptions.RequestException as exc:
+        print(f"Could not request {NPM_LAST_MONTH_DOWNLOADS_META_API_URL}/{dependency_name}: {exc}")
+        entry['downloads_last_month'] = None
 
     # Get keywords (i.e. categories) and date
-    res = requests.get(NPM_DEPENDENCY_META_URL + f'/{dependency_name}')
-    res_json = res.json()
+    try:
+        res = requests.get(f'{NPM_DEPENDENCY_META_URL}/{dependency_name}')
+        res_json = res.json()
 
-    entry['categories'] = None
-    if res_json.get('keywords'):
-        entry['categories'] = res_json.get('keywords')
+        entry['categories'] = None
+        if res_json.get('keywords'):
+            entry['categories'] = res_json.get('keywords')
 
-    entry['modified'] = None
-    if res_json.get('time') and res_json.get('time')['modified']:
-        entry['modified'] = res_json.get('time')['modified']
+        entry['modified'] = None
+        if res_json.get('time') and res_json['time'].get('modified'):
+            entry['modified'] = res_json['time']['modified']
+    except requests.exceptions.RequestException as exc:
+        print(f"Could not request {NPM_DEPENDENCY_META_URL}/{dependency_name}: {exc}")
+        entry['categories'] = None
+        entry['modified'] = None
 
     return entry
 

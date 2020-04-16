@@ -3,14 +3,15 @@ Train an item-to-item collaborative filtering model based on similarity matrices
 """
 
 import os
+from itertools import chain
 import psycopg2
 from pyspark.mllib.linalg.distributed import RowMatrix
 from pyspark.mllib.linalg import Vectors
 from pyspark.ml.feature import CountVectorizer
-from pyspark.sql.functions import col
-from pyspark.sql.functions import collect_list
+from pyspark.sql.functions import col, collect_list, create_map, lit
 from pyspark.sql import SparkSession
 from pyspark import SparkContext
+
 SC = SparkContext("local[2]", "pkgpkr")
 
 # Connect to the database
@@ -52,7 +53,17 @@ SIMILARITY = MATRIX.columnSimilarities()
 
 # Convert the matrix to a DataFrame
 ENTRIES = SIMILARITY.entries.collect()
-SIMILARITY_DF = SPARK.createDataFrame(ENTRIES).toDF("package_a", "package_b", "similarity")
+SIMILARITY_DF = SPARK.createDataFrame(ENTRIES).toDF("a", "b", "similarity")
+
+# Map the package identifiers back to their pre-vectorized values
+MAPPING = create_map([lit(x) for x in chain(*enumerate(VECTORIZER_MODEL.vocabulary))])
+SIMILARITY_DF = SIMILARITY_DF.withColumn("package_a", MAPPING.getItem(col("a")).cast("integer")) \
+                             .withColumn("package_b", MAPPING.getItem(col("b")).cast("integer"))
+SIMILARITY_DF = SIMILARITY_DF.drop(col("a")).drop(col("b"))
+
+# Mirror the columns and append to the existing dataframe so we need only query the first column
+SIMILARITY_DF = SIMILARITY_DF.select('package_a', 'package_b', 'similarity') \
+                             .union(SIMILARITY_DF.select('package_b', 'package_a', 'similarity'))
 
 # Write to the database
 URL_CONNECT = f"jdbc:postgresql://{HOST}/"
