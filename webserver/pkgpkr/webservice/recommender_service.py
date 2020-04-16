@@ -47,18 +47,23 @@ class RecommenderService:
         # Get recommendations from our model
         #
         # 1. Get a list of identifiers for the packages passed into this method
-        # 2. Get a list of all similarity scores involving those packages
-        # 3. Get the names and similarity scores of those packages
+        # 2. Fetch recommendations but deduplicate them by keeping the highest score
+        # 3. Return a list of recommendations with the package for which they were recommended
+        # 4. Exclude any recommendations for packages that appear in the dependencies already
+        # 5. Limit results to 1,000 for performance (we should figure out how to raise this)
+        #
         packages = self.strip_to_major_version(dependencies)
         cur.execute(f"""
                     SELECT DISTINCT ON (b.name) a.name, b.name, s.similarity, b.downloads_last_month, b.categories, b.modified
                     FROM similarity s
                     INNER JOIN packages a ON s.package_a = a.id
                     INNER JOIN packages b ON s.package_b = b.id
-                    WHERE s.package_a IN (
-                        SELECT DISTINCT id FROM packages WHERE name in ({str(packages)[1:-1]})
-                    )
+                    WHERE
+                    s.package_a IN (SELECT id FROM packages WHERE name in ({str(packages)[1:-1]}))
+                    AND
+                    s.package_b NOT IN (SELECT id FROM packages WHERE name in ({str(packages)[1:-1]}))
                     ORDER BY b.name, s.similarity DESC
+                    LIMIT 1000
                     """)
 
         # Add recommendations (including metadata) to results
