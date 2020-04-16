@@ -56,8 +56,8 @@ def get_package_metadata(dependency):
             entry['categories'] = res_json.get('keywords')
 
         entry['modified'] = None
-        if res_json.get('time') and res_json.get('time')['modified']:
-            entry['modified'] = res_json.get('time')['modified']
+        if res_json.get('time') and res_json['time'].get('modified'):
+            entry['modified'] = res_json['time']['modified']
     except requests.exceptions.RequestException as exc:
         print(f"Could not request {NPM_DEPENDENCY_META_URL}/{dependency_name}: {exc}")
         entry['categories'] = None
