@@ -88,10 +88,16 @@ class TestMyClass(unittest.TestCase):
         cursor = None
         for i in [1, 10, 100]:
             try:
-                result = run_query_once(i, month_str, cursor)
+                result = run_query_once(i, month_str, cursor, "JavaScript")
                 self.assertIsNotNone(result['data']['search']['edges'])
+                print("\nJS query finished")
+                result = None
+                result = run_query_once(i, month_str, cursor, "Python")
+                print(result)
+                self.assertIsNotNone(result['data']['search']['edges'])
+                print("\nPython query finished")
             except ValueError:
-                self.assertIsNone(result['data']['search']['edges'])
+                self.assertIsNone(result)
 
 
     @ORDERED
@@ -119,7 +125,7 @@ class TestMyClass(unittest.TestCase):
         self.assertIsInstance(app_id, int)
         cur = database.cursor()
         cur.execute(
-            "SELECT name FROM applications WHERE id = %s;" % (app_id)
+            f"SELECT name FROM applications WHERE id = { app_id };"
         )
         application_name = cur.fetchone()[0]
         self.assertEqual(application_name, app_name)
@@ -137,7 +143,7 @@ class TestMyClass(unittest.TestCase):
         self.assertIsInstance(package_id, int)
         cur = database.cursor()
         cur.execute(
-            "SELECT name FROM packages WHERE id = %s;" % (package_id)
+            f"SELECT name FROM packages WHERE id = { package_id };"
         )
         package_name = cur.fetchone()[0]
         self.assertEqual(package_name, name)
@@ -162,7 +168,7 @@ class TestMyClass(unittest.TestCase):
         # Ensure that the modified field is None
         cur = database.cursor()
         cur.execute(
-            "SELECT modified FROM packages WHERE id = %s;" % (package_id)
+            f"SELECT modified FROM packages WHERE id = { package_id };"
         )
         modified_date = cur.fetchone()[0]
         self.assertIsNone(modified_date)
@@ -172,7 +178,7 @@ class TestMyClass(unittest.TestCase):
 
         # Ensure that the modified field is now not None
         cur.execute(
-            "SELECT modified FROM packages WHERE id = %s;" % (package_id)
+            f"SELECT modified FROM packages WHERE id = { package_id };"
         )
         modified_date = cur.fetchone()[0]
         self.assertIsNotNone(modified_date)
@@ -183,7 +189,7 @@ class TestMyClass(unittest.TestCase):
 
         # Ensure that the modified field is still not None
         cur.execute(
-            "SELECT modified FROM packages WHERE id = %s;" % (package_id)
+            f"SELECT modified FROM packages WHERE id = { package_id };"
         )
         modified_date = cur.fetchone()[0]
         self.assertIsNotNone(modified_date)
@@ -206,8 +212,7 @@ class TestMyClass(unittest.TestCase):
         insert_to_dependencies(database, application_id, package_id)
         cur = database.cursor()
         cur.execute(
-            "SELECT * FROM dependencies WHERE application_id = %s AND package_id = %s;"
-            % (application_id, package_id)
+            f"SELECT * FROM dependencies WHERE application_id = { application_id } AND package_id ={ package_id };"
         )
         result = cur.fetchall()
         self.assertEqual(result, [(application_id, package_id)])
