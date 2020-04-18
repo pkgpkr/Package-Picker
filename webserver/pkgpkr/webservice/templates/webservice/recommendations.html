@@ -62,7 +62,8 @@
                         <tr>
                             <th>Package</th>
                             <th>Recommendation</th>
-                            <th>Score</th>
+                            <th>Popularity</th>
+                            <th>Similarity</th>
                             <th>Category</th>
                             <th>Downloads</th>
                             <th id="version-date-header">Version Date</th>
@@ -74,7 +75,8 @@
                                 <td>{{ recommendation.package }}</td>
                                 <td><a target="_blank"
                                        href="{{ recommendation.url }}">{{ recommendation.recommendation }}</td>
-                                <td>{{ recommendation.similarity }}</td>
+                                <td>{{ recommendation.popularity_score }}</td>
+                                <td>{{ recommendation.similarity_score }}</td>
                                 <td>
                                     {% for keyword in recommendation.keywords %}
                                         <div class="buttons" style="margin-bottom: 0; display:inline-block;">

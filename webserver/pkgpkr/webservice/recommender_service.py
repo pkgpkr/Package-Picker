@@ -55,8 +55,11 @@ class RecommenderService:
         #
         packages = self.strip_to_major_version(dependencies)
         cur.execute(f"""
-                    SELECT DISTINCT ON (b.name) a.name, b.name, s.similarity, b.downloads_last_month, b.categories, b.modified
-                    FROM similarity s
+                    SELECT DISTINCT ON (b.name) a.name, b.name, p.popularity, s.similarity, b.downloads_last_month, b.categories, b.modified
+                    FROM (
+                        SELECT package_b, COUNT(package_b) AS popularity FROM similarity GROUP BY package_b
+                    ) p
+                    INNER JOIN similarity s ON s.package_b = p.package_b
                     INNER JOIN packages a ON s.package_a = a.id
                     INNER JOIN packages b ON s.package_b = b.id
                     WHERE
@@ -75,8 +78,8 @@ class RecommenderService:
             package = result[0].replace("pkg:npm/", "", 1)
             recommendation = result[1].replace("pkg:npm/", "", 1)
             url = f"{NPM_DEPENDENCY_BASE_URL}/{self.name_only_regex.search(result[1]).group(1)}"
-            similarity = math.ceil(10 * result[2])
-            day = result[5]
+            similarity_score = math.ceil(10 * result[3])
+            day = result[6]
             if day:
                 day = day.strftime('%Y-%m-%d')
 
@@ -86,9 +89,10 @@ class RecommenderService:
                     'package': package,
                     'recommendation': recommendation,
                     'url': url,
-                    'similarity': similarity,
-                    'average_downloads': result[3],
-                    'keywords': result[4],
+                    'popularity_score': result[2],
+                    'similarity_score': similarity_score,
+                    'average_downloads': result[4],
+                    'keywords': result[5],
                     'date': day
                 }
             )
