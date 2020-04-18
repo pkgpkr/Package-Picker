@@ -46,7 +46,7 @@ class SimpleTest(TestCase):
 
         # Set session tokean
         request.session = dict()
-        request.session['github_token'] = os.environ.get('TOKEN')
+        request.session['github_token'] = os.environ.get('GITHUB_TOKEN')
         request.session['github_info'] = github_util.get_user_info(request.session['github_token'])
         return request
 
