@@ -40,7 +40,7 @@ def login(request):
 
     # For Selenium testing
     if os.environ.get('SELENIUM_TEST'):
-        request.session['github_token'] = os.environ.get('GITHUB_TOKEN')
+        request.session['github_token'] = os.environ.get('TOKEN')
         request.session['github_info'] = github_util.get_user_info(request.session['github_token'])
 
         return HttpResponseRedirect(reverse('index'))
