@@ -4,6 +4,10 @@ on:
     paths:
       - 'pipeline/scraper/**'
       - '.github/workflows/test_pipeline.yml'
+  pull_request:
+    paths:
+      - 'pipeline/scraper/**'
+      - '.github/workflows/test_pipeline.yml'
 
 jobs:
   test:
@@ -46,4 +50,4 @@ jobs:
           DB_PASSWORD: postgres
           DB_NAME: postgres
           DB_HOST: localhost
-          TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -22,7 +22,7 @@ class TestGithubUtil(TestCase):
     """
 
     def setUp(self):
-        self.github_token = os.environ.get('TOKEN')
+        self.github_token = os.environ.get('GITHUB_TOKEN')
 
     def test_get_user_info(self):
         """
@@ -41,7 +41,7 @@ class TestGithubUtil(TestCase):
         """
 
         self.assertTrue(is_user_authenticated(self.github_token))
-        self.assertFalse(is_user_authenticated('BAD TOKEN'))
+        self.assertFalse(is_user_authenticated('BAD GITHUB_TOKEN'))
 
     def test_get_user_name(self):
         """
