@@ -1,9 +1,8 @@
 name: Pipeline Tests
 on:
-  push:
-    paths:
-      - 'pipeline/scraper/**'
-      - '.github/workflows/test_pipeline.yml'
+  paths:
+    - 'pipeline/scraper/**'
+    - '.github/workflows/test_pipeline.yml'
 
 jobs:
   test:
