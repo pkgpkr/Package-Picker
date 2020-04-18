@@ -12,7 +12,7 @@ from pyspark.sql.functions import col, collect_list, create_map, lit
 from pyspark.sql import SparkSession
 from pyspark import SparkContext
 
-SC = SparkContext("local[2]", "pkgpkr")
+SC = SparkContext("local[1]", "pkgpkr")
 
 # Connect to the database
 USER = os.environ.get("DB_USER")
@@ -24,7 +24,7 @@ CUR = DB.cursor()
 # Load the raw data into Spark
 CUR.execute("SELECT * FROM dependencies")
 DEPENDENCIES = CUR.fetchall()
-SPARK = SparkSession.builder.master("local[2]").appName("pkgpkr").getOrCreate()
+SPARK = SparkSession.builder.master("local[1]").appName("pkgpkr").getOrCreate()
 DF = SPARK.createDataFrame(DEPENDENCIES).toDF("application_id", "package_id")
 
 # Close the database connection
@@ -46,7 +46,7 @@ TRANSFORMED_DF = TRANSFORMED_DF.drop(col("package_ids"))
 ARRAY = [Vectors.fromML(row.packages_encoded) for row in TRANSFORMED_DF.collect()]
 
 # Create a RowMatrix
-MATRIX = RowMatrix(SC.parallelize(ARRAY))
+MATRIX = RowMatrix(SC.parallelize(ARRAY, numSlices=50))
 
 # Compute column similarity matrix
 SIMILARITY = MATRIX.columnSimilarities()
@@ -65,9 +65,51 @@ SIMILARITY_DF = SIMILARITY_DF.drop(col("a")).drop(col("b"))
 SIMILARITY_DF = SIMILARITY_DF.select('package_a', 'package_b', 'similarity') \
                              .union(SIMILARITY_DF.select('package_b', 'package_a', 'similarity'))
 
-# Write to the database
+# Write similarity scores to the database
 URL_CONNECT = f"jdbc:postgresql://{HOST}/"
 TABLE = "similarity"
 MODE = "overwrite"
 PROPERTIES = {"user": USER, "password": PASSWORD, "driver": "org.postgresql.Driver"}
 SIMILARITY_DF.write.jdbc(URL_CONNECT, TABLE, MODE, PROPERTIES)
+
+# Update popularity scores
+POPULARITY_UPDATE = """
+UPDATE packages
+SET popularity = s.popularity
+FROM (
+  SELECT package_b, COUNT(package_b) AS popularity
+  FROM similarity
+  GROUP BY package_b
+) s
+WHERE packages.id = s.package_b;
+"""
+
+POPULARITY_NULL_TO_ZERO = """
+UPDATE packages
+SET popularity = 0
+WHERE popularity IS NULL;
+"""
+
+BOUNDED_POPULARITY_UPDATE = """
+UPDATE packages
+SET bounded_popularity = s.popularity
+FROM (
+  SELECT id, WIDTH_BUCKET(popularity, 0, (SELECT MAX(popularity) FROM packages), 9) AS popularity
+  FROM packages
+) s
+WHERE packages.id = s.id;
+"""
+
+# Connect to the database
+DB = psycopg2.connect(user=USER, password=PASSWORD, host=HOST)
+CUR = DB.cursor()
+
+# Execute popularity updates
+CUR.execute(POPULARITY_UPDATE)
+CUR.execute(POPULARITY_NULL_TO_ZERO)
+CUR.execute(BOUNDED_POPULARITY_UPDATE)
+
+# Commit changes and close the database connection
+DB.commit()
+CUR.close()
+DB.close()
