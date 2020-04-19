@@ -59,7 +59,7 @@ class RecommenderService:
         #
         packages = self.strip_to_major_version(dependencies)
         cur.execute(f"""
-                    SELECT DISTINCT ON (b.name) a.name, b.name, b.absolute_trend, b.monthly_downloads_a_year_ago, b.bounded_popularity, s.similarity, b.categories, b.modified
+                    SELECT DISTINCT ON (b.name) a.name, b.name, b.absolute_trend, b.relative_trend, b.bounded_popularity, s.similarity, b.categories, b.modified
                     FROM similarity s
                     INNER JOIN packages a ON s.package_a = a.id
                     INNER JOIN packages b ON s.package_b = b.id
@@ -94,13 +94,11 @@ class RecommenderService:
             absolute_trend_score = result[2]
 
             # Relative trend score
-            relative_trend_score = 0
-            if result[2] and result[3] > 0:
-                relative_trend_score = result[2] / result[3]
-            
+            relative_trend_score = result[3]
+
             # Keywords
             keywords = result[6]
-            
+
             # Modified date
             day = result[7]
             if day:
