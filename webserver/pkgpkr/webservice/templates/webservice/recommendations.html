@@ -57,7 +57,7 @@
                     </p>
                 </div>
                 <div class="table-container">
-                    <table class="display-data-tables">
+                    <table id="recommendTable" class="display-data-tables">
                         <thead>
                         <tr>
                             <th>Package</th>
@@ -66,6 +66,7 @@
                             <th>Relative Trend</th>
                             <th>Popularity</th>
                             <th>Similarity</th>
+                            <th>Detail</th>
                             <th>Categories</th>
                             <th>Downloads</th>
                             <th id="version-date-header">Version Date</th>
@@ -81,6 +82,7 @@
                                 <td>{{ recommendation.relative_trend_score }}</td>
                                 <td>{{ recommendation.popularity_score }}</td>
                                 <td>{{ recommendation.similarity_score }}</td>
+                                <td></td>
                                 <td>
                                     {% for keyword in recommendation.keywords %}
                                         <div class="buttons" style="margin-bottom: 0; display:inline-block;">
@@ -95,6 +97,23 @@
                         {% endfor %}
                         <tbody>
                     </table>
+                    <div id="scoreModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-background"></div>
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                          </div>
+                          <div class="modal-body">
+                            <div class="insertHere"></div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 </div>
             </div>
         </div>
