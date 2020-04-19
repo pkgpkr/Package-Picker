@@ -97,7 +97,7 @@ BOUNDED_POPULARITY_UPDATE = """
 UPDATE packages
 SET bounded_popularity = s.popularity
 FROM (
-  SELECT id, WIDTH_BUCKET(popularity, 0, (SELECT MAX(popularity) FROM packages), 9) AS popularity
+  SELECT id, WIDTH_BUCKET(LOG(popularity + 1), 0, (SELECT MAX(LOG(popularity + 1)) FROM packages), 9) AS popularity
   FROM packages
 ) s
 WHERE packages.id = s.id;
@@ -111,11 +111,6 @@ CUR = DB.cursor()
 CUR.execute(POPULARITY_UPDATE)
 CUR.execute(POPULARITY_NULL_TO_ZERO)
 CUR.execute(BOUNDED_POPULARITY_UPDATE)
-
-# Commit changes and close the database connection
-DB.commit()
-CUR.close()
-DB.close()
 
 #
 # Update trending scores
@@ -138,9 +133,9 @@ UPDATE packages
 SET absolute_trend = s.absolute_trend
 FROM (
   SELECT id, WIDTH_BUCKET(
-    monthly_downloads_last_month - monthly_downloads_a_year_ago,
-    (SELECT MIN(monthly_downloads_last_month - monthly_downloads_a_year_ago) FROM packages),
-    (SELECT MAX(monthly_downloads_last_month - monthly_downloads_a_year_ago) FROM packages),
+    LOG(monthly_downloads_last_month + 1) - LOG(monthly_downloads_a_year_ago + 1),
+    (SELECT MIN(LOG(monthly_downloads_last_month + 1) - LOG(monthly_downloads_a_year_ago + 1)) FROM packages),
+    (SELECT MAX(LOG(monthly_downloads_last_month + 1) - LOG(monthly_downloads_a_year_ago + 1)) FROM packages),
     9
   ) AS absolute_trend
   FROM packages
@@ -153,12 +148,23 @@ UPDATE packages
 SET relative_trend = s.relative_trend
 FROM (
   SELECT id, WIDTH_BUCKET(
-    monthly_downloads_last_month / (monthly_downloads_a_year_ago + 1),
-    (SELECT MIN(monthly_downloads_last_month / (monthly_downloads_a_year_ago + 1)) FROM packages),
-    (SELECT MAX(monthly_downloads_last_month / (monthly_downloads_a_year_ago + 1)) FROM packages),
+    LOG(monthly_downloads_last_month + 1) / (LOG(monthly_downloads_a_year_ago + 1) + 1),
+    (SELECT MIN(LOG(monthly_downloads_last_month + 1) / (LOG(monthly_downloads_a_year_ago + 1) + 1)) FROM packages),
+    (SELECT MAX(LOG(monthly_downloads_last_month + 1) / (LOG(monthly_downloads_a_year_ago + 1) + 1)) FROM packages),
     9
   ) AS relative_trend
   FROM packages
 ) s
 WHERE packages.id = s.id;
 """
+
+# Execute trending updates
+CUR.execute(MONTHLY_DOWNLOADS_LAST_MONTH_NULL_TO_ZERO)
+CUR.execute(MONTHLY_DOWNLOADS_A_YEAR_AGO_NULL_TO_ZERO)
+CUR.execute(ABSOLUTE_TREND_UPDATE)
+CUR.execute(RELATIVE_TREND_UPDATE)
+
+# Commit changes and close the database connection
+DB.commit()
+CUR.close()
+DB.close()
