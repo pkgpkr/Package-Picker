@@ -9,7 +9,7 @@ try:
     USER = 'postgres'
     PASSWORD = 'postgres'
     DATABASE = 'postgres'
-    REAL_TOKEN = os.environ['GITHUB_TOKEN']
+    REAL_TOKEN = os.environ['GH_TOKEN']
     HOST = 'localhost'
     CONNECTION = None
     RESULT = None
@@ -57,7 +57,7 @@ try:
 DB_USER={USER} \
 DB_PASSWORD={PASSWORD} \
 DB_HOST={HOST} \
-GITHUB_TOKEN={REAL_TOKEN} \
+GH_TOKEN={REAL_TOKEN} \
 python3 -m unittest test.py -v
                        """)
 

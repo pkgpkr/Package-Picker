@@ -22,7 +22,7 @@ class TestGithubUtil(TestCase):
     """
 
     def setUp(self):
-        self.github_token = os.environ.get('GITHUB_TOKEN')
+        self.github_token = os.environ.get('GH_TOKEN')
 
     def test_get_user_info(self):
         """
