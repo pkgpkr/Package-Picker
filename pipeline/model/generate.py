@@ -148,9 +148,9 @@ UPDATE packages
 SET relative_trend = s.relative_trend
 FROM (
   SELECT id, WIDTH_BUCKET(
-    LOG(monthly_downloads_last_month + 1) / (LOG(monthly_downloads_a_year_ago + 1) + 1),
-    (SELECT MIN(LOG(monthly_downloads_last_month + 1) / (LOG(monthly_downloads_a_year_ago + 1) + 1)) FROM packages),
-    (SELECT MAX(LOG(monthly_downloads_last_month + 1) / (LOG(monthly_downloads_a_year_ago + 1) + 1)) FROM packages),
+    LOG((monthly_downloads_last_month / (monthly_downloads_a_year_ago + 1)) + 1),
+    (SELECT MIN(LOG((monthly_downloads_last_month / (monthly_downloads_a_year_ago + 1)) + 1)) FROM packages),
+    (SELECT MAX(LOG((monthly_downloads_last_month / (monthly_downloads_a_year_ago + 1)) + 1)) FROM packages),
     9
   ) AS relative_trend
   FROM packages
