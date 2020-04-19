@@ -15,10 +15,32 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 $(document).ready( function () {
-    var table = $('.display-data-tables').DataTable({
+    var repoTable = $('#repoTable').DataTable({
         "bLengthChange": false,
         dom: 'tip',
         scroller: true
+    });
+
+    var table = $('#recommendTable').DataTable({
+        "bLengthChange": false,
+        dom: 'tip',
+        scroller: true,
+        columnDefs : [{
+            "targets": [3, 4, 5],
+            "visible": false
+        }, {
+            "targets": [6],
+            "data": null,
+            "defaultContent": "<button type='button' class='btn btn-default'><span class='glyphicon glyphicon-plus' aria-hidden='true'></span></button>"
+        }]
+    });
+
+    $('#recommendTable tbody').on('click', 'button', function() {
+        var data = table.row($(this).parents('tr')).data();
+        $('.insertHere').html(
+             '<table class="table dtr-details" width="100%"><tbody><tr><td>PkgPkr Score<td><td>' + data[2] + '</td></tr><tr><td>Relative Trend Score<td><td>' + data[3] + '</td></tr><tr><td>Popularity Score<td><td>' + data[4] + '</td></tr><tr><td>Similarity Score<td><td>' + data[5] + '</td></tr></tbody></table>'
+        );
+        $('#scoreModal').modal('show');
     });
 
     $('#categoryName').keyup( function() {
