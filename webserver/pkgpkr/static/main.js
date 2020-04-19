@@ -29,26 +29,27 @@ $(document).ready( function () {
         columnDefs : [{
             "targets": [3, 4, 5, 6],
             "visible": false
-        }, {
-            "targets": [7],
-            "data": null,
-            "defaultContent": "<button type='button' class='btn btn-default'><span class='glyphicon glyphicon-plus' aria-hidden='true'></span></button>"
         }]
     });
 
-    $('#recommendTable tbody').on('click', 'button', function() {
+    $('#recommendTable tbody ').on('click', 'img', function() {
         var data = table.row($(this).parents('tr')).data();
         $('.insertHere').html(
-             '<table class="table dtr-details" width="100%"><tbody><tr><td>PkgPkr Score<td><td>' + data[2] + '</td></tr><tr><td>Relative Trend Score<td><td>' + data[3] + '</td></tr><tr><td>Popularity Score<td><td>' + data[4] + '</td></tr><tr><td>Similarity Score<td><td>' + data[5] + '</td></tr></tbody></table>'
+             '<table class="table dtr-details" width="100%"><tbody><tr><td>PkgPkr Score<td><td>' + data[2] +
+             '</td></tr><tr><td>Absolute Trend Score<td><td>' + data[3] +
+             '</td></tr><tr><td>Relative Trend Score<td><td>' + data[4] +
+             '</td></tr><tr><td>Popularity Score<td><td>' + data[5] +
+             '</td></tr><tr><td>Similarity Score<td><td>' + data[6] +
+             '</td></tr></tbody></table>'
         );
         $('#scoreModal').modal('show');
     });
 
-    $('#categoryName').keyup( function() {
-        table.column(3).search($(this).val()).draw();
+    $('#categoryName').keyup(function() {
+        table.column(7).search($(this).val()).draw();
     });
 
-    $('#recommendationFilter').keyup( function() {
+    $('#recommendationFilter').keyup(function() {
         table.search($(this).val()).draw();
     });
 });

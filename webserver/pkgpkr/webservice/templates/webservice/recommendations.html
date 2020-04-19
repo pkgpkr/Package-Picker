@@ -1,5 +1,7 @@
 {% extends "webservice/base.html" %}
 
+{% load static %}
+
 {% block title %}
     Recommendations
 {% endblock %}
@@ -67,7 +69,6 @@
                             <th>Relative Trend</th>
                             <th>Popularity</th>
                             <th>Similarity</th>
-                            <th>Detail</th>
                             <th>Categories</th>
                             <th id="version-date-header">Version Date</th>
                         </tr>
@@ -78,12 +79,11 @@
                                 <td>{{ recommendation.package }}</td>
                                 <td><a target="_blank"
                                        href="{{ recommendation.url }}">{{ recommendation.recommendation }}</td>
-                                <td>{{ recommendation.overall_score }}</td>
+                                <td ><img class="pkgpkrscore_img" src="/static/images/{{ recommendation.overall_score }}.png"><p class="pkgpkrscore_value">{{ recommendation.overall_score }}</p></td>
                                 <td>{{ recommendation.absolute_trend_score }}</td>
                                 <td>{{ recommendation.relative_trend_score }}</td>
                                 <td>{{ recommendation.popularity_score }}</td>
                                 <td>{{ recommendation.similarity_score }}</td>
-                                <td></td>
                                 <td>
                                     {% for keyword in recommendation.keywords %}
                                         <div class="buttons" style="margin-bottom: 0; display:inline-block;">

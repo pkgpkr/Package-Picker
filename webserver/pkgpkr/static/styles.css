@@ -46,3 +46,7 @@ body {
   min-height: 100%;
   position: relative;
 }
+
+.pkgpkrscore_value {
+  display: none;
+}
