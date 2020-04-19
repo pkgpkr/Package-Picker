@@ -96,6 +96,9 @@ class RecommenderService:
             # Relative trend score
             relative_trend_score = result[3]
 
+            # Overall score
+            overall_score = similarity_score * 0.5 + popularity_score * 0.3 + absolute_trend_score * 0.1 + relative_trend_score * 0.1
+
             # Keywords
             keywords = result[6]
 
@@ -114,6 +117,7 @@ class RecommenderService:
                     'relative_trend_score': relative_trend_score,
                     'popularity_score': popularity_score,
                     'similarity_score': similarity_score,
+                    'overall_score': overall_score,
                     'keywords': keywords,
                     'date': day
                 }
