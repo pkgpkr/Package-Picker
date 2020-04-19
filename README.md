@@ -91,7 +91,7 @@ CREATE TABLE similarity (
 
 ```
 cd pipeline
-docker build --build-arg GITHUB_TOKEN=$GITHUB_TOKEN --build-arg MONTH=$MONTH --build-arg DB_USER=$DB_USER --build-arg DB_HOST=$DB_HOST --build-arg=DB_PASSWORD=$DB_PASSWORD .
+docker build --build-arg GITHUB_TOKEN=$TEST_USER_TOKEN --build-arg MONTH=$MONTH --build-arg DB_USER=$DB_USER --build-arg DB_HOST=$DB_HOST --build-arg=DB_PASSWORD=$DB_PASSWORD .
 ```
 
 2. Run the Docker image. It will automatically scrape data and train the model, and quit when done.
@@ -102,7 +102,7 @@ docker build --build-arg GITHUB_TOKEN=$GITHUB_TOKEN --build-arg MONTH=$MONTH --b
 
 Run this inside the `pipeline/` folder.
 
-`DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD DB_HOST=$DB_HOST GITHUB_TOKEN=$GITHUB_TOKEN python3 -m unittest scraper/test.py -v`
+`DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD DB_HOST=$DB_HOST GITHUB_TOKEN=$TEST_USER_TOKEN python3 -m unittest scraper/test.py -v`
 
 ### Web server
 

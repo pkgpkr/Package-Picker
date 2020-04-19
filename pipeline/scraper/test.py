@@ -1,12 +1,5 @@
 """
 Test script for the ML pipeline scraper
-
-To run the test, use the following command under the pipeline/ folder:
-
-```
-DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD DB_HOST=$DB_HOST GITHUB_TOKEN=$GITHUB_TOKEN \
-    python3 -m unittest scraper/test.py -v
-```
 """
 
 import unittest
