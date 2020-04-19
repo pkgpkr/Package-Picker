@@ -135,10 +135,10 @@ class SimpleTest(TestCase):
 
         # Test redirect
         request = self.prep_not_github_auth_request('/repositories')
-        response = recommendations(request, 'pkgpkr/express')
+        response = recommendations(request, 'pkgpkr1/express')
         self.assertEqual(response.status_code, 302)
 
         # Test success
         request = self.prep_with_github_auth_request('/repositories')
-        response = recommendations(request, 'pkgpkr/express')
+        response = recommendations(request, 'pkgpkr1/express')
         self.assertEqual(response.status_code, 200)

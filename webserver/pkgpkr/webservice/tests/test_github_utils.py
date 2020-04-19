@@ -48,7 +48,7 @@ class TestGithubUtil(TestCase):
         Ensure that the user name associated with our token is what we expect
         """
 
-        self.assertEqual(get_user_name(self.github_token), 'pkgpkr')
+        self.assertEqual(get_user_name(self.github_token), 'pkgpkr1')
 
     def test_get_repositories(self):
         """
@@ -58,7 +58,7 @@ class TestGithubUtil(TestCase):
         repos = get_repositories(self.github_token)
 
         self.assertLessEqual(len(repos), 100)
-        self.assertIn('pkgpkr/express', [repo['nameWithOwner'] for repo in repos])
+        self.assertIn('pkgpkr1/express', [repo['nameWithOwner'] for repo in repos])
 
     def test_dependencies_name_to_purl(self):
         """
@@ -90,7 +90,7 @@ class TestGithubUtil(TestCase):
         Ensure that a repository has a package we expect
         """
 
-        dependencies, branch_names = get_dependencies(self.github_token, 'pkgpkr/express', 'master')
+        dependencies, branch_names = get_dependencies(self.github_token, 'pkgpkr1/express', 'master')
 
         # For partial match, e.g pkg:npm/accepts@1.3.7 -> pkg:npm/accepts
         must_include_package = 'pkg:npm/accepts'
