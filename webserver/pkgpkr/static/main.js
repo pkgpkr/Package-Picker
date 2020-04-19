@@ -25,11 +25,12 @@ $(document).ready( function () {
         "bLengthChange": false,
         dom: 'tip',
         scroller: true,
+        order: [[2, "desc"]],
         columnDefs : [{
-            "targets": [3, 4, 5],
+            "targets": [3, 4, 5, 6],
             "visible": false
         }, {
-            "targets": [6],
+            "targets": [7],
             "data": null,
             "defaultContent": "<button type='button' class='btn btn-default'><span class='glyphicon glyphicon-plus' aria-hidden='true'></span></button>"
         }]

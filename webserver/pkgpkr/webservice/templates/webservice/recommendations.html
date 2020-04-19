@@ -62,13 +62,13 @@
                         <tr>
                             <th>Package</th>
                             <th>Recommendation</th>
+                            <th>PkgPkr Score</th>
                             <th>Absolute Trend</th>
                             <th>Relative Trend</th>
                             <th>Popularity</th>
                             <th>Similarity</th>
                             <th>Detail</th>
                             <th>Categories</th>
-                            <th>Downloads</th>
                             <th id="version-date-header">Version Date</th>
                         </tr>
                         </thead>
@@ -78,6 +78,7 @@
                                 <td>{{ recommendation.package }}</td>
                                 <td><a target="_blank"
                                        href="{{ recommendation.url }}">{{ recommendation.recommendation }}</td>
+                                <td>{{ recommendation.overall_score }}</td>
                                 <td>{{ recommendation.absolute_trend_score }}</td>
                                 <td>{{ recommendation.relative_trend_score }}</td>
                                 <td>{{ recommendation.popularity_score }}</td>
@@ -91,7 +92,6 @@
                                         </div>
                                     {% endfor %}
                                 </td>
-                                <td>{{ recommendation.average_downloads }}</td>
                                 <td>{{ recommendation.date }}</td>
                             </tr>
                         {% endfor %}
