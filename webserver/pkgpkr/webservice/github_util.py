@@ -80,6 +80,7 @@ def get_repositories(token):
     payload = {'query': query,
                'variables': variables}
 
+    print(token)
     header = {'Authorization': 'Bearer ' + token}
 
     res = requests.post(GITHUB_GRAPHQL_URL, headers=header, data=json.dumps(payload))
