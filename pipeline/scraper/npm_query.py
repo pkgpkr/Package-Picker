@@ -2,24 +2,14 @@
 Fetch package metadata from the npmjs registry API
 """
 
+import datetime
 import requests
+from month_calculation import month_delta
 from psql import connect_to_db, update_package_metadata
 
 NPM_DEPENDENCY_META_URL = 'https://registry.npmjs.org'
 NPM_DEPENDENCY_URL = 'https://npmjs.com/package'
-NPM_API_BASE_URL = 'https://api.npmjs.org'
-NPM_LAST_MONTH_DOWNLOADS_META_API_URL = f'{NPM_API_BASE_URL}/downloads/range/last-month'
-
-def get_average_monthly_donwloads(daily_donwloads_list):
-    """
-    Calculate the average monthly downloads from the download API response
-    """
-
-    total = 0
-    for daily_donwloads in daily_donwloads_list:
-        total += daily_donwloads['downloads']
-
-    return total // len(daily_donwloads_list)
+NPM_DOWNLOADS_API_URL = 'https://api.npmjs.org/downloads/point'
 
 def get_package_metadata(dependency):
     """
@@ -34,16 +24,29 @@ def get_package_metadata(dependency):
 
     entry['name'] = dependency
 
-    # Get average downloads
+    # Get downloads
     try:
-        res = requests.get(f'{NPM_LAST_MONTH_DOWNLOADS_META_API_URL}/{dependency_name}')
-        res_json = res.json()
+        now_date = datetime.datetime.now()
+        last_month_start = month_delta(now_date, 1).strftime("%Y-%m-%d")
+        last_month_end = now_date.strftime("%Y-%m-%d")
+        month_last_year_start = month_delta(now_date, 13).strftime("%Y-%m-%d")
+        month_last_year_end = month_delta(now_date, 12).strftime("%Y-%m-%d")
+        last_month_url = f'{NPM_DOWNLOADS_API_URL}/{last_month_start}:{last_month_end}/{dependency_name}'
+        month_last_year_url = f'{NPM_DOWNLOADS_API_URL}/{month_last_year_start}:{month_last_year_end}/{dependency_name}'
+        last_month_downloads_json = requests.get(last_month_url).json()
+        month_last_year_downloads_json = requests.get(month_last_year_url).json()
 
-        entry['downloads_last_month'] = 0
-        if res_json.get('downloads'):
-            entry['downloads_last_month'] = get_average_monthly_donwloads(res_json.get('downloads'))
+        # Get monthly downloads over the past month
+        entry['monthly_downloads_last_month'] = 0
+        if last_month_downloads_json.get('downloads'):
+            entry['monthly_downloads_last_month'] = last_month_downloads_json['downloads']
+
+        # Get monthly downloads for the month a year ago
+        entry['monthly_downloads_a_year_ago'] = 0
+        if month_last_year_downloads_json.get('downloads'):
+            entry['monthly_downloads_a_year_ago'] = month_last_year_downloads_json['downloads']
     except requests.exceptions.RequestException as exc:
-        print(f"Could not request {NPM_LAST_MONTH_DOWNLOADS_META_API_URL}/{dependency_name}: {exc}")
+        print(f"Could not request downloads for {dependency_name}: {exc}")
         entry['downloads_last_month'] = None
 
     # Get keywords (i.e. categories) and date
@@ -75,7 +78,7 @@ def run_query():
     cur = database.cursor()
 
     # Fetch all package names from the database
-    cur.execute("SELECT name FROM packages;")
+    cur.execute("SELECT name FROM packages WHERE name LIKE 'pkg:npm/%';")
     results = [result[0] for result in cur.fetchall()]
 
     # Fetch all metadata for the packages from npmjs.com and write to the database
@@ -84,7 +87,8 @@ def run_query():
         metadata = get_package_metadata(result)
         update_package_metadata(database,
                                 metadata['name'],
-                                metadata['downloads_last_month'],
+                                metadata['monthly_downloads_last_month'],
+                                metadata['monthly_downloads_a_year_ago'],
                                 metadata['categories'],
                                 metadata['modified'])
 
