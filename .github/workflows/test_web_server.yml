@@ -39,7 +39,7 @@ jobs:
         CLIENT_ID: ${{ secrets.CLIENT_ID }}
         CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
         SELENIUM_TEST: ${{ secrets.SELENIUM_TEST }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TEST_USER_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TEST_USER_TOKEN }}
 
       working-directory: webserver/pkgpkr
       run: |
