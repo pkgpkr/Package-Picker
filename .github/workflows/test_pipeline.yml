@@ -1,15 +1,13 @@
-name: Scraper Test CI
+name: Pipeline Tests
 on:
   push:
     paths:
-      - 'pipeline/**'
-      - 'client.py'
-      - '.github/workflows/scraper.yml'
+      - 'pipeline/scraper/**'
+      - '.github/workflows/test_pipeline.yml'
   pull_request:
     paths:
-      - 'pipeline/**'
-      - 'client.py'
-      - '.github/workflows/scraper.yml'
+      - 'pipeline/scraper/**'
+      - '.github/workflows/test_pipeline.yml'
 
 jobs:
   test:
@@ -42,13 +40,14 @@ jobs:
           python -m pip install psycopg2
           python -m pip install requests
           python -m pip install datetime
+          python -m pip install pypistats
         if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Python run script
         run: cd ./pipeline/scraper && python client.py
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
-          POSTGRES_HOST: localhost
-          TOKEN: ${{ secrets.TOKEN }}
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: postgres
+          DB_HOST: localhost
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}

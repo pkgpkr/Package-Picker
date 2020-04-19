@@ -1,4 +1,4 @@
-![ML Pipeline Tests](https://github.com/pkgpkr/Package-Picker/workflows/Scraper%20Test%20CI/badge.svg) ![ML Pipeline Deploy](https://github.com/pkgpkr/Package-Picker/workflows/Deploy%20ML%20Pipeline%20to%20Amazon%20ECS/badge.svg) ![Webserver Tests](https://github.com/pkgpkr/Package-Picker/workflows/Webserver%20Django%20CI/badge.svg) ![Webserver Deploy](https://github.com/pkgpkr/Package-Picker/workflows/Deploy%20to%20Amazon%20ECS/badge.svg)
+![Pipeline Tests](https://github.com/pkgpkr/Package-Picker/workflows/Scraper%20Test%20CI/badge.svg) ![Pipeline Deploy](https://github.com/pkgpkr/Package-Picker/workflows/Pipeline%20Deploy/badge.svg) ![Web Server Tests](https://github.com/pkgpkr/Package-Picker/workflows/Web%20Server%20Tests/badge.svg) ![Web Server Deploy](https://github.com/pkgpkr/Package-Picker/workflows/Web%20Server%20Deploy/badge.svg)
 
 # Intro
 
@@ -16,43 +16,95 @@ NOTE: If you do not know the git CLI commands, recommend to use [sourcetree](htt
 # Set environment variables
 
 ```
-AWS_ACCESS_KEY_ID.    # Your AWS account's access key
+AWS_ACCESS_KEY_ID     # Your AWS account's access key
 AWS_SECRET_ACCESS_KEY # Your AWS account's secret access key
 CLIENT_ID             # ID of the GitHub app used by the web server
 CLIENT_SECRET         # Secret for the GitHub app
 DB_HOST               # Database URL
 DB_PASSWORD           # Database password
 DB_USER               # Database user
-DOMAIN_NAME           # The domain name where the site is hosted
+DOMAIN_NAME           # The domain name where the site is hosted (e.g. http://pkgpkr.com)
 MONTH                 # How many months of data to scrape
 SELENIUM_TEST         # Set if running Selenium tests
-TOKEN                 # Your GitHub API token
+GH_TOKEN              # Your GitHub API token
 ```
 
-# Run locally
+# Database
 
-NOTE: Before running any of the components, set the environment variables listed above and install Docker.
+Terraform will provision a database for you (see the AWS section below), otherwise you will need to manually create a PostgreSQL instance in RDS.
 
-## Data scraper
+> NOTE: Make sure the database is publically accessible if you want to access it from your local developer setup.
+
+## Load data
+
+If you want to start with some data in the database so you don't have to run the ML pipeline first, run the following commands:
+
+```
+wget https://pkgpkr-models.s3.amazonaws.com/database.dump
+psql -h <DB host> -U <DB user> <DB name> < database.dump
+```
+
+## Fresh start
+
+If you want to populate the database with data from scratch, create new tables with the following SQL commands before running the ML pipeline:
+
+```
+CREATE TABLE applications (
+  id SERIAL PRIMARY KEY,
+  url TEXT NOT NULL,
+  name TEXT NOT NULL,
+  followers INTEGER,
+  hash TEXT NOT NULL,
+  retrieved TIMESTAMPTZ NOT NULL,
+  CONSTRAINT unique_url UNIQUE (url)
+);
+CREATE TABLE packages (
+  id SERIAL PRIMARY KEY,
+  name TEXT UNIQUE NOT NULL,
+  downloads_last_month INTEGER,
+  categories TEXT[],
+  modified TIMESTAMPTZ,
+  retrieved TIMESTAMPTZ NOT NULL
+);
+CREATE TABLE dependencies (
+  application_id INTEGER REFERENCES applications (id),
+  package_id INTEGER REFERENCES packages (id),
+  CONSTRAINT unique_app_to_pkg UNIQUE (application_id, package_id)
+);
+CREATE TABLE similarity (
+  package_a INTEGER REFERENCES packages (id),
+  package_b INTEGER REFERENCES packages (id),
+  similarity FLOAT(4) NOT NULL,
+  CONSTRAINT unique_pkg_to_pkg UNIQUE (package_a, package_b)
+);
+```
+
+# Run
+
+## Local development
+
+> NOTE: Before running any of the components, set the environment variables listed above and install Docker.
+
+### Data scraper
 
 1. Switch to the `pipeline/` folder and build the Docker image.
 
 ```
 cd pipeline
-docker build --build-arg TOKEN=$TOKEN --build-arg MONTH=$MONTH --build-arg DB_USER=$DB_USER --build-arg DB_HOST=$DB_HOST --build-arg=DB_PASSWORD=$DB_PASSWORD .
+docker build --build-arg GH_TOKEN=$GH_TOKEN --build-arg MONTH=$MONTH --build-arg DB_USER=$DB_USER --build-arg DB_HOST=$DB_HOST --build-arg=DB_PASSWORD=$DB_PASSWORD .
 ```
 
 2. Run the Docker image. It will automatically scrape data and train the model, and quit when done.
 
 `docker run -i -t <id>`
 
-### Testing
+#### Testing
 
 Run this inside the `pipeline/` folder.
 
-`DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD DB_HOST=$DB_HOST TOKEN=$TOKEN python3 -m unittest scraper/test.py -v`
+`DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD DB_HOST=$DB_HOST GH_TOKEN=$GH_TOKEN python3 -m unittest scraper/test.py -v`
 
-## Web server
+### Web server
 
 1. Switch to the `webserver/pkgpkr/` folder and build the Docker image.
 
@@ -67,7 +119,7 @@ docker build --build-arg DOMAIN_NAME=$DOMAIN_NAME --build-arg CLIENT_ID=$CLIENT_
 
 3. When the web server starts, open your browser to http://localhost:8000
 
-### Testing
+#### Testing
 
 Run this inside the `webserver/pkgpkr` folder.
 
@@ -76,70 +128,56 @@ python3 manage.py collectstatic
 SELENIUM_TEST=1 CLIENT_ID=$CLIENT_ID CLIENT_SECRET=$CLIENT_SECRET DB_HOST=$DB_HOST DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD python3 manage.py test
 ```
 
-# Run on AWS
+## AWS
 
-## Relational Database Service (RDS)
-
-1. Create a new PostgreSQL instance.
-
-2. If you want to use this database for local testing.
-
-    1. Make sure it's in a security group that allows inbound traffic (if you want to use the database while testing locally).
-    
-    2. Configure the database to have public accessibly.
-
-
-## Elastic Container Service (ECS)
-
-1. Create an Elastic Container Registry (ECR) named `pkgpkr`.
-
-`aws ecr create-repository --repository-name pkgpkr --region us-east-1`
-
-2. Create a ECS cluster named `default` and a service named `pkgpkr-web`. The service must support Fargate and have a Load Balancer assigned to it. Follow the [Getting Started](https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east-1#/firstRun) guide for a nice wizard to guide you through the process.
-
-3. Ensure that your IAM user has permission to register images with ECR, upload task definitions to ECS, and deploy images to ECS.
-
-## Step Functions
-
-1. Create a new State Machine with the following definition.
+Check out a new branch
 
 ```
-{
-  "StartAt": "RunTask",
-  "Comment": "Run ML Pipeline",
-  "States": {
-    "RunTask": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::ecs:runTask.sync",
-      "Parameters": {
-        "LaunchType": "FARGATE",
-        "Cluster": "arn:aws:ecs:us-east-1:<ACCOUNT_ID>:cluster/default",
-        "TaskDefinition": "arn:aws:ecs:us-east-1:<ACCOUNT_ID>:task-definition/pkgpkr-ml-task-definition",
-        "NetworkConfiguration": {
-          "AwsvpcConfiguration": {
-            "Subnets": [
-              <SUBNET_LIST>
-            ],
-            "AssignPublicIp": "ENABLED",
-            "SecurityGroups": [
-              <SECURITY_GROUP_LIST>
-            ]
-          }
-        }
-      },
-      "End": true
-    }
-  }
-}
+git checkout -b deploy_to_aws
 ```
 
-2. Create a new IAM Role that will allow the State Machine to execute tasks in our ECS cluster.
+Install Terraform and initialize it within the `terraform/` folder.
 
-## CloudWatch
+```
+cd terraform
+terraform init
+```
 
-1. Create a new Rule that is scheduled to run daily and execute the State Machine you created.
+You'll also need to have the AWS CLI installed and configured.
 
-2. Create a new IAM Role that will allow the Rule to execute the State Machine.
+```
+aws configure
+```
+
+### No custom domain
+
+1. `terraform apply`
+    1. Don't provide a value for `DOMAIN_NAME`, just hit 'enter'
+    2. `DB_PASSWORD` is the desired password for your database
+    3. `DB_USER` is the desired username for your database
+2. Create a new GitHub OAuth application
+    1. Homepage URL is `http://<ELB DNS name>`
+    2. Callback URL is `http://<ELB DNS name>/callback`
+3. Set up the database (choose one)
+    1. Load data into your databse (see "Database" section above)
+    2. Start fresh by creating new tables (see "Database" section above)
+4. Make sure all environment variables are set as secrets on your GitHub repository (see "Set environment variables" section above)
+5. Commit the changes from step 1 and merge your branch to `dev` to trigger the deploy to AWS
+6. After the GitHub deploy actions are complete, open the load balancer DNS name in your browser
+
+### pkgpkr.com domain only
+
+1. `terraform apply`
+    1. Provide `pkgpkr.com` for `DOMAIN_NAME`
+    2. `DB_PASSWORD` is the desired password for your database
+    3. `DB_USER` is the desired username for your database
+2. Update the `pkgpkr.com` and `*.pkgpkr.com` entries in the `pkgpkr.com` hosted zone to point at the ELB DNS name
+3. Set up the database (choose one)
+    1. Load data into your databse (see "Database" section above)
+    2. Start fresh by creating new tables (see "Database" section above)
+4. Make sure all environment variables are set as secrets on your GitHub repository (see "Set environment variables" section above)
+5. Commit the changes from step 1 and merge your branch to `dev` to trigger the deploy to AWS
+6. After the GitHub deploy actions are complete, open pkgpkr.com in your web browser (it may take up to 5 minutes for the TTL on pkgpkr.com to expire)
 
 # Pull Request
 

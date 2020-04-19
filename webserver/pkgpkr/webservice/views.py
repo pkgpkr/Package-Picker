@@ -1,22 +1,23 @@
+"""
+Views for the web service
+"""
+
+import os
+import urllib.parse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from django.http import HttpResponse
 from django.urls import reverse
-import os
 
 import requests
-import urllib.parse
-import json
 
 from webservice.github_util import parse_dependencies
+from pkgpkr.settings import GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, \
+    GITHUB_OATH_AUTH_PATH, GITHUB_OATH_ACCESS_TOKEN_PATH
 from . import github_util
 from .recommender_service import RecommenderService
 
-from pkgpkr.settings import GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, \
-    GITHUB_OATH_AUTH_PATH, GITHUB_OATH_ACCESS_TOKEN_PATH
-
 # Instantiate service class
-recommender_service = RecommenderService()
+RECOMMENDER_SERVICE = RecommenderService()
 
 
 def index(request):
@@ -39,7 +40,7 @@ def login(request):
 
     # For Selenium testing
     if os.environ.get('SELENIUM_TEST'):
-        request.session['github_token'] = os.environ.get('TOKEN')
+        request.session['github_token'] = os.environ.get('GH_TOKEN')
         request.session['github_info'] = github_util.get_user_info(request.session['github_token'])
 
         return HttpResponseRedirect(reverse('index'))
@@ -98,10 +99,10 @@ def repositories(request):
 
     for repo in repos:
         # Updated Date
-        dateTime = repo['updatedAt']
+        date_time = repo['updatedAt']
 
         # Convert time format e.g. 2020-03-16T13:03:34Z -> 2020-03-16
-        date = dateTime.split('T')[0]
+        date = date_time.split('T')[0]
 
         repo['date'] = date
 
@@ -138,15 +139,22 @@ def recommendations(request, name):
         return HttpResponseRedirect(reverse("index"))
 
     # Convert encoded URL back to string e.g. hello%2world -> hello/world
-    name = urllib.parse.unquote_plus(name)
+    repo_name = urllib.parse.unquote_plus(name)
 
-    # Get depencies for current repo
-    dependencies = github_util.get_dependencies(request.session['github_token'], name)
+    # Fetch branch name out of HTTP GET Param
+    branch_name = request.GET.get('branch', default='master')
+
+    # Get depencies for current repo, and branch names for the repo
+    dependencies, branch_names = github_util.get_dependencies(request.session['github_token'],
+                                                              repo_name,
+                                                              branch_name)
 
     # Get predicitons
-    recommended_dependencies = recommender_service.get_recommendations(dependencies)
+    recommended_dependencies = RECOMMENDER_SERVICE.get_recommendations(dependencies)
 
     return render(request, "webservice/recommendations.html", {
-        'repository_name': name,
-        'recommendations': recommended_dependencies
+        'repository_name': repo_name,
+        'recommendations': recommended_dependencies,
+        'branch_names': branch_names,
+        'current_branch': branch_name
     })

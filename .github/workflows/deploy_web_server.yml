@@ -23,7 +23,7 @@
 #    See the documentation for each action used below for the recommended IAM policies for this IAM user,
 #    and best practices on handling the access key credentials.
 
-name: Deploy to Amazon ECS
+name: Web Server Deploy
 
 on:
   push:
@@ -31,6 +31,7 @@ on:
       - dev
     paths:
       - 'webserver/pkgpkr/**'
+      - '.github/workflows/deploy_web_server.yml'
 
 jobs:
   deploy:
@@ -57,10 +58,7 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         ECR_REPOSITORY: pkgpkr
-        IMAGE_TAG: ${{ github.sha }}
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_HOST: ${{ secrets.DB_HOST }}
+        IMAGE_TAG: web
       run: |
         # Build a docker container and
         # push it to ECR so that it can
@@ -82,5 +80,5 @@ jobs:
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
         service: pkgpkr-web
-        cluster: default
+        cluster: pkgpkr
         wait-for-service-stability: true

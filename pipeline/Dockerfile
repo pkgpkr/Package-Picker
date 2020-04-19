@@ -4,14 +4,14 @@ FROM python:3.7
 ARG DB_USER
 ARG DB_HOST
 ARG DB_PASSWORD
-ARG TOKEN
+ARG GH_TOKEN
 ARG MONTH
 
 ENV PYTHONUNBUFFERED 1
 ENV DB_USER $DB_USER
 ENV DB_HOST $DB_HOST
 ENV DB_PASSWORD $DB_PASSWORD
-ENV TOKEN $TOKEN
+ENV GH_TOKEN $GH_TOKEN
 ENV MONTH $MONTH
 
 RUN mkdir /code
@@ -28,5 +28,5 @@ COPY . /code/
 
 RUN wget https://jdbc.postgresql.org/download/postgresql-42.2.11.jar
 
-CMD python3 scraper/Script.py && spark-submit --driver-class-path=postgresql-42.2.11.jar --jars=postgresql-42.2.11.jar model/generate.py
+CMD python3 scraper/script.py && spark-submit --driver-class-path=postgresql-42.2.11.jar --jars=postgresql-42.2.11.jar model/generate.py
 

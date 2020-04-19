@@ -1,3 +1,7 @@
+"""
+Routing URLs for the web service
+"""
+
 from django.urls import path
 
 from . import views
