@@ -51,14 +51,15 @@ class RecommenderService:
         # 2. Fetch recommendations with the following scores:
         #    1. Similarity score
         #    2. Popularity score
-        #    3. Trending score (TBD)
+        #    3. Absolute trend score
+        #    4. Percent trend score
         # 3. Return a list of recommendations with the package for which they were recommended
         # 4. Exclude any recommendations for packages that appear in the dependencies already
         # 5. Limit results to 1,000 for performance (we should figure out how to raise this)
         #
         packages = self.strip_to_major_version(dependencies)
         cur.execute(f"""
-                    SELECT DISTINCT ON (b.name) a.name, b.name, b.bounded_popularity, s.similarity, b.downloads_last_month, b.categories, b.modified
+                    SELECT DISTINCT ON (b.name) a.name, b.name, b.absolute_trend, b.monthly_downloads_a_year_ago, b.bounded_popularity, s.similarity, b.categories, b.modified
                     FROM similarity s
                     INNER JOIN packages a ON s.package_a = a.id
                     INNER JOIN packages b ON s.package_b = b.id
@@ -74,12 +75,34 @@ class RecommenderService:
         recommended = []
         for result in cur.fetchall():
 
-            # Format metadata
+            # Package name
             package = result[0].replace("pkg:npm/", "", 1)
+
+            # Recommendation name
             recommendation = result[1].replace("pkg:npm/", "", 1)
+
+            # Recommendation URL
             url = f"{NPM_DEPENDENCY_BASE_URL}/{self.name_only_regex.search(result[1]).group(1)}"
-            similarity_score = math.ceil(10 * result[3])
-            day = result[6]
+
+            # Similarity score
+            similarity_score = math.ceil(10 * result[5])
+
+            # Popularity score
+            popularity_score = result[4]
+
+            # Absolute trend score
+            absolute_trend_score = result[2]
+
+            # Relative trend score
+            relative_trend_score = 0
+            if result[2] and result[3] > 0:
+                relative_trend_score = result[2] / result[3]
+            
+            # Keywords
+            keywords = result[6]
+            
+            # Modified date
+            day = result[7]
             if day:
                 day = day.strftime('%Y-%m-%d')
 
@@ -89,10 +112,11 @@ class RecommenderService:
                     'package': package,
                     'recommendation': recommendation,
                     'url': url,
-                    'popularity_score': result[2],
+                    'absolute_trend_score': absolute_trend_score,
+                    'relative_trend_score': relative_trend_score,
+                    'popularity_score': popularity_score,
                     'similarity_score': similarity_score,
-                    'average_downloads': result[4],
-                    'keywords': result[5],
+                    'keywords': keywords,
                     'date': day
                 }
             )

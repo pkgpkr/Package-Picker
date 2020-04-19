@@ -62,6 +62,8 @@
                         <tr>
                             <th>Package</th>
                             <th>Recommendation</th>
+                            <th>Absolute Trend</th>
+                            <th>Relative Trend</th>
                             <th>Popularity</th>
                             <th>Similarity</th>
                             <th>Category</th>
@@ -75,6 +77,8 @@
                                 <td>{{ recommendation.package }}</td>
                                 <td><a target="_blank"
                                        href="{{ recommendation.url }}">{{ recommendation.recommendation }}</td>
+                                <td>{{ recommendation.absolute_trend_score }}</td>
+                                <td>{{ recommendation.relative_trend_score }}</td>
                                 <td>{{ recommendation.popularity_score }}</td>
                                 <td>{{ recommendation.similarity_score }}</td>
                                 <td>

@@ -72,7 +72,10 @@ MODE = "overwrite"
 PROPERTIES = {"user": USER, "password": PASSWORD, "driver": "org.postgresql.Driver"}
 SIMILARITY_DF.write.jdbc(URL_CONNECT, TABLE, MODE, PROPERTIES)
 
+#
 # Update popularity scores
+#
+
 POPULARITY_UPDATE = """
 UPDATE packages
 SET popularity = s.popularity
@@ -113,3 +116,34 @@ CUR.execute(BOUNDED_POPULARITY_UPDATE)
 DB.commit()
 CUR.close()
 DB.close()
+
+#
+# Update absolute trending scores
+#
+
+MONTHLY_DOWNLOADS_LAST_MONTH_NULL_TO_ZERO = """
+UPDATE packages
+SET monthly_downloads_last_month = 0
+WHERE monthly_downloads_last_month IS NULL;
+"""
+
+MONTHLY_DOWNLOADS_A_YEAR_AGO_NULL_TO_ZERO = """
+UPDATE packages
+SET monthly_downloads_a_year_ago = 0
+WHERE monthly_downloads_a_year_ago IS NULL;
+"""
+
+ABSOLUTE_TREND_UPDATE = """
+UPDATE packages
+SET absolute_trend = s.absolute_trend
+FROM (
+  SELECT id, WIDTH_BUCKET(
+    monthly_downloads_last_month - monthly_downloads_a_year_ago,
+    (SELECT MIN(monthly_downloads_last_month - monthly_downloads_a_year_ago) FROM packages),
+    (SELECT MAX(monthly_downloads_last_month - monthly_downloads_a_year_ago) FROM packages),
+    9
+  ) AS absolute_trend
+  FROM packages
+) s
+WHERE packages.id = s.id;
+"""

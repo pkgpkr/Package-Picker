@@ -47,7 +47,8 @@ def get_package_metadata(dependency):
             entry['monthly_downloads_a_year_ago'] = month_last_year_downloads_json['downloads']
     except requests.exceptions.RequestException as exc:
         print(f"Could not request downloads for {dependency_name}: {exc}")
-        entry['downloads_last_month'] = None
+        entry['monthly_downloads_last_month'] = 0
+        entry['monthly_downloads_a_year_ago'] = 0
 
     # Get keywords (i.e. categories) and date
     try:
