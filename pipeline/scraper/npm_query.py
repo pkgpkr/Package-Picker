@@ -75,7 +75,7 @@ def run_query():
     cur = database.cursor()
 
     # Fetch all package names from the database
-    cur.execute("SELECT name FROM packages;")
+    cur.execute("SELECT name FROM packages WHERE name LIKE 'pkg:npm/%';")
     results = [result[0] for result in cur.fetchall()]
 
     # Fetch all metadata for the packages from npmjs.com and write to the database
