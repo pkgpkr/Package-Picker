@@ -97,7 +97,7 @@ class RecommenderService:
             relative_trend_score = result[3]
 
             # Overall score
-            overall_score = similarity_score * 0.5 + popularity_score * 0.3 + absolute_trend_score * 0.1 + relative_trend_score * 0.1
+            overall_score = math.ceil(similarity_score * 0.5 + popularity_score * 0.3 + absolute_trend_score * 0.1 + relative_trend_score * 0.1)
 
             # Keywords
             keywords = result[6]
