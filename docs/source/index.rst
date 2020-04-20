@@ -26,8 +26,10 @@ Indices and tables
 
 :Authors:
     Daniel Sauble,
-    Gerald Arocenam,
+    Gerald Arocena,
     Dennis Cherchenko,
     Muwei Gu,
     Ed Kang,
     Vlad Popil
+
+v.2020-04-19 9:56
