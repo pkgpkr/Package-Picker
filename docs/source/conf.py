@@ -14,7 +14,8 @@ import django
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../..'))
-sys.path.insert(0, os.path.abspath('../../pipeline'))
+sys.path.insert(0, os.path.abspath('../../pipeline/scraper'))
+sys.path.insert(0, os.path.abspath('../../pipeline/model'))
 sys.path.insert(0, os.path.abspath('../../webserver/pkgpkr'))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'pkgpkr.settings'
 django.setup()
@@ -35,7 +36,8 @@ release = '0.2.0'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc'
+    'sphinx.ext.autodoc',
+    'recommonmark'
 ]
 
 
@@ -59,3 +61,14 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+
+# This block allows to add RST snippets inside MDs
+from recommonmark.transform import AutoStructify
+github_doc_root = 'https://github.com/rtfd/recommonmark/tree/master/doc/'
+def setup(app):
+    app.add_config_value('recommonmark_config', {
+            'url_resolver': lambda url: github_doc_root + url,
+            'auto_toc_tree_section': 'Contents',
+            }, True)
+    app.add_transform(AutoStructify)
