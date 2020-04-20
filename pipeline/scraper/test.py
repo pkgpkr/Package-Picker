@@ -168,7 +168,7 @@ class TestMyClass(unittest.TestCase):
         self.assertIsNone(modified_date)
 
         # Update metadata in the table
-        update_package_metadata(database, name, downloads_last_month, categories, modified)
+        update_package_metadata(database, name, downloads_last_month, downloads_last_month, categories, modified)
 
         # Ensure that the modified field is now not None
         cur.execute(
