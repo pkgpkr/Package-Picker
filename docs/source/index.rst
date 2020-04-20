@@ -15,7 +15,7 @@ Welcome to pkgpkr's documentation!
    recommender-model.rst
    webserver.rst
 
-
+   README.md
 
 
 Indices and tables

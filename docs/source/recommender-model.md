@@ -1,3 +1,12 @@
+# Recommender Model
+
+
+### Algorithm Description
+
+Our Recommender...
+
+- Read packages...
+- Calc similarity scores...
 
 
 *bold*
@@ -5,10 +14,6 @@
 ## second
 
 # first
-
-
-
-#YO
 
 
 Hello `simple mark`
