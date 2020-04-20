@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Recommender Model" href="recommender-model.html" />
+    <link rel="next" title="second" href="recommender-model.html" />
     <link rel="prev" title="Introduction" href="intro.html" /> 
 </head>
 
@@ -83,8 +83,15 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Scraper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="recommender-model.html">Recommender Model</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Scraper</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-month_calculation">month_calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#github-query">github_query</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#npm-query">npm_query</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pypi-query">pypi_query</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="recommender-model.html">second</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recommender-model.html#first">first</a></li>
 <li class="toctree-l1"><a class="reference internal" href="webserver.html">Web Server</a></li>
 </ul>
 
@@ -152,6 +159,31 @@
             
   <div class="section" id="scraper">
 <h1>Scraper<a class="headerlink" href="#scraper" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-month_calculation">
+<span id="month-calculation"></span><h2>month_calculation<a class="headerlink" href="#module-month_calculation" title="Permalink to this headline">¶</a></h2>
+<p>Compute month-long time slices for use in GitHub scraping</p>
+<dl class="function">
+<dt id="month_calculation.get_monthly_search_str">
+<code class="sig-prename descclassname">month_calculation.</code><code class="sig-name descname">get_monthly_search_str</code><span class="sig-paren">(</span><em class="sig-param">start_date</em><span class="sig-paren">)</span><a class="headerlink" href="#month_calculation.get_monthly_search_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a month-specifying date string for GitHub v4 API</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="month_calculation.month_delta">
+<code class="sig-prename descclassname">month_calculation.</code><code class="sig-name descname">month_delta</code><span class="sig-paren">(</span><em class="sig-param">date</em>, <em class="sig-param">delta</em><span class="sig-paren">)</span><a class="headerlink" href="#month_calculation.month_delta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the date string corresponding with the given offset from the given date</p>
+</dd></dl>
+
+</div>
+<div class="section" id="github-query">
+<h2>github_query<a class="headerlink" href="#github-query" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="npm-query">
+<h2>npm_query<a class="headerlink" href="#npm-query" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="pypi-query">
+<h2>pypi_query<a class="headerlink" href="#pypi-query" title="Permalink to this headline">¶</a></h2>
+</div>
 </div>
 
 
@@ -162,7 +194,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="recommender-model.html" class="btn btn-neutral float-right" title="Recommender Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="recommender-model.html" class="btn btn-neutral float-right" title="second" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="intro.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

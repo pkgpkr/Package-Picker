@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Recommender Model" href="recommender-model.html" /> 
+    <link rel="prev" title="second" href="recommender-model.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -83,8 +83,14 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scraper.html">Scraper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="recommender-model.html">Recommender Model</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Web Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recommender-model.html">second</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recommender-model.html#first">first</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Web Server</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#webservice-views">webservice.views</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#webservice-recommender-service">webservice.recommender_service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#webservice-github-util">webservice.github_util</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -151,6 +157,75 @@
             
   <div class="section" id="web-server">
 <h1>Web Server<a class="headerlink" href="#web-server" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="webservice-views">
+<h2>webservice.views<a class="headerlink" href="#webservice-views" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="webservice-recommender-service">
+<h2>webservice.recommender_service<a class="headerlink" href="#webservice-recommender-service" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="webservice-github-util">
+<h2>webservice.github_util<a class="headerlink" href="#webservice-github-util" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><span class="target" id="module-webservice.github_util"></span><p>Utility functions for the web server</p>
+<dl class="function">
+<dt id="webservice.github_util.dependencies_name_to_purl">
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">dependencies_name_to_purl</code><span class="sig-paren">(</span><em class="sig-param">dependencies</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.dependencies_name_to_purl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert dependency names to the universal Package URL (PURL) format
+:param dependencies: Array of <a class="reference external" href="mailto:name&#37;&#52;&#48;version">name<span>&#64;</span>version</a> like names</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="webservice.github_util.get_dependencies">
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">get_dependencies</code><span class="sig-paren">(</span><em class="sig-param">token</em>, <em class="sig-param">repo_full_name</em>, <em class="sig-param">branch_name</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.get_dependencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets repository info for a specific repo (from package.json)
+:param token: GitHub token for auth
+:param repo_full_name: repo name with user name
+:param branch_name: specific branch to fetch dependencies for, or MASTER (default)
+:return: dependencies and all branch names</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="webservice.github_util.get_repositories">
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">get_repositories</code><span class="sig-paren">(</span><em class="sig-param">token</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.get_repositories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the repositories associated with the given GitHub token
+:param token: GitHub API token
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="webservice.github_util.get_user_info">
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">get_user_info</code><span class="sig-paren">(</span><em class="sig-param">token</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.get_user_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the user info associated with the given GitHub token
+:param token: GitHub API token
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="webservice.github_util.get_user_name">
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">get_user_name</code><span class="sig-paren">(</span><em class="sig-param">token</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.get_user_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves name of the authenticated GitHub user
+:param token: GitHub API token
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="webservice.github_util.is_user_authenticated">
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">is_user_authenticated</code><span class="sig-paren">(</span><em class="sig-param">token</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.is_user_authenticated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the user is authenticated
+:param token: GitHub API token
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="webservice.github_util.parse_dependencies">
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">parse_dependencies</code><span class="sig-paren">(</span><em class="sig-param">text_response</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.parse_dependencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a stringified package.json file and extract its dependencies
+:param text_reponse: A stringified package.json object
+:return:</p>
+</dd></dl>
+
+</div></blockquote>
+</div>
 </div>
 
 
@@ -162,7 +237,7 @@
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="recommender-model.html" class="btn btn-neutral float-left" title="Recommender Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="recommender-model.html" class="btn btn-neutral float-left" title="second" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
