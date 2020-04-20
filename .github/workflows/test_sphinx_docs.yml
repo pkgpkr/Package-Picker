@@ -26,6 +26,11 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
+    - name: Install dependencies
+      run: |
+        pip install webserver/pkgpkr/requirements.txt
+        pip install pipeline/requirements.txt
+        
     # Build Sphinx
     - name: Sphinx Build
       uses: ammaraskar/sphinx-action@0.4
