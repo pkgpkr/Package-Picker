@@ -28,9 +28,9 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install webserver/pkgpkr/requirements.txt
-        pip install pipeline/requirements.txt
-        
+        pip install -r webserver/pkgpkr/requirements.txt
+        pip install -r pipeline/requirements.txt
+
     # Build Sphinx
     - name: Sphinx Build
       uses: ammaraskar/sphinx-action@0.4
