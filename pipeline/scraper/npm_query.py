@@ -25,26 +25,24 @@ def get_package_metadata(dependency):
     entry['name'] = dependency
 
     # Get downloads
+    now = datetime.datetime.now()
+    last_month_str = f'{month_delta(now, 1).strftime("%Y-%m-%d")}:{now.strftime("%Y-%m-%d")}'
+    month_last_year_str = f'{month_delta(now, 13).strftime("%Y-%m-%d")}:{month_delta(now, 12).strftime("%Y-%m-%d")}'
+    entry['monthly_downloads_last_month'] = 0
+    entry['monthly_downloads_a_year_ago'] = 0
     try:
-        now_date = datetime.datetime.now()
-        last_month_str = f'{month_delta(now_date, 1).strftime("%Y-%m-%d")}:{now_date.strftime("%Y-%m-%d")}'
-        month_last_year_str = f'{month_delta(now_date, 13).strftime("%Y-%m-%d")}:{month_delta(now_date, 12).strftime("%Y-%m-%d")}'
         last_month_downloads_json = requests.get(f'{NPM_DOWNLOADS_API_URL}/{last_month_str}/{dependency_name}').json()
         month_last_year_downloads_json = requests.get(f'{NPM_DOWNLOADS_API_URL}/{month_last_year_str}/{dependency_name}').json()
 
         # Get monthly downloads over the past month
-        entry['monthly_downloads_last_month'] = 0
         if last_month_downloads_json.get('downloads'):
             entry['monthly_downloads_last_month'] = last_month_downloads_json['downloads']
 
         # Get monthly downloads for the month a year ago
-        entry['monthly_downloads_a_year_ago'] = 0
         if month_last_year_downloads_json.get('downloads'):
             entry['monthly_downloads_a_year_ago'] = month_last_year_downloads_json['downloads']
     except requests.exceptions.RequestException as exc:
         print(f"Could not request downloads for {dependency_name}: {exc}")
-        entry['monthly_downloads_last_month'] = 0
-        entry['monthly_downloads_a_year_ago'] = 0
 
     # Get keywords (i.e. categories) and date
     try:
