@@ -30,8 +30,6 @@ jobs:
     # Build Sphinx
     - name: Sphinx Build
       uses: ammaraskar/sphinx-action@0.4
-      env:
-        SPHINXOPTS: -W
       with:
         # The folder containing your sphinx docs.
         docs-folder: docs/
