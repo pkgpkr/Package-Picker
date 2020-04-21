@@ -96,8 +96,20 @@ class RecommenderService:
             # Relative trend score
             relative_trend_score = result[3]
 
-            # Overall score
-            overall_score = math.ceil(similarity_score * 0.5 + popularity_score * 0.3 + absolute_trend_score * 0.1 + relative_trend_score * 0.1)
+            # Weighted overall score
+            weighted_similarity = 0
+            weighted_popularity = 0
+            weighted_absolute_trend = 0
+            weighted_relative_trend = 0
+            if similarity_score:
+                weighted_similarity = similarity_score * 0.5
+            if popularity_score:
+                weighted_popularity = popularity_score * 0.3
+            if absolute_trend_score:
+                weighted_absolute_trend = absolute_trend_score * 0.1
+            if relative_trend_score:
+                weighted_relative_trend = relative_trend_score * 0.1
+            overall_score = math.ceil(weighted_similarity + weighted_popularity + weighted_absolute_trend + weighted_relative_trend)
 
             # Keywords
             keywords = result[6]
