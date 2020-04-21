@@ -45,21 +45,18 @@ def get_package_metadata(dependency):
         print(f"Could not request downloads for {dependency_name}: {exc}")
 
     # Get keywords (i.e. categories) and date
+    entry['categories'] = None
+    entry['modified'] = None
     try:
-        res = requests.get(f'{NPM_DEPENDENCY_META_URL}/{dependency_name}')
-        res_json = res.json()
+        res_json = requests.get(f'{NPM_DEPENDENCY_META_URL}/{dependency_name}').json()
 
-        entry['categories'] = None
         if res_json.get('keywords'):
             entry['categories'] = res_json.get('keywords')
 
-        entry['modified'] = None
         if res_json.get('time') and res_json['time'].get('modified'):
             entry['modified'] = res_json['time']['modified']
     except requests.exceptions.RequestException as exc:
         print(f"Could not request {NPM_DEPENDENCY_META_URL}/{dependency_name}: {exc}")
-        entry['categories'] = None
-        entry['modified'] = None
 
     return entry
 
