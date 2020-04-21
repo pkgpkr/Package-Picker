@@ -43,7 +43,7 @@ jobs:
         git clone https://github.com/pkgpkr/Package-Picker.git --branch gh-pages --single-branch gh-pages
         cd gh-pages
         rm -r *
-        cp -r ../docs/build/html/* gh-pages/
+        cp -r ../docs/build/html/* .
         touch .nojekyll
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
