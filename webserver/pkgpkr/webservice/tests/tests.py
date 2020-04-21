@@ -77,7 +77,7 @@ class LoginTest(LiveServerTestCase):
 
         # The first element from the repos list
         first_repo_ele = self.driver.find_element_by_xpath(
-            "//*[@id='DataTables_Table_0']/tbody/tr/td[1]/a")
+            "//*[@class='display-data-tables']/tbody/tr/td[1]/a")
         first_repo_ele.click()
 
         # Check if the user at recommendations page
@@ -99,7 +99,7 @@ class LoginTest(LiveServerTestCase):
 
         # Category border
         category_order_ele = self.driver.find_element_by_xpath(
-            "//*[@id='DataTables_Table_0']/thead/tr/th[4]")
+            "//*[@id='recommendTable']/thead/tr/th[4]")
 
         # Click it twice to make sure the first recommendation has at least one category
         category_order_ele.click()
@@ -107,7 +107,7 @@ class LoginTest(LiveServerTestCase):
 
         # The first category
         first_category_ele = self.driver.find_element_by_xpath(
-            "//*[@id='DataTables_Table_0']/tbody/tr[1]/td[4]/div[1]/button")
+            "//*[@id='recommendTable']/tbody/tr[1]/td[4]/div[1]/button")
         first_category_ele.click()
 
         # Clear button
@@ -122,7 +122,7 @@ class LoginTest(LiveServerTestCase):
 
         # The first element from the recommendation list
         first_recommendation_ele = self.driver.find_element_by_xpath(
-            "//*[@id='DataTables_Table_0']/tbody/tr/td[2]/a")
+            "//*[@id='recommendTable']/tbody/tr/td[2]/a")
         first_recommendation_ele.click()
 
         # Logout button
