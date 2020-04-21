@@ -88,8 +88,8 @@
 <li class="toctree-l1"><a class="reference internal" href="deploy.html">AWS Deploy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Web Server</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#webservice-views">webservice.views</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#webservice-recommender-service">webservice.recommender_service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-webservice.views">webservice.views</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-webservice.recommender_service">webservice.recommender_service</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#webservice-github-util">webservice.github_util</a></li>
 </ul>
 </li>
@@ -161,11 +161,76 @@
   <div class="section" id="web-server">
 <h1>Web Server<a class="headerlink" href="#web-server" title="Permalink to this headline">¶</a></h1>
 <p>TODO about webserver</p>
-<div class="section" id="webservice-views">
-<h2>webservice.views<a class="headerlink" href="#webservice-views" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-webservice.views">
+<span id="webservice-views"></span><h2>webservice.views<a class="headerlink" href="#module-webservice.views" title="Permalink to this headline">¶</a></h2>
+<p>Views for the web service</p>
+<dl class="function">
+<dt id="webservice.views.about">
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">about</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.about" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return about info</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="webservice.views.callback">
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">callback</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.callback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Github redirect here, then retrieves token for API</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="webservice.views.index">
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">index</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return landing page</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="webservice.views.login">
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">login</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log user in using Github OAuth</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="webservice.views.logout">
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">logout</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.logout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logs user out but keep authorization ot OAuth Github</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="webservice.views.recommendations">
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">recommendations</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.recommendations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get recomended pacakges for the repo
+:param request:
+:param name: repo name
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="webservice.views.repositories">
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">repositories</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.repositories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get full list (up to 100) for the current user</p>
+</dd></dl>
+
 </div>
-<div class="section" id="webservice-recommender-service">
-<h2>webservice.recommender_service<a class="headerlink" href="#webservice-recommender-service" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-webservice.recommender_service">
+<span id="webservice-recommender-service"></span><h2>webservice.recommender_service<a class="headerlink" href="#module-webservice.recommender_service" title="Permalink to this headline">¶</a></h2>
+<p>Get package recommendations from our database</p>
+<dl class="class">
+<dt id="webservice.recommender_service.RecommenderService">
+<em class="property">class </em><code class="sig-prename descclassname">webservice.recommender_service.</code><code class="sig-name descname">RecommenderService</code><a class="headerlink" href="#webservice.recommender_service.RecommenderService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recommender engine for the web server</p>
+<dl class="method">
+<dt id="webservice.recommender_service.RecommenderService.get_recommendations">
+<code class="sig-name descname">get_recommendations</code><span class="sig-paren">(</span><em class="sig-param">dependencies</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.recommender_service.RecommenderService.get_recommendations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of package recommendations and metadata given a set of dependencies</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="webservice.recommender_service.RecommenderService.strip_to_major_version">
+<code class="sig-name descname">strip_to_major_version</code><span class="sig-paren">(</span><em class="sig-param">dependencies</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.recommender_service.RecommenderService.strip_to_major_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strip everything after the major version in each dependency</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="webservice-github-util">
 <h2>webservice.github_util<a class="headerlink" href="#webservice-github-util" title="Permalink to this headline">¶</a></h2>
