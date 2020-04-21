@@ -38,7 +38,8 @@ pypi_query
 TODO About model
 
 
-```eval_rst
+```
+TODO this may need to be eval_rst, but no use
 generate
 ----------------------
  .. automodule:: generate
