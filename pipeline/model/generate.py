@@ -46,7 +46,7 @@ TRANSFORMED_DF = TRANSFORMED_DF.drop(col("package_ids"))
 ARRAY = [Vectors.fromML(row.packages_encoded) for row in TRANSFORMED_DF.collect()]
 
 # Create a RowMatrix
-MATRIX = RowMatrix(SC.parallelize(ARRAY, numSlices=50))
+MATRIX = RowMatrix(SC.parallelize(ARRAY, numSlices=100))
 
 # Compute column similarity matrix
 SIMILARITY = MATRIX.columnSimilarities()
