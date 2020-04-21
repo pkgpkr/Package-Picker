@@ -1,4 +1,4 @@
-![Pipeline Tests](https://github.com/pkgpkr/Package-Picker/workflows/Scraper%20Test%20CI/badge.svg) ![Pipeline Deploy](https://github.com/pkgpkr/Package-Picker/workflows/Pipeline%20Deploy/badge.svg) ![Web Server Tests](https://github.com/pkgpkr/Package-Picker/workflows/Web%20Server%20Tests/badge.svg) ![Web Server Deploy](https://github.com/pkgpkr/Package-Picker/workflows/Web%20Server%20Deploy/badge.svg)
+![Pipeline Tests](https://github.com/pkgpkr/Package-Picker/workflows/Scraper%20Test%20CI/badge.svg) ![Pipeline Deploy](https://github.com/pkgpkr/Package-Picker/workflows/Pipeline%20Deploy/badge.svg) ![Web Server Tests](https://github.com/pkgpkr/Package-Picker/workflows/Web%20Server%20Tests/badge.svg) ![Web Server Deploy](https://github.com/pkgpkr/Package-Picker/workflows/Web%20Server%20Deploy/badge.svg)![Sphinx Docs Test](https://github.com/pkgpkr/Package-Picker/workflows/Sphinx%20Docs%20Test/badge.svg)![Sphinx Docs Deploy](https://github.com/pkgpkr/Package-Picker/workflows/Sphinx%20Docs%20Deploy/badge.svg)
 
 # Intro
 
@@ -26,7 +26,7 @@ DB_USER               # Database user
 DOMAIN_NAME           # The domain name where the site is hosted (e.g. http://pkgpkr.com)
 MONTH                 # How many months of data to scrape
 SELENIUM_TEST         # Set if running Selenium tests
-GITHUB_TOKEN                 # Your GitHub API token
+GH_TOKEN              # Your GitHub API token
 ```
 
 # Database
@@ -96,7 +96,7 @@ CREATE TABLE similarity (
 
 ```
 cd pipeline
-docker build --build-arg GITHUB_TOKEN=$TEST_USER_TOKEN --build-arg MONTH=$MONTH --build-arg DB_USER=$DB_USER --build-arg DB_HOST=$DB_HOST --build-arg=DB_PASSWORD=$DB_PASSWORD .
+docker build --build-arg GH_TOKEN=$GH_TOKEN --build-arg MONTH=$MONTH --build-arg DB_USER=$DB_USER --build-arg DB_HOST=$DB_HOST --build-arg=DB_PASSWORD=$DB_PASSWORD .
 ```
 
 2. Run the Docker image. It will automatically scrape data and train the model, and quit when done.
@@ -107,7 +107,7 @@ docker build --build-arg GITHUB_TOKEN=$TEST_USER_TOKEN --build-arg MONTH=$MONTH 
 
 Run this inside the `pipeline/` folder.
 
-`DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD DB_HOST=$DB_HOST GITHUB_TOKEN=$TEST_USER_TOKEN python3 -m unittest scraper/test.py -v`
+`DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD DB_HOST=$DB_HOST GH_TOKEN=$GH_TOKEN python3 -m unittest scraper/test.py -v`
 
 ### Web server
 
