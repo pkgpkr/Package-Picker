@@ -27,14 +27,10 @@ def get_package_metadata(dependency):
     # Get downloads
     try:
         now_date = datetime.datetime.now()
-        last_month_start = month_delta(now_date, 1).strftime("%Y-%m-%d")
-        last_month_end = now_date.strftime("%Y-%m-%d")
-        month_last_year_start = month_delta(now_date, 13).strftime("%Y-%m-%d")
-        month_last_year_end = month_delta(now_date, 12).strftime("%Y-%m-%d")
-        last_month_url = f'{NPM_DOWNLOADS_API_URL}/{last_month_start}:{last_month_end}/{dependency_name}'
-        month_last_year_url = f'{NPM_DOWNLOADS_API_URL}/{month_last_year_start}:{month_last_year_end}/{dependency_name}'
-        last_month_downloads_json = requests.get(last_month_url).json()
-        month_last_year_downloads_json = requests.get(month_last_year_url).json()
+        last_month_str = f'{month_delta(now_date, 1).strftime("%Y-%m-%d")}:{now_date.strftime("%Y-%m-%d")}'
+        month_last_year_str = f'{month_delta(now_date, 13).strftime("%Y-%m-%d")}:{month_delta(now_date, 12).strftime("%Y-%m-%d")}'
+        last_month_downloads_json = requests.get(f'{NPM_DOWNLOADS_API_URL}/{last_month_str}/{dependency_name}').json()
+        month_last_year_downloads_json = requests.get(f'{NPM_DOWNLOADS_API_URL}/{month_last_year_str}/{dependency_name}').json()
 
         # Get monthly downloads over the past month
         entry['monthly_downloads_last_month'] = 0
