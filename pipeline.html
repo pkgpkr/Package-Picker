@@ -94,10 +94,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#pypi-query">pypi_query</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#recommender-model">Recommender Model</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#generate">generate</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#recommender-model">Recommender Model</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="webserver.html">Web Server</a></li>
@@ -189,6 +186,27 @@
 </div>
 <div class="section" id="github-query">
 <h3>github_query<a class="headerlink" href="#github-query" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><span class="target" id="module-github_query"></span><p>Fetch npm dependency information from the GitHub v4 API</p>
+<dl class="function">
+<dt id="github_query.run_query">
+<code class="sig-prename descclassname">github_query.</code><code class="sig-name descname">run_query</code><span class="sig-paren">(</span><em class="sig-param">today</em>, <em class="sig-param">language='JavaScript'</em><span class="sig-paren">)</span><a class="headerlink" href="#github_query.run_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch all repositories for the given month</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="github_query.run_query_once">
+<code class="sig-prename descclassname">github_query.</code><code class="sig-name descname">run_query_once</code><span class="sig-paren">(</span><em class="sig-param">node_per_loop</em>, <em class="sig-param">monthly_search_str</em>, <em class="sig-param">cursor</em>, <em class="sig-param">language</em><span class="sig-paren">)</span><a class="headerlink" href="#github_query.run_query_once" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch a single page of repositories for the given month</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="github_query.write_db">
+<code class="sig-prename descclassname">github_query.</code><code class="sig-name descname">write_db</code><span class="sig-paren">(</span><em class="sig-param">database</em>, <em class="sig-param">result</em>, <em class="sig-param">language='JavaScript'</em><span class="sig-paren">)</span><a class="headerlink" href="#github_query.write_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a set of repositories and their dependencies to the database for JS packages</p>
+</dd></dl>
+
+</div></blockquote>
 </div>
 <div class="section" id="npm-query">
 <h3>npm_query<a class="headerlink" href="#npm-query" title="Permalink to this headline">¶</a></h3>
@@ -216,13 +234,33 @@
 </div>
 <div class="section" id="pypi-query">
 <h3>pypi_query<a class="headerlink" href="#pypi-query" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><span class="target" id="module-pypi_query"></span><p>Fetch package metadata from the pypi API</p>
+<dl class="function">
+<dt id="pypi_query.get_package_metadata">
+<code class="sig-prename descclassname">pypi_query.</code><code class="sig-name descname">get_package_metadata</code><span class="sig-paren">(</span><em class="sig-param">dependency</em><span class="sig-paren">)</span><a class="headerlink" href="#pypi_query.get_package_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the downloads, categories, and modified date for a package</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pypi_query.run_query">
+<code class="sig-prename descclassname">pypi_query.</code><code class="sig-name descname">run_query</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pypi_query.run_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enrich the package table with metadata for all packages in the table</p>
+</dd></dl>
+
+</div></blockquote>
 </div>
 </div>
 <div class="section" id="recommender-model">
 <h2>Recommender Model<a class="headerlink" href="#recommender-model" title="Permalink to this headline">¶</a></h2>
 <p>TODO About model</p>
-<div class="section" id="generate">
-<h3>generate<a class="headerlink" href="#generate" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TODO</span> <span class="n">this</span> <span class="n">may</span> <span class="n">need</span> <span class="n">to</span> <span class="n">be</span> <span class="n">eval_rst</span><span class="p">,</span> <span class="n">but</span> <span class="n">no</span> <span class="n">use</span>
+<span class="n">generate</span>
+<span class="o">----------------------</span>
+ <span class="o">..</span> <span class="n">automodule</span><span class="p">::</span> <span class="n">generate</span>
+    <span class="p">:</span><span class="n">members</span><span class="p">:</span>
+    <span class="p">:</span><span class="n">undoc</span><span class="o">-</span><span class="n">members</span><span class="p">:</span>
+</pre></div>
 </div>
 </div>
 </div>
