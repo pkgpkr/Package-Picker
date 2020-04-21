@@ -10,12 +10,18 @@ Welcome to pkgpkr's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   intro.rst
-   scraper.rst
-   recommender-model.rst
-   webserver.rst
-
    README.md
+   setup.md
+   development.md
+   deploy.md
+   pipeline.md
+   webserver.md
+   architecture.md
+
+
+
+
+
 
 
 Indices and tables
