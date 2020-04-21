@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Recommender Model &mdash; pkgpkr 0.2.0 documentation</title>
+  <title>Architecture &mdash; pkgpkr 0.2.0 documentation</title>
   
 
   
@@ -35,8 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Web Server" href="webserver.html" />
-    <link rel="prev" title="Scraper" href="scraper.html" /> 
+    <link rel="prev" title="Web Server" href="webserver.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -82,25 +81,13 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="scraper.html">Scraper</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Recommender Model</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#algorithm-description">Algorithm Description</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#second">second</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="#first">first</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#generate">generate</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="webserver.html">Web Server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="README.html">Intro</a></li>
-<li class="toctree-l1"><a class="reference internal" href="README.html#get-the-code">Get the code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="README.html#set-environment-variables">Set environment variables</a></li>
-<li class="toctree-l1"><a class="reference internal" href="README.html#database">Database</a></li>
-<li class="toctree-l1"><a class="reference internal" href="README.html#run">Run</a></li>
-<li class="toctree-l1"><a class="reference internal" href="README.html#pull-request">Pull Request</a></li>
-<li class="toctree-l1"><a class="reference internal" href="README.html#merge">Merge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Local development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deploy.html">AWS Deploy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webserver.html">Web Server</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Architecture</a></li>
 </ul>
 
             
@@ -146,13 +133,13 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Recommender Model</li>
+      <li>Architecture</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/recommender-model.md.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/architecture.md.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -165,31 +152,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="recommender-model">
-<h1>Recommender Model<a class="headerlink" href="#recommender-model" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="algorithm-description">
-<h2>Algorithm Description<a class="headerlink" href="#algorithm-description" title="Permalink to this headline">¶</a></h2>
-<p>Our Recommender…</p>
-<ul class="simple">
-<li><p>Read packages…</p></li>
-<li><p>Calc similarity scores…</p></li>
-</ul>
-<p><em>bold</em></p>
-</div>
-<div class="section" id="second">
-<h2>second<a class="headerlink" href="#second" title="Permalink to this headline">¶</a></h2>
-</div>
-</div>
-<div class="section" id="first">
-<h1>first<a class="headerlink" href="#first" title="Permalink to this headline">¶</a></h1>
-<p>Hello <code class="docutils literal notranslate"><span class="pre">simple</span> <span class="pre">mark</span></code></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-</pre></div>
-</div>
-<div class="section" id="generate">
-<h2>generate<a class="headerlink" href="#generate" title="Permalink to this headline">¶</a></h2>
-</div>
+  <div class="section" id="architecture">
+<h1>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h1>
+<p><img alt="Pipeline Tests" src="_images/diagram.png" /></p>
 </div>
 
 
@@ -200,10 +165,8 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="webserver.html" class="btn btn-neutral float-right" title="Web Server" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-      
-        <a href="scraper.html" class="btn btn-neutral float-left" title="Scraper" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="webserver.html" class="btn btn-neutral float-left" title="Web Server" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

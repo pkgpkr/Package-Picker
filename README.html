@@ -35,7 +35,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Web Server" href="webserver.html" /> 
+    <link rel="next" title="Setup" href="setup.html" />
+    <link rel="prev" title="Welcome to pkgpkr’s documentation!" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -81,40 +82,13 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="scraper.html">Scraper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="recommender-model.html">Recommender Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="recommender-model.html#first">first</a></li>
-<li class="toctree-l1"><a class="reference internal" href="webserver.html">Web Server</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Intro</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#get-the-code">Get the code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#set-environment-variables">Set environment variables</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#database">Database</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#load-data">Load data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#fresh-start">Fresh start</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="#run">Run</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#local-development">Local development</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#data-scraper">Data scraper</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#testing">Testing</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#web-server">Web server</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id1">Testing</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#aws">AWS</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#no-custom-domain">No custom domain</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pkgpkr-com-domain-only">pkgpkr.com domain only</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="#pull-request">Pull Request</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#merge">Merge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Local development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deploy.html">AWS Deploy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webserver.html">Web Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
 </ul>
 
             
@@ -184,213 +158,6 @@
 <h1>Intro<a class="headerlink" href="#intro" title="Permalink to this headline">¶</a></h1>
 <p>Package Picker is a recommendation platform for JavaScript packages. It uses machine learning to predict packages that are frequently used with the packages in your projects. Check it out at <a class="reference external" href="http://pkgpkr.com">pkgpkr.com</a>.</p>
 </div>
-<div class="section" id="get-the-code">
-<h1>Get the code<a class="headerlink" href="#get-the-code" title="Permalink to this headline">¶</a></h1>
-<p>NOTE: If you do not know the git CLI commands, recommend to use <a class="reference external" href="https://www.sourcetreeapp.com/">sourcetree</a> or <a class="reference external" href="https://www.gitkraken.com/">gitkraren</a>.</p>
-<ol class="simple">
-<li><p>git clone https://github.com/pkgpkr/Package-Picker.git to your local folder</p></li>
-<li><p>create a branch locally for your small features.</p></li>
-<li><p>start coding.</p></li>
-<li><p>make commits frequently</p></li>
-</ol>
-</div>
-<div class="section" id="set-environment-variables">
-<h1>Set environment variables<a class="headerlink" href="#set-environment-variables" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">AWS_ACCESS_KEY_ID</span>     <span class="c1"># Your AWS account&#39;s access key</span>
-<span class="n">AWS_SECRET_ACCESS_KEY</span> <span class="c1"># Your AWS account&#39;s secret access key</span>
-<span class="n">CLIENT_ID</span>             <span class="c1"># ID of the GitHub app used by the web server</span>
-<span class="n">CLIENT_SECRET</span>         <span class="c1"># Secret for the GitHub app</span>
-<span class="n">DB_HOST</span>               <span class="c1"># Database URL</span>
-<span class="n">DB_PASSWORD</span>           <span class="c1"># Database password</span>
-<span class="n">DB_USER</span>               <span class="c1"># Database user</span>
-<span class="n">DOMAIN_NAME</span>           <span class="c1"># The domain name where the site is hosted (e.g. http://pkgpkr.com)</span>
-<span class="n">MONTH</span>                 <span class="c1"># How many months of data to scrape</span>
-<span class="n">SELENIUM_TEST</span>         <span class="c1"># Set if running Selenium tests</span>
-<span class="n">GH_TOKEN</span>              <span class="c1"># Your GitHub API token</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="database">
-<h1>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h1>
-<p>Terraform will provision a database for you (see the AWS section below), otherwise you will need to manually create a PostgreSQL instance in RDS.</p>
-<blockquote>
-<div><p>NOTE: Make sure the database is publically accessible if you want to access it from your local developer setup.</p>
-</div></blockquote>
-<div class="section" id="load-data">
-<h2>Load data<a class="headerlink" href="#load-data" title="Permalink to this headline">¶</a></h2>
-<p>If you want to start with some data in the database so you don’t have to run the ML pipeline first, run the following commands:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pkgpkr</span><span class="o">-</span><span class="n">models</span><span class="o">.</span><span class="n">s3</span><span class="o">.</span><span class="n">amazonaws</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">database</span><span class="o">.</span><span class="n">dump</span>
-<span class="n">psql</span> <span class="o">-</span><span class="n">h</span> <span class="o">&lt;</span><span class="n">DB</span> <span class="n">host</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">U</span> <span class="o">&lt;</span><span class="n">DB</span> <span class="n">user</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">DB</span> <span class="n">name</span><span class="o">&gt;</span> <span class="o">&lt;</span> <span class="n">database</span><span class="o">.</span><span class="n">dump</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="fresh-start">
-<h2>Fresh start<a class="headerlink" href="#fresh-start" title="Permalink to this headline">¶</a></h2>
-<p>If you want to populate the database with data from scratch, create new tables with the following SQL commands before running the ML pipeline:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">applications</span> <span class="p">(</span>
-  <span class="nb">id</span> <span class="n">SERIAL</span> <span class="n">PRIMARY</span> <span class="n">KEY</span><span class="p">,</span>
-  <span class="n">url</span> <span class="n">TEXT</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
-  <span class="n">name</span> <span class="n">TEXT</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
-  <span class="n">followers</span> <span class="n">INTEGER</span><span class="p">,</span>
-  <span class="nb">hash</span> <span class="n">TEXT</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
-  <span class="n">retrieved</span> <span class="n">TIMESTAMPTZ</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
-  <span class="n">CONSTRAINT</span> <span class="n">unique_url</span> <span class="n">UNIQUE</span> <span class="p">(</span><span class="n">url</span><span class="p">)</span>
-<span class="p">);</span>
-<span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">packages</span> <span class="p">(</span>
-  <span class="nb">id</span> <span class="n">SERIAL</span> <span class="n">PRIMARY</span> <span class="n">KEY</span><span class="p">,</span>
-  <span class="n">name</span> <span class="n">TEXT</span> <span class="n">UNIQUE</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
-  <span class="n">downloads_last_month</span> <span class="n">INTEGER</span><span class="p">,</span>
-  <span class="n">categories</span> <span class="n">TEXT</span><span class="p">[],</span>
-  <span class="n">modified</span> <span class="n">TIMESTAMPTZ</span><span class="p">,</span>
-  <span class="n">retrieved</span> <span class="n">TIMESTAMPTZ</span> <span class="n">NOT</span> <span class="n">NULL</span>
-<span class="p">);</span>
-<span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">dependencies</span> <span class="p">(</span>
-  <span class="n">application_id</span> <span class="n">INTEGER</span> <span class="n">REFERENCES</span> <span class="n">applications</span> <span class="p">(</span><span class="nb">id</span><span class="p">),</span>
-  <span class="n">package_id</span> <span class="n">INTEGER</span> <span class="n">REFERENCES</span> <span class="n">packages</span> <span class="p">(</span><span class="nb">id</span><span class="p">),</span>
-  <span class="n">CONSTRAINT</span> <span class="n">unique_app_to_pkg</span> <span class="n">UNIQUE</span> <span class="p">(</span><span class="n">application_id</span><span class="p">,</span> <span class="n">package_id</span><span class="p">)</span>
-<span class="p">);</span>
-<span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">similarity</span> <span class="p">(</span>
-  <span class="n">package_a</span> <span class="n">INTEGER</span> <span class="n">REFERENCES</span> <span class="n">packages</span> <span class="p">(</span><span class="nb">id</span><span class="p">),</span>
-  <span class="n">package_b</span> <span class="n">INTEGER</span> <span class="n">REFERENCES</span> <span class="n">packages</span> <span class="p">(</span><span class="nb">id</span><span class="p">),</span>
-  <span class="n">similarity</span> <span class="n">FLOAT</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
-  <span class="n">CONSTRAINT</span> <span class="n">unique_pkg_to_pkg</span> <span class="n">UNIQUE</span> <span class="p">(</span><span class="n">package_a</span><span class="p">,</span> <span class="n">package_b</span><span class="p">)</span>
-<span class="p">);</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="run">
-<h1>Run<a class="headerlink" href="#run" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="local-development">
-<h2>Local development<a class="headerlink" href="#local-development" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><p>NOTE: Before running any of the components, set the environment variables listed above and install Docker.</p>
-</div></blockquote>
-<div class="section" id="data-scraper">
-<h3>Data scraper<a class="headerlink" href="#data-scraper" title="Permalink to this headline">¶</a></h3>
-<ol class="simple">
-<li><p>Switch to the <code class="docutils literal notranslate"><span class="pre">pipeline/</span></code> folder and build the Docker image.</p></li>
-</ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cd pipeline
-docker build --build-arg GH_TOKEN=$GH_TOKEN --build-arg MONTH=$MONTH --build-arg DB_USER=$DB_USER --build-arg DB_HOST=$DB_HOST --build-arg=DB_PASSWORD=$DB_PASSWORD .
-</pre></div>
-</div>
-<ol class="simple">
-<li><p>Run the Docker image. It will automatically scrape data and train the model, and quit when done.</p></li>
-</ol>
-<p><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span> <span class="pre">-i</span> <span class="pre">-t</span> <span class="pre">&lt;id&gt;</span></code></p>
-<div class="section" id="testing">
-<h4>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h4>
-<p>Run this inside the <code class="docutils literal notranslate"><span class="pre">pipeline/</span></code> folder.</p>
-<p><code class="docutils literal notranslate"><span class="pre">DB_USER=$DB_USER</span> <span class="pre">DB_PASSWORD=$DB_PASSWORD</span> <span class="pre">DB_HOST=$DB_HOST</span> <span class="pre">GH_TOKEN=$GH_TOKEN</span> <span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">unittest</span> <span class="pre">scraper/test.py</span> <span class="pre">-v</span></code></p>
-</div>
-</div>
-<div class="section" id="web-server">
-<h3>Web server<a class="headerlink" href="#web-server" title="Permalink to this headline">¶</a></h3>
-<ol class="simple">
-<li><p>Switch to the <code class="docutils literal notranslate"><span class="pre">webserver/pkgpkr/</span></code> folder and build the Docker image.</p></li>
-</ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cd webserver/pkgpkr
-docker build --build-arg DOMAIN_NAME=$DOMAIN_NAME --build-arg CLIENT_ID=$CLIENT_ID --build-arg CLIENT_SECRET=$CLIENT_SECRET --build-arg DB_USER=$DB_USER --build-arg DB_PASSWORD=$DB_PASSWORD --build-arg DB_HOST=$DB_HOST .
-</pre></div>
-</div>
-<ol class="simple">
-<li><p>Run the Docker image (remember the <code class="docutils literal notranslate"><span class="pre">-p</span></code> flag to expose the webserver port)</p></li>
-</ol>
-<p><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span> <span class="pre">-i</span> <span class="pre">-t</span> <span class="pre">-p</span> <span class="pre">8000:80</span> <span class="pre">&lt;id&gt;</span></code></p>
-<ol class="simple">
-<li><p>When the web server starts, open your browser to http://localhost:8000</p></li>
-</ol>
-<div class="section" id="id1">
-<h4>Testing<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
-<p>Run this inside the <code class="docutils literal notranslate"><span class="pre">webserver/pkgpkr</span></code> folder.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>python3 manage.py collectstatic
-SELENIUM_TEST=1 CLIENT_ID=$CLIENT_ID CLIENT_SECRET=$CLIENT_SECRET DB_HOST=$DB_HOST DB_USER=$DB_USER DB_PASSWORD=$DB_PASSWORD python3 manage.py test
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="section" id="aws">
-<h2>AWS<a class="headerlink" href="#aws" title="Permalink to this headline">¶</a></h2>
-<p>Check out a new branch</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="o">-</span><span class="n">b</span> <span class="n">deploy_to_aws</span>
-</pre></div>
-</div>
-<p>Install Terraform and initialize it within the <code class="docutils literal notranslate"><span class="pre">terraform/</span></code> folder.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">terraform</span>
-<span class="n">terraform</span> <span class="n">init</span>
-</pre></div>
-</div>
-<p>You’ll also need to have the AWS CLI installed and configured.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">aws</span> <span class="n">configure</span>
-</pre></div>
-</div>
-<div class="section" id="no-custom-domain">
-<h3>No custom domain<a class="headerlink" href="#no-custom-domain" title="Permalink to this headline">¶</a></h3>
-<ol class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">apply</span></code></p>
-<ol class="simple">
-<li><p>Don’t provide a value for <code class="docutils literal notranslate"><span class="pre">DOMAIN_NAME</span></code>, just hit ‘enter’</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">DB_PASSWORD</span></code> is the desired password for your database</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">DB_USER</span></code> is the desired username for your database</p></li>
-</ol>
-</li>
-<li><p>Create a new GitHub OAuth application</p>
-<ol class="simple">
-<li><p>Homepage URL is <code class="docutils literal notranslate"><span class="pre">http://&lt;ELB</span> <span class="pre">DNS</span> <span class="pre">name&gt;</span></code></p></li>
-<li><p>Callback URL is <code class="docutils literal notranslate"><span class="pre">http://&lt;ELB</span> <span class="pre">DNS</span> <span class="pre">name&gt;/callback</span></code></p></li>
-</ol>
-</li>
-<li><p>Set up the database (choose one)</p>
-<ol class="simple">
-<li><p>Load data into your databse (see “Database” section above)</p></li>
-<li><p>Start fresh by creating new tables (see “Database” section above)</p></li>
-</ol>
-</li>
-<li><p>Make sure all environment variables are set as secrets on your GitHub repository (see “Set environment variables” section above)</p></li>
-<li><p>Commit the changes from step 1 and merge your branch to <code class="docutils literal notranslate"><span class="pre">dev</span></code> to trigger the deploy to AWS</p></li>
-<li><p>After the GitHub deploy actions are complete, open the load balancer DNS name in your browser</p></li>
-</ol>
-</div>
-<div class="section" id="pkgpkr-com-domain-only">
-<h3>pkgpkr.com domain only<a class="headerlink" href="#pkgpkr-com-domain-only" title="Permalink to this headline">¶</a></h3>
-<ol class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">apply</span></code></p>
-<ol class="simple">
-<li><p>Provide <code class="docutils literal notranslate"><span class="pre">pkgpkr.com</span></code> for <code class="docutils literal notranslate"><span class="pre">DOMAIN_NAME</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">DB_PASSWORD</span></code> is the desired password for your database</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">DB_USER</span></code> is the desired username for your database</p></li>
-</ol>
-</li>
-<li><p>Update the <code class="docutils literal notranslate"><span class="pre">pkgpkr.com</span></code> and <code class="docutils literal notranslate"><span class="pre">*.pkgpkr.com</span></code> entries in the <code class="docutils literal notranslate"><span class="pre">pkgpkr.com</span></code> hosted zone to point at the ELB DNS name</p></li>
-<li><p>Set up the database (choose one)</p>
-<ol class="simple">
-<li><p>Load data into your databse (see “Database” section above)</p></li>
-<li><p>Start fresh by creating new tables (see “Database” section above)</p></li>
-</ol>
-</li>
-<li><p>Make sure all environment variables are set as secrets on your GitHub repository (see “Set environment variables” section above)</p></li>
-<li><p>Commit the changes from step 1 and merge your branch to <code class="docutils literal notranslate"><span class="pre">dev</span></code> to trigger the deploy to AWS</p></li>
-<li><p>After the GitHub deploy actions are complete, open pkgpkr.com in your web browser (it may take up to 5 minutes for the TTL on pkgpkr.com to expire)</p></li>
-</ol>
-</div>
-</div>
-</div>
-<div class="section" id="pull-request">
-<h1>Pull Request<a class="headerlink" href="#pull-request" title="Permalink to this headline">¶</a></h1>
-<ol class="simple">
-<li><p>make your final commit for this branch</p></li>
-<li><p>send a pull request from <code class="docutils literal notranslate"><span class="pre">your</span> <span class="pre">branch</span> <span class="pre">name</span></code> to <code class="docutils literal notranslate"><span class="pre">origin/dev</span></code></p></li>
-</ol>
-</div>
-<div class="section" id="merge">
-<h1>Merge<a class="headerlink" href="#merge" title="Permalink to this headline">¶</a></h1>
-<ol class="simple">
-<li><p>need at least one peer to review code and approve the change</p></li>
-<li><p>let Jenkins build and check tests(including lint) and do the merge if no error</p></li>
-</ol>
-</div>
 
 
            </div>
@@ -400,8 +167,10 @@ SELENIUM_TEST=1 CLIENT_ID=$CLIENT_ID CLIENT_SECRET=$CLIENT_SECRET DB_HOST=$DB_HO
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="setup.html" class="btn btn-neutral float-right" title="Setup" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-        <a href="webserver.html" class="btn btn-neutral float-left" title="Web Server" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to pkgpkr’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

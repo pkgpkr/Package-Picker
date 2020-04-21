@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Setup &mdash; pkgpkr 0.2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Local development" href="development.html" />
+    <link rel="prev" title="Intro" href="README.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pkgpkr
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">Intro</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#set-environment-variables">Set environment variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#database">Database</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#load-data">Load data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fresh-start">Fresh start</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Local development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deploy.html">AWS Deploy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="webserver.html">Web Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pkgpkr</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Setup</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/setup.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="setup">
+<h1>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="set-environment-variables">
+<h2>Set environment variables<a class="headerlink" href="#set-environment-variables" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">AWS_ACCESS_KEY_ID</span>     <span class="c1"># Your AWS account&#39;s access key</span>
+<span class="n">AWS_SECRET_ACCESS_KEY</span> <span class="c1"># Your AWS account&#39;s secret access key</span>
+<span class="n">CLIENT_ID</span>             <span class="c1"># ID of the GitHub app used by the web server</span>
+<span class="n">CLIENT_SECRET</span>         <span class="c1"># Secret for the GitHub app</span>
+<span class="n">DB_HOST</span>               <span class="c1"># Database URL</span>
+<span class="n">DB_PASSWORD</span>           <span class="c1"># Database password</span>
+<span class="n">DB_USER</span>               <span class="c1"># Database user</span>
+<span class="n">DOMAIN_NAME</span>           <span class="c1"># The domain name where the site is hosted (e.g. http://pkgpkr.com)</span>
+<span class="n">MONTH</span>                 <span class="c1"># How many months of data to scrape</span>
+<span class="n">SELENIUM_TEST</span>         <span class="c1"># Set if running Selenium tests</span>
+<span class="n">GH_TOKEN</span>              <span class="c1"># Your GitHub API token</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="database">
+<h2>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h2>
+<p>Terraform will provision a database for you (see the AWS section below), otherwise you will need to manually create a PostgreSQL instance in RDS.</p>
+<blockquote>
+<div><p>NOTE: Make sure the database is publically accessible if you want to access it from your local developer setup.</p>
+</div></blockquote>
+<div class="section" id="load-data">
+<h3>Load data<a class="headerlink" href="#load-data" title="Permalink to this headline">¶</a></h3>
+<p>If you want to start with some data in the database so you don’t have to run the ML pipeline first, run the following commands:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pkgpkr</span><span class="o">-</span><span class="n">models</span><span class="o">.</span><span class="n">s3</span><span class="o">.</span><span class="n">amazonaws</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">database</span><span class="o">.</span><span class="n">dump</span>
+<span class="n">psql</span> <span class="o">-</span><span class="n">h</span> <span class="o">&lt;</span><span class="n">DB</span> <span class="n">host</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">U</span> <span class="o">&lt;</span><span class="n">DB</span> <span class="n">user</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">DB</span> <span class="n">name</span><span class="o">&gt;</span> <span class="o">&lt;</span> <span class="n">database</span><span class="o">.</span><span class="n">dump</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="fresh-start">
+<h3>Fresh start<a class="headerlink" href="#fresh-start" title="Permalink to this headline">¶</a></h3>
+<p>If you want to populate the database with data from scratch, create new tables with the following SQL commands before running the ML pipeline:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">applications</span> <span class="p">(</span>
+  <span class="nb">id</span> <span class="n">SERIAL</span> <span class="n">PRIMARY</span> <span class="n">KEY</span><span class="p">,</span>
+  <span class="n">url</span> <span class="n">TEXT</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
+  <span class="n">name</span> <span class="n">TEXT</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
+  <span class="n">followers</span> <span class="n">INTEGER</span><span class="p">,</span>
+  <span class="nb">hash</span> <span class="n">TEXT</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
+  <span class="n">retrieved</span> <span class="n">TIMESTAMPTZ</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
+  <span class="n">CONSTRAINT</span> <span class="n">unique_url</span> <span class="n">UNIQUE</span> <span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="p">);</span>
+<span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">packages</span> <span class="p">(</span>
+  <span class="nb">id</span> <span class="n">SERIAL</span> <span class="n">PRIMARY</span> <span class="n">KEY</span><span class="p">,</span>
+  <span class="n">name</span> <span class="n">TEXT</span> <span class="n">UNIQUE</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
+  <span class="n">downloads_last_month</span> <span class="n">INTEGER</span><span class="p">,</span>
+  <span class="n">categories</span> <span class="n">TEXT</span><span class="p">[],</span>
+  <span class="n">modified</span> <span class="n">TIMESTAMPTZ</span><span class="p">,</span>
+  <span class="n">retrieved</span> <span class="n">TIMESTAMPTZ</span> <span class="n">NOT</span> <span class="n">NULL</span>
+<span class="p">);</span>
+<span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">dependencies</span> <span class="p">(</span>
+  <span class="n">application_id</span> <span class="n">INTEGER</span> <span class="n">REFERENCES</span> <span class="n">applications</span> <span class="p">(</span><span class="nb">id</span><span class="p">),</span>
+  <span class="n">package_id</span> <span class="n">INTEGER</span> <span class="n">REFERENCES</span> <span class="n">packages</span> <span class="p">(</span><span class="nb">id</span><span class="p">),</span>
+  <span class="n">CONSTRAINT</span> <span class="n">unique_app_to_pkg</span> <span class="n">UNIQUE</span> <span class="p">(</span><span class="n">application_id</span><span class="p">,</span> <span class="n">package_id</span><span class="p">)</span>
+<span class="p">);</span>
+<span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">similarity</span> <span class="p">(</span>
+  <span class="n">package_a</span> <span class="n">INTEGER</span> <span class="n">REFERENCES</span> <span class="n">packages</span> <span class="p">(</span><span class="nb">id</span><span class="p">),</span>
+  <span class="n">package_b</span> <span class="n">INTEGER</span> <span class="n">REFERENCES</span> <span class="n">packages</span> <span class="p">(</span><span class="nb">id</span><span class="p">),</span>
+  <span class="n">similarity</span> <span class="n">FLOAT</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
+  <span class="n">CONSTRAINT</span> <span class="n">unique_pkg_to_pkg</span> <span class="n">UNIQUE</span> <span class="p">(</span><span class="n">package_a</span><span class="p">,</span> <span class="n">package_b</span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="development.html" class="btn btn-neutral float-right" title="Local development" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="README.html" class="btn btn-neutral float-left" title="Intro" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Daniel Sauble, Gerald Arocena, Dennis Cherchenko, Muwei Gu, Ed Kang, and Vlad Popil
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #0B8181;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #034E5C;
+    }
+
+    /* CSS clicked link color */
+    a:visited { color: #2cb6d1; } 
+
+
+  </style>
+
+
+</body>
+</html>

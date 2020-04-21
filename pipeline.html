@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Introduction &mdash; pkgpkr 0.2.0 documentation</title>
+  <title>Pipeline &mdash; pkgpkr 0.2.0 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Scraper" href="scraper.html" />
-    <link rel="prev" title="Welcome to pkgpkr’s documentation!" href="index.html" /> 
+    <link rel="next" title="Web Server" href="webserver.html" />
+    <link rel="prev" title="AWS Deploy" href="deploy.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -82,22 +82,26 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#sample-usage">Sample usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html">Intro</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Local development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deploy.html">AWS Deploy</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#scraper">Scraper</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-month_calculation">month_calculation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#github-query">github_query</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#npm-query">npm_query</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pypi-query">pypi_query</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="scraper.html">Scraper</a></li>
-<li class="toctree-l1"><a class="reference internal" href="recommender-model.html">Recommender Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="recommender-model.html#first">first</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recommender-model">Recommender Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#generate">generate</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="webserver.html">Web Server</a></li>
-<li class="toctree-l1"><a class="reference internal" href="README.html">Intro</a></li>
-<li class="toctree-l1"><a class="reference internal" href="README.html#get-the-code">Get the code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="README.html#set-environment-variables">Set environment variables</a></li>
-<li class="toctree-l1"><a class="reference internal" href="README.html#database">Database</a></li>
-<li class="toctree-l1"><a class="reference internal" href="README.html#run">Run</a></li>
-<li class="toctree-l1"><a class="reference internal" href="README.html#pull-request">Pull Request</a></li>
-<li class="toctree-l1"><a class="reference internal" href="README.html#merge">Merge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
 </ul>
 
             
@@ -143,13 +147,13 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Introduction</li>
+      <li>Pipeline</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/intro.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/pipeline.md.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -162,21 +166,43 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
-<p>Welcome to Package Picker!</p>
-<div class="section" id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="pipeline">
+<h1>Pipeline<a class="headerlink" href="#pipeline" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="scraper">
+<h2>Scraper<a class="headerlink" href="#scraper" title="Permalink to this headline">¶</a></h2>
+<p>TODO About scraper</p>
+<div class="section" id="module-month_calculation">
+<span id="month-calculation"></span><h3>month_calculation<a class="headerlink" href="#module-month_calculation" title="Permalink to this headline">¶</a></h3>
+<p>Compute month-long time slices for use in GitHub scraping</p>
+<dl class="function">
+<dt id="month_calculation.get_monthly_search_str">
+<code class="sig-prename descclassname">month_calculation.</code><code class="sig-name descname">get_monthly_search_str</code><span class="sig-paren">(</span><em class="sig-param">start_date</em><span class="sig-paren">)</span><a class="headerlink" href="#month_calculation.get_monthly_search_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a month-specifying date string for GitHub v4 API</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="month_calculation.month_delta">
+<code class="sig-prename descclassname">month_calculation.</code><code class="sig-name descname">month_delta</code><span class="sig-paren">(</span><em class="sig-param">date</em>, <em class="sig-param">delta</em><span class="sig-paren">)</span><a class="headerlink" href="#month_calculation.month_delta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the date string corresponding with the given offset from the given date</p>
+</dd></dl>
+
 </div>
-<div class="section" id="sample-usage">
-<h2>Sample usage<a class="headerlink" href="#sample-usage" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello Package Picker&quot;</span><span class="p">)</span>
-</pre></div>
+<div class="section" id="github-query">
+<h3>github_query<a class="headerlink" href="#github-query" title="Permalink to this headline">¶</a></h3>
 </div>
-<p>The code above produces:</p>
-<blockquote>
-<div><p><cite>Hello Package Picker</cite></p>
-</div></blockquote>
+<div class="section" id="npm-query">
+<h3>npm_query<a class="headerlink" href="#npm-query" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="pypi-query">
+<h3>pypi_query<a class="headerlink" href="#pypi-query" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="recommender-model">
+<h2>Recommender Model<a class="headerlink" href="#recommender-model" title="Permalink to this headline">¶</a></h2>
+<p>TODO About model</p>
+<div class="section" id="generate">
+<h3>generate<a class="headerlink" href="#generate" title="Permalink to this headline">¶</a></h3>
+</div>
 </div>
 </div>
 
@@ -188,10 +214,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="scraper.html" class="btn btn-neutral float-right" title="Scraper" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="webserver.html" class="btn btn-neutral float-right" title="Web Server" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to pkgpkr’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="deploy.html" class="btn btn-neutral float-left" title="AWS Deploy" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
