@@ -4,6 +4,7 @@ Fetch package metadata from the npmjs registry API
 
 import datetime
 import requests
+import simplejson
 from month_calculation import month_delta
 from psql import connect_to_db, update_package_metadata
 
@@ -43,6 +44,8 @@ def get_package_metadata(dependency):
             entry['monthly_downloads_a_year_ago'] = month_last_year_downloads_json['downloads']
     except requests.exceptions.RequestException as exc:
         print(f"Could not request downloads for {dependency_name}: {exc}")
+    except simplejson.errors.JSONDecodeError as exc:
+        print(f"Could not decode download metadata for {dependency_name}: {exc}")
 
     # Get keywords (i.e. categories) and date
     entry['categories'] = None
@@ -57,6 +60,8 @@ def get_package_metadata(dependency):
             entry['modified'] = res_json['time']['modified']
     except requests.exceptions.RequestException as exc:
         print(f"Could not request {NPM_DEPENDENCY_META_URL}/{dependency_name}: {exc}")
+    except simplejson.errors.JSONDecodeError as exc:
+        print(f"Could not decode packument for {dependency_name}: {exc}")
 
     return entry
 
