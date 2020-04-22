@@ -23,7 +23,8 @@ INSERT_TO_PACKAGES_SQL = """
     """
 UPDATE_PACKAGE_METADATA_SQL = """
     UPDATE packages SET
-    downloads_last_month = %s,
+    monthly_downloads_last_month = %s,
+    monthly_downloads_a_year_ago = %s,
     categories = %s,
     modified = %s
     WHERE name = %s;
@@ -74,7 +75,7 @@ def insert_to_package(database, name):
     package_id = cur.fetchone()[0]
     return package_id
 
-def update_package_metadata(database, name, downloads_last_month, categories, modified):
+def update_package_metadata(database, name, monthly_downloads_last_month, monthly_downloads_a_year_ago, categories, modified):
     """
     Update metadata for a particular package
     """
@@ -90,7 +91,8 @@ def update_package_metadata(database, name, downloads_last_month, categories, mo
         # Convert to an array literal for PostgreSQL
         category_string = str(temp).replace("'", "").replace("[", "{").replace("]", "}")
 
-    cur.execute(UPDATE_PACKAGE_METADATA_SQL, (downloads_last_month,
+    cur.execute(UPDATE_PACKAGE_METADATA_SQL, (monthly_downloads_last_month,
+                                              monthly_downloads_a_year_ago,
                                               category_string,
                                               modified,
                                               name))
