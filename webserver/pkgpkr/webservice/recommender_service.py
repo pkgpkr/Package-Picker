@@ -59,7 +59,7 @@ class RecommenderService:
         #
         packages = self.strip_to_major_version(dependencies)
         cur.execute(f"""
-                    SELECT DISTINCT ON (b.name) a.name, b.name, b.absolute_trend, b.relative_trend, b.bounded_popularity, s.similarity, b.categories, b.modified
+                    SELECT a.name, b.name, b.absolute_trend, b.relative_trend, b.bounded_popularity, s.similarity, b.categories, b.modified
                     FROM similarity s
                     INNER JOIN packages a ON s.package_a = a.id
                     INNER JOIN packages b ON s.package_b = b.id
@@ -67,7 +67,6 @@ class RecommenderService:
                     s.package_a IN (SELECT id FROM packages WHERE name in ({str(packages)[1:-1]}))
                     AND
                     s.package_b NOT IN (SELECT id FROM packages WHERE name in ({str(packages)[1:-1]}))
-                    ORDER BY b.name, s.similarity DESC
                     LIMIT {self.max_recommendations}
                     """)
 
