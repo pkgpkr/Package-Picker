@@ -9,7 +9,6 @@ on:
   push:
     branches:
       - dev
-      - feature/sphinx-cicd
     paths:
       - 'docs/**'
       - '.github/workflows/deploy_sphinx_docs.yml'
