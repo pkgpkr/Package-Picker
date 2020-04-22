@@ -19,11 +19,6 @@ Welcome to pkgpkr's documentation!
    architecture.md
 
 
-
-
-
-
-
 Indices and tables
 ==================
 
@@ -39,5 +34,3 @@ Indices and tables
     Muwei Gu,
     Ed Kang,
     Vlad Popil
-
-v.2020-04-19 9:56
