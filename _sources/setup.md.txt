@@ -21,7 +21,7 @@ GH_TOKEN              # Your GitHub API token
 
 Terraform will provision a database for you (see the AWS section below), otherwise you will need to manually create a PostgreSQL instance in RDS.
 
-> NOTE: Make sure the database is publically accessible if you want to access it from your local developer setup.
+> NOTE: Make sure the database is publicly accessible if you want to access it from your local developer setup.
 
 ### Load data
 
@@ -49,8 +49,13 @@ CREATE TABLE applications (
 CREATE TABLE packages (
   id SERIAL PRIMARY KEY,
   name TEXT UNIQUE NOT NULL,
-  downloads_last_month INTEGER,
+  monthly_downloads_last_month INTEGER,
+  monthly_downloads_a_year_ago INTEGER,
+  absolute_trend INTEGER,
+  relative_trend INTEGER,
   categories TEXT[],
+  popularity INTEGER,
+  bounded_popularity INTEGER,
   modified TIMESTAMPTZ,
   retrieved TIMESTAMPTZ NOT NULL
 );

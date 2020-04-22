@@ -183,7 +183,7 @@
 <h2>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h2>
 <p>Terraform will provision a database for you (see the AWS section below), otherwise you will need to manually create a PostgreSQL instance in RDS.</p>
 <blockquote>
-<div><p>NOTE: Make sure the database is publically accessible if you want to access it from your local developer setup.</p>
+<div><p>NOTE: Make sure the database is publicly accessible if you want to access it from your local developer setup.</p>
 </div></blockquote>
 <div class="section" id="load-data">
 <h3>Load data<a class="headerlink" href="#load-data" title="Permalink to this headline">¶</a></h3>
@@ -208,8 +208,13 @@
 <span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">packages</span> <span class="p">(</span>
   <span class="nb">id</span> <span class="n">SERIAL</span> <span class="n">PRIMARY</span> <span class="n">KEY</span><span class="p">,</span>
   <span class="n">name</span> <span class="n">TEXT</span> <span class="n">UNIQUE</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
-  <span class="n">downloads_last_month</span> <span class="n">INTEGER</span><span class="p">,</span>
+  <span class="n">monthly_downloads_last_month</span> <span class="n">INTEGER</span><span class="p">,</span>
+  <span class="n">monthly_downloads_a_year_ago</span> <span class="n">INTEGER</span><span class="p">,</span>
+  <span class="n">absolute_trend</span> <span class="n">INTEGER</span><span class="p">,</span>
+  <span class="n">relative_trend</span> <span class="n">INTEGER</span><span class="p">,</span>
   <span class="n">categories</span> <span class="n">TEXT</span><span class="p">[],</span>
+  <span class="n">popularity</span> <span class="n">INTEGER</span><span class="p">,</span>
+  <span class="n">bounded_popularity</span> <span class="n">INTEGER</span><span class="p">,</span>
   <span class="n">modified</span> <span class="n">TIMESTAMPTZ</span><span class="p">,</span>
   <span class="n">retrieved</span> <span class="n">TIMESTAMPTZ</span> <span class="n">NOT</span> <span class="n">NULL</span>
 <span class="p">);</span>
