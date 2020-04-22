@@ -21,10 +21,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -171,15 +171,15 @@
 <div class="section" id="module-month_calculation">
 <span id="month-calculation"></span><h3>month_calculation<a class="headerlink" href="#module-month_calculation" title="Permalink to this headline">¶</a></h3>
 <p>Compute month-long time slices for use in GitHub scraping</p>
-<dl class="function">
+<dl class="py function">
 <dt id="month_calculation.get_monthly_search_str">
-<code class="sig-prename descclassname">month_calculation.</code><code class="sig-name descname">get_monthly_search_str</code><span class="sig-paren">(</span><em class="sig-param">start_date</em><span class="sig-paren">)</span><a class="headerlink" href="#month_calculation.get_monthly_search_str" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">month_calculation.</code><code class="sig-name descname">get_monthly_search_str</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_date</span></em><span class="sig-paren">)</span><a class="headerlink" href="#month_calculation.get_monthly_search_str" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a month-specifying date string for GitHub v4 API</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="month_calculation.month_delta">
-<code class="sig-prename descclassname">month_calculation.</code><code class="sig-name descname">month_delta</code><span class="sig-paren">(</span><em class="sig-param">date</em>, <em class="sig-param">delta</em><span class="sig-paren">)</span><a class="headerlink" href="#month_calculation.month_delta" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">month_calculation.</code><code class="sig-name descname">month_delta</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">date</span></em>, <em class="sig-param"><span class="n">delta</span></em><span class="sig-paren">)</span><a class="headerlink" href="#month_calculation.month_delta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the date string corresponding with the given offset from the given date</p>
 </dd></dl>
 
@@ -188,21 +188,21 @@
 <h3>github_query<a class="headerlink" href="#github-query" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><span class="target" id="module-github_query"></span><p>Fetch npm dependency information from the GitHub v4 API</p>
-<dl class="function">
+<dl class="py function">
 <dt id="github_query.run_query">
-<code class="sig-prename descclassname">github_query.</code><code class="sig-name descname">run_query</code><span class="sig-paren">(</span><em class="sig-param">today</em>, <em class="sig-param">language='JavaScript'</em><span class="sig-paren">)</span><a class="headerlink" href="#github_query.run_query" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">github_query.</code><code class="sig-name descname">run_query</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">today</span></em>, <em class="sig-param"><span class="n">language</span><span class="o">=</span><span class="default_value">'JavaScript'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#github_query.run_query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch all repositories for the given month</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="github_query.run_query_once">
-<code class="sig-prename descclassname">github_query.</code><code class="sig-name descname">run_query_once</code><span class="sig-paren">(</span><em class="sig-param">node_per_loop</em>, <em class="sig-param">monthly_search_str</em>, <em class="sig-param">cursor</em>, <em class="sig-param">language</em><span class="sig-paren">)</span><a class="headerlink" href="#github_query.run_query_once" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">github_query.</code><code class="sig-name descname">run_query_once</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_per_loop</span></em>, <em class="sig-param"><span class="n">monthly_search_str</span></em>, <em class="sig-param"><span class="n">cursor</span></em>, <em class="sig-param"><span class="n">language</span></em><span class="sig-paren">)</span><a class="headerlink" href="#github_query.run_query_once" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch a single page of repositories for the given month</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="github_query.write_db">
-<code class="sig-prename descclassname">github_query.</code><code class="sig-name descname">write_db</code><span class="sig-paren">(</span><em class="sig-param">database</em>, <em class="sig-param">result</em>, <em class="sig-param">language='JavaScript'</em><span class="sig-paren">)</span><a class="headerlink" href="#github_query.write_db" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">github_query.</code><code class="sig-name descname">write_db</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">result</span></em>, <em class="sig-param"><span class="n">language</span><span class="o">=</span><span class="default_value">'JavaScript'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#github_query.write_db" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a set of repositories and their dependencies to the database for JS packages</p>
 </dd></dl>
 
@@ -212,19 +212,19 @@
 <h3>npm_query<a class="headerlink" href="#npm-query" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><span class="target" id="module-npm_query"></span><p>Fetch package metadata from the npmjs registry API</p>
-<dl class="function">
+<dl class="py function">
 <dt id="npm_query.get_average_monthly_donwloads">
-<code class="sig-prename descclassname">npm_query.</code><code class="sig-name descname">get_average_monthly_donwloads</code><span class="sig-paren">(</span><em class="sig-param">daily_donwloads_list</em><span class="sig-paren">)</span><a class="headerlink" href="#npm_query.get_average_monthly_donwloads" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">npm_query.</code><code class="sig-name descname">get_average_monthly_donwloads</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">daily_donwloads_list</span></em><span class="sig-paren">)</span><a class="headerlink" href="#npm_query.get_average_monthly_donwloads" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the average monthly downloads from the download API response</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="npm_query.get_package_metadata">
-<code class="sig-prename descclassname">npm_query.</code><code class="sig-name descname">get_package_metadata</code><span class="sig-paren">(</span><em class="sig-param">dependency</em><span class="sig-paren">)</span><a class="headerlink" href="#npm_query.get_package_metadata" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">npm_query.</code><code class="sig-name descname">get_package_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dependency</span></em><span class="sig-paren">)</span><a class="headerlink" href="#npm_query.get_package_metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the downloads, categories, and modified date for a package</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="npm_query.run_query">
 <code class="sig-prename descclassname">npm_query.</code><code class="sig-name descname">run_query</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#npm_query.run_query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enrich the package table with metadata for all packages in the table</p>
@@ -236,13 +236,13 @@
 <h3>pypi_query<a class="headerlink" href="#pypi-query" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><span class="target" id="module-pypi_query"></span><p>Fetch package metadata from the pypi API</p>
-<dl class="function">
+<dl class="py function">
 <dt id="pypi_query.get_package_metadata">
-<code class="sig-prename descclassname">pypi_query.</code><code class="sig-name descname">get_package_metadata</code><span class="sig-paren">(</span><em class="sig-param">dependency</em><span class="sig-paren">)</span><a class="headerlink" href="#pypi_query.get_package_metadata" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pypi_query.</code><code class="sig-name descname">get_package_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dependency</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pypi_query.get_package_metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the downloads, categories, and modified date for a package</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="pypi_query.run_query">
 <code class="sig-prename descclassname">pypi_query.</code><code class="sig-name descname">run_query</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pypi_query.run_query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enrich the package table with metadata for all packages in the table</p>

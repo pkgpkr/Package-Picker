@@ -21,10 +21,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -164,48 +164,48 @@
 <div class="section" id="module-webservice.views">
 <span id="webservice-views"></span><h2>webservice.views<a class="headerlink" href="#module-webservice.views" title="Permalink to this headline">¶</a></h2>
 <p>Views for the web service</p>
-<dl class="function">
+<dl class="py function">
 <dt id="webservice.views.about">
-<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">about</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.about" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">about</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.about" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return about info</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="webservice.views.callback">
-<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">callback</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.callback" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.callback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Github redirect here, then retrieves token for API</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="webservice.views.index">
-<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">index</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.index" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return landing page</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="webservice.views.login">
-<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">login</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.login" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">login</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.login" title="Permalink to this definition">¶</a></dt>
 <dd><p>Log user in using Github OAuth</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="webservice.views.logout">
-<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">logout</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.logout" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">logout</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.logout" title="Permalink to this definition">¶</a></dt>
 <dd><p>Logs user out but keep authorization ot OAuth Github</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="webservice.views.recommendations">
-<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">recommendations</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.recommendations" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">recommendations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.recommendations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get recomended pacakges for the repo
 :param request:
 :param name: repo name
 :return:</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="webservice.views.repositories">
-<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">repositories</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.repositories" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">repositories</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.repositories" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get full list (up to 100) for the current user</p>
 </dd></dl>
 
@@ -213,19 +213,19 @@
 <div class="section" id="module-webservice.recommender_service">
 <span id="webservice-recommender-service"></span><h2>webservice.recommender_service<a class="headerlink" href="#module-webservice.recommender_service" title="Permalink to this headline">¶</a></h2>
 <p>Get package recommendations from our database</p>
-<dl class="class">
+<dl class="py class">
 <dt id="webservice.recommender_service.RecommenderService">
 <em class="property">class </em><code class="sig-prename descclassname">webservice.recommender_service.</code><code class="sig-name descname">RecommenderService</code><a class="headerlink" href="#webservice.recommender_service.RecommenderService" title="Permalink to this definition">¶</a></dt>
 <dd><p>Recommender engine for the web server</p>
-<dl class="method">
+<dl class="py method">
 <dt id="webservice.recommender_service.RecommenderService.get_recommendations">
-<code class="sig-name descname">get_recommendations</code><span class="sig-paren">(</span><em class="sig-param">dependencies</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.recommender_service.RecommenderService.get_recommendations" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_recommendations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dependencies</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.recommender_service.RecommenderService.get_recommendations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of package recommendations and metadata given a set of dependencies</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="webservice.recommender_service.RecommenderService.strip_to_major_version">
-<code class="sig-name descname">strip_to_major_version</code><span class="sig-paren">(</span><em class="sig-param">dependencies</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.recommender_service.RecommenderService.strip_to_major_version" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">strip_to_major_version</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dependencies</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.recommender_service.RecommenderService.strip_to_major_version" title="Permalink to this definition">¶</a></dt>
 <dd><p>Strip everything after the major version in each dependency</p>
 </dd></dl>
 
@@ -236,16 +236,16 @@
 <h2>webservice.github_util<a class="headerlink" href="#webservice-github-util" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><span class="target" id="module-webservice.github_util"></span><p>Utility functions for the web server</p>
-<dl class="function">
+<dl class="py function">
 <dt id="webservice.github_util.dependencies_name_to_purl">
-<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">dependencies_name_to_purl</code><span class="sig-paren">(</span><em class="sig-param">dependencies</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.dependencies_name_to_purl" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">dependencies_name_to_purl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dependencies</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.dependencies_name_to_purl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert dependency names to the universal Package URL (PURL) format
 :param dependencies: Array of <a class="reference external" href="mailto:name&#37;&#52;&#48;version">name<span>&#64;</span>version</a> like names</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="webservice.github_util.get_dependencies">
-<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">get_dependencies</code><span class="sig-paren">(</span><em class="sig-param">token</em>, <em class="sig-param">repo_full_name</em>, <em class="sig-param">branch_name</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.get_dependencies" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">get_dependencies</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">token</span></em>, <em class="sig-param"><span class="n">repo_full_name</span></em>, <em class="sig-param"><span class="n">branch_name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.get_dependencies" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets repository info for a specific repo (from package.json)
 :param token: GitHub token for auth
 :param repo_full_name: repo name with user name
@@ -253,41 +253,41 @@
 :return: dependencies and all branch names</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="webservice.github_util.get_repositories">
-<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">get_repositories</code><span class="sig-paren">(</span><em class="sig-param">token</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.get_repositories" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">get_repositories</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">token</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.get_repositories" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the repositories associated with the given GitHub token
 :param token: GitHub API token
 :return:</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="webservice.github_util.get_user_info">
-<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">get_user_info</code><span class="sig-paren">(</span><em class="sig-param">token</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.get_user_info" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">get_user_info</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">token</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.get_user_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the user info associated with the given GitHub token
 :param token: GitHub API token
 :return:</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="webservice.github_util.get_user_name">
-<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">get_user_name</code><span class="sig-paren">(</span><em class="sig-param">token</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.get_user_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">get_user_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">token</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.get_user_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves name of the authenticated GitHub user
 :param token: GitHub API token
 :return:</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="webservice.github_util.is_user_authenticated">
-<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">is_user_authenticated</code><span class="sig-paren">(</span><em class="sig-param">token</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.is_user_authenticated" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">is_user_authenticated</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">token</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.is_user_authenticated" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine if the user is authenticated
 :param token: GitHub API token
 :return:</p>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="webservice.github_util.parse_dependencies">
-<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">parse_dependencies</code><span class="sig-paren">(</span><em class="sig-param">text_response</em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.parse_dependencies" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">parse_dependencies</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text_response</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.parse_dependencies" title="Permalink to this definition">¶</a></dt>
 <dd><p>Take a stringified package.json file and extract its dependencies
 :param text_reponse: A stringified package.json object
 :return:</p>
