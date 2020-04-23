@@ -120,18 +120,20 @@ class RecommenderService:
 
             # Add to the list of recommendations
             recommended.append(
-                {
-                    'package': package,
-                    'recommendation': recommendation,
-                    'url': url,
-                    'absolute_trend_score': absolute_trend_score,
-                    'relative_trend_score': relative_trend_score,
-                    'popularity_score': popularity_score,
-                    'similarity_score': similarity_score,
-                    'overall_score': overall_score,
-                    'keywords': keywords,
-                    'date': day
-                }
+                [
+                    package,
+                    [
+                        recommendation,
+                        url
+                    ],
+                    overall_score,
+                    absolute_trend_score,
+                    relative_trend_score,
+                    popularity_score,
+                    similarity_score,
+                    keywords,
+                    day
+                ]
             )
 
         # Disconnect from the database

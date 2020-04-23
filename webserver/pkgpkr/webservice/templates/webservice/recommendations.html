@@ -74,28 +74,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for recommendation in recommendations %}
-                            <tr>
-                                <td>{{ recommendation.package }}</td>
-                                <td><a target="_blank"
-                                       href="{{ recommendation.url }}">{{ recommendation.recommendation }}</td>
-                                <td ><img class="pkgpkrscore_img" src="/static/images/{{ recommendation.overall_score }}.png"><p class="pkgpkrscore_value">{{ recommendation.overall_score }}</p></td>
-                                <td>{{ recommendation.absolute_trend_score }}</td>
-                                <td>{{ recommendation.relative_trend_score }}</td>
-                                <td>{{ recommendation.popularity_score }}</td>
-                                <td>{{ recommendation.similarity_score }}</td>
-                                <td>
-                                    {% for keyword in recommendation.keywords %}
-                                        <div class="buttons" style="margin-bottom: 0; display:inline-block;">
-                                            <button class="button is-info is-light is-small is-hovered"
-                                                    onclick="categoryClick('{{ keyword }}')">{{ keyword }}</button>
-                                        </div>
-                                    {% endfor %}
-                                </td>
-                                <td>{{ recommendation.date }}</td>
-                            </tr>
-                        {% endfor %}
-                        <tbody>
+                            <!-- Rows are added dynamically -->
+                        </tbody>
                     </table>
                     <div id="scoreModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                       <div class="modal-dialog" role="document">
@@ -118,4 +98,74 @@
             </div>
         </div>
     </section>
+    <script>
+        $(document).ready(function() {
+            var table = $('#recommendTable').DataTable({
+                "bLengthChange": false,
+                dom: 'tip',
+                ajax: '{{ recommendation_url }}',
+                scroller: true,
+                order: [[2, "desc"]],
+                columnDefs : [
+                    // Render recommendation link
+                    {
+                        "targets": 1,
+                        "render": function (data, type, row, meta) {
+                            return '<a href="' + data[1] + '">' + data[0] + '</a>'
+                        }
+                    },
+                    // Render PkgPkr Score
+                    {
+                        "targets": 2,
+                        "render": function (data, type, row, meta) {
+                            return '<img class="pkgpkrscore_img" src="/static/images/' + data + '.png"><p class="pkgpkrscore_value">' + data + '</p>'
+                        }
+                    },
+                    // Hide component scores
+                    {
+                        "targets": [3, 4, 5, 6],
+                        "visible": false
+                    },
+                    // Render categories
+                    {
+                        "targets": 7,
+                        "render": function (data, type, row, meta) {
+                            if (!data) {
+                                return "";
+                            }
+
+                            html_str = '<div class="buttons" style="margin-bottom: 0; display:inline-block;">';
+                            for (var i = 0; i < data.length; ++i) {
+                                html_str += '<button class="button is-info is-light is-small is-hovered" \
+                                                     onclick="categoryClick(\'' + data[i] + '\')">' + data[i] + '</button>';
+                            }
+                            html_str += '</div>';
+                            return html_str;
+                        }
+                    }
+                ]
+            });
+
+            $('#recommendTable tbody ').on('click', 'img', function() {
+                var data = table.row($(this).parents('tr')).data();
+                $('.insertHere').html(
+                    '<table class="table dtr-details" width="100%"><tbody><tr><td>PkgPkr Score<td><td>' + data[2] +
+                    '</td></tr><tr><td>Absolute Trend Score<td><td>' + data[3] +
+                    '</td></tr><tr><td>Relative Trend Score<td><td>' + data[4] +
+                    '</td></tr><tr><td>Popularity Score<td><td>' + data[5] +
+                    '</td></tr><tr><td>Similarity Score<td><td>' + data[6] +
+                    '</td></tr></tbody></table>'
+                );
+                $('#scoreModal').modal('show');
+            });
+
+            $('#categoryName').keyup(function() {
+                table.column(7).search($(this).val()).draw();
+            });
+
+            $('#recommendationFilter').keyup(function() {
+                table.search($(this).val()).draw();
+            });
+        });
+    </script>
 {% endblock %}

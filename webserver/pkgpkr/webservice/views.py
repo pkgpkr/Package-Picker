@@ -3,9 +3,11 @@ Views for the web service
 """
 
 import os
+import json
 import urllib.parse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.urls import reverse
 
 import requests
@@ -145,16 +147,43 @@ def recommendations(request, name):
     branch_name = request.GET.get('branch', default='master')
 
     # Get depencies for current repo, and branch names for the repo
-    dependencies, branch_names = github_util.get_dependencies(request.session['github_token'],
-                                                              repo_name,
-                                                              branch_name)
-
-    # Get predicitons
-    recommended_dependencies = RECOMMENDER_SERVICE.get_recommendations(dependencies)
+    _, branch_names = github_util.get_dependencies(request.session['github_token'],
+                                                   repo_name,
+                                                   branch_name)
 
     return render(request, "webservice/recommendations.html", {
         'repository_name': repo_name,
-        'recommendations': recommended_dependencies,
+        'recommendation_url': f"/recommendations/{urllib.parse.quote_plus(name)}?branch={branch_name}",
         'branch_names': branch_names,
         'current_branch': branch_name
     })
+
+def recommendations_json(request, name):
+    """
+    Get recommended pacakges for the repo in JSON format
+    :param request:
+    :param name: repo name
+    :return:
+    """
+
+    # Convert encoded URL back to string e.g. hello%2world -> hello/world
+    repo_name = urllib.parse.unquote_plus(name)
+
+    # Fetch branch name out of HTTP GET Param
+    branch_name = request.GET.get('branch', default='master')
+
+    # Get depencies for current repo, and branch names for the repo
+    dependencies, _ = github_util.get_dependencies(request.session['github_token'],
+                                                   repo_name,
+                                                   branch_name)
+
+    # Get predictions
+    recommended_dependencies = RECOMMENDER_SERVICE.get_recommendations(dependencies)
+
+    # Setup data to be returned
+    data = {
+        'repository_name': repo_name,
+        'current_branch': branch_name,
+        'data': recommended_dependencies,
+    }
+    return HttpResponse(json.dumps(data), content_type="application/json")
