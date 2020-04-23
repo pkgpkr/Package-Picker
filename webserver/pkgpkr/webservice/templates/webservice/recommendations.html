@@ -7,15 +7,14 @@
 {% endblock %}
 
 {% block body %}
+    <!-- <div class="pageloader">
+        <img src="/static/images/loading.gif" />
+        <img src="/static/images/calculating.gif" />
+    </div> -->
     <section class="section">
         <div class="container">
             <div class="content is-medium">
                 <h2>Package recommendations for {{ repository_name }}</h2>
-                <p>
-                    This tool recommends packages that frequently appear alongside the packages
-                    in {{ repository_name }}. A score of 10 indicates that the packages are
-                    <em>always</em> used together.
-                </p>
                 <p>Choose a branch:</p>
                 <div class="dropdown is-hoverable">
                     <div class="dropdown-trigger">
@@ -59,16 +58,16 @@
                     </p>
                 </div>
                 <div class="table-container">
-                    <table id="recommendTable" class="display-data-tables">
+                    <table id="recommendTable" class="display-data-tables" style="width:100%">
                         <thead>
                         <tr>
                             <th>Package</th>
                             <th>Recommendation</th>
                             <th>PkgPkr Score</th>
-                            <th>Absolute Trend</th>
-                            <th>Relative Trend</th>
-                            <th>Popularity</th>
-                            <th>Similarity</th>
+                            <th class="hidden_score_head">Used-Together</th>
+                            <th class="hidden_score_head">Collaborative Filtering</th>
+                            <th class="hidden_score_head">Absolute Trend</th>
+                            <th class="hidden_score_head">Relative Trend</th>
                             <th>Categories</th>
                             <th id="version-date-header">Version Date</th>
                         </tr>
@@ -79,11 +78,11 @@
                                 <td>{{ recommendation.package }}</td>
                                 <td><a target="_blank"
                                        href="{{ recommendation.url }}">{{ recommendation.recommendation }}</td>
-                                <td ><img class="pkgpkrscore_img" src="/static/images/{{ recommendation.overall_score }}.png"><p class="pkgpkrscore_value">{{ recommendation.overall_score }}</p></td>
-                                <td>{{ recommendation.absolute_trend_score }}</td>
-                                <td>{{ recommendation.relative_trend_score }}</td>
-                                <td>{{ recommendation.popularity_score }}</td>
-                                <td>{{ recommendation.similarity_score }}</td>
+                                <td><img class="pkgpkrscore_img" src="/static/images/{{ recommendation.overall_score }}.png"><p class="pkgpkrscore_value">{{ recommendation.overall_score }}</p></td>
+                                <td class="hidden_score"><img class="pkgpkrscore_img" src="/static/images/{{ recommendation.similarity_score }}.png"><p class="pkgpkrscore_value">{{ recommendation.similarity_score }}</p></td>
+                                <td class="hidden_score"><img class="pkgpkrscore_img" src="/static/images/{{ recommendation.popularity_score }}.png"><p class="pkgpkrscore_value">{{ recommendation.popularity_score }}</p></td>
+                                <td class="hidden_score"><img class="pkgpkrscore_img" src="/static/images/{{ recommendation.absolute_trend_score }}.png"><p class="pkgpkrscore_value">{{ recommendation.absolute_trend_score }}</p></td>
+                                <td class="hidden_score"><img class="pkgpkrscore_img" src="/static/images/{{ recommendation.relative_trend_score }}.png"><p class="pkgpkrscore_value">{{ recommendation.relative_trend_score }}</p></td>
                                 <td>
                                     {% for keyword in recommendation.keywords %}
                                         <div class="buttons" style="margin-bottom: 0; display:inline-block;">
@@ -101,15 +100,10 @@
                       <div class="modal-dialog" role="document">
                         <div class="modal-background"></div>
                         <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-                          </div>
                           <div class="modal-body">
                             <div class="insertHere"></div>
                           </div>
                           <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                           </div>
                         </div>
                       </div>
