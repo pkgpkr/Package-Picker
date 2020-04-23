@@ -63,7 +63,7 @@
                         <tr>
                             <th>Package</th>
                             <th>Recommendation</th>
-                            <th>PkgPkr Score</th>
+                            <th>PkgPkr Score©</th>
                             <th class="hidden_score_head">Used-Together</th>
                             <th class="hidden_score_head">Collaborative Filtering</th>
                             <th class="hidden_score_head">Absolute Trend</th>
@@ -78,11 +78,11 @@
                                 <td>{{ recommendation.package }}</td>
                                 <td><a target="_blank"
                                        href="{{ recommendation.url }}">{{ recommendation.recommendation }}</td>
-                                <td><img class="pkgpkrscore_img" src="/static/images/{{ recommendation.overall_score }}.png"><p class="pkgpkrscore_value">{{ recommendation.overall_score }}</p></td>
-                                <td class="hidden_score"><img class="pkgpkrscore_img" src="/static/images/{{ recommendation.similarity_score }}.png"><p class="pkgpkrscore_value">{{ recommendation.similarity_score }}</p></td>
-                                <td class="hidden_score"><img class="pkgpkrscore_img" src="/static/images/{{ recommendation.popularity_score }}.png"><p class="pkgpkrscore_value">{{ recommendation.popularity_score }}</p></td>
-                                <td class="hidden_score"><img class="pkgpkrscore_img" src="/static/images/{{ recommendation.absolute_trend_score }}.png"><p class="pkgpkrscore_value">{{ recommendation.absolute_trend_score }}</p></td>
-                                <td class="hidden_score"><img class="pkgpkrscore_img" src="/static/images/{{ recommendation.relative_trend_score }}.png"><p class="pkgpkrscore_value">{{ recommendation.relative_trend_score }}</p></td>
+                                <td><img class="pkgpkrscore_img" src="/static/images/{{ recommendation.overall_score }}.png" style="width:250px;"><p class="pkgpkrscore_value">{{ recommendation.overall_score }}</p></td>
+                                <td class="hidden_score"><img src="/static/images/{{ recommendation.similarity_score }}.png" style="width:150px;"><p class="pkgpkrscore_value">{{ recommendation.similarity_score }}</p></td>
+                                <td class="hidden_score"><img src="/static/images/{{ recommendation.popularity_score }}.png" style="width:150px;"><p class="pkgpkrscore_value">{{ recommendation.popularity_score }}</p></td>
+                                <td class="hidden_score"><img src="/static/images/{{ recommendation.absolute_trend_score }}.png" style="width:150px;"><p class="pkgpkrscore_value">{{ recommendation.absolute_trend_score }}</p></td>
+                                <td class="hidden_score"><img src="/static/images/{{ recommendation.relative_trend_score }}.png" style="width:150px;"><p class="pkgpkrscore_value">{{ recommendation.relative_trend_score }}</p></td>
                                 <td>
                                     {% for keyword in recommendation.keywords %}
                                         <div class="buttons" style="margin-bottom: 0; display:inline-block;">
@@ -97,16 +97,16 @@
                         <tbody>
                     </table>
                     <div id="scoreModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                      <div class="modal-dialog" role="document">
                         <div class="modal-background"></div>
-                        <div class="modal-content">
-                          <div class="modal-body">
+                        <div class="modal-card">
+                          <header class="modal-card-head">
+                            <p id="modalTitle" class="modal-card-title">PkgPkr Score© Chart</p>
+                            <button id="modal-close" class="delete" aria-label="close"></button>
+                          </header>
+                          <section class="modal-card-body">
                             <div class="insertHere"></div>
-                          </div>
-                          <div class="modal-footer">
-                          </div>
+                          </section>
                         </div>
-                      </div>
                     </div>
                 </div>
             </div>

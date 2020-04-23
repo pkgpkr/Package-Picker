@@ -25,26 +25,32 @@ $(document).ready( function () {
         "bLengthChange": false,
         dom: 'tip',
         scroller: true,
-        order: [[2, "desc"]],
-        "language": {
-          "loadingRecords": "Please wait - loading..."
-        }
+        order: [[2, "desc"]]
     });
 
     $('#recommendTable tbody').on('click', 'img', function() {
         var data = table.row($(this).parents('tr')).data();
         $('.insertHere').html(
              '<table class="table dtr-details" width="100%"><tbody><tr>' +
-             '<th class="pkgpkr_score_td">PkgPkr<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
-             '<span class="tooltiptext">A score of 10 indicates that the packages are always used together.</span></div></th>' +
+             '<th class="pkgpkr_score_td">PkgPkr<br>Score© <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
+             '<span class="tooltiptext">A score of 10 indicates that the packages are always used together. ' +
+             '<a target="_blank" href="/about">See more details</a></span></div></th>' +
+
              '<th class="other_score_td">Used-Together<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
-             '<span class="tooltiptext">A score of 10 indicates that the packages are always used together.</span></div></th>' +
+             '<span class="tooltiptext">A score of 10 indicates that the packages are always used together. ' +
+             '<a target="_blank" href="/about">See more details</a></span></div></th>' +
+
              '<th class="other_score_td">Collaborative Filtering<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
-             '<span class="tooltiptext">A score of 10 indicates that the packages are always used together A score of 10 indicates that the packages are always used together.</span></div></th>' +
+             '<span class="tooltiptext">A score of 10 indicates that the packages are always used together A score of 10 indicates that the packages are always used together. ' +
+             '<a target="_blank" href="/about">See more details</a></span></div></th>' +
+
              '<th class="other_score_td">Absolute Trend<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
-             '<span class="tooltiptext">A score of 10 indicates that the packages are always used together.</span></div></th>' +
+             '<span class="tooltiptext">A score of 10 indicates that the packages are always used together. ' +
+             '<a target="_blank" href="/about">See more details</a></span></div></th>' +
+
              '<th class="other_score_td">Relative Trend<br>Score <div class="tooltip-left"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
-             '<span class="tooltiptext-left">A score of 10 indicates that the packages are always used together.</span></div></th><tr>' +
+             '<span class="tooltiptext-left">A score of 10 indicates that the packages are always used together. ' +
+             '<a target="_blank" href="/about">See more details</a></span></div></th><tr>' +
              '<td>' + data[2] + '</td>' +
              '<td>' + data[3] + '</td>' +
              '<td>' + data[4] + '</td>' +
@@ -56,6 +62,10 @@ $(document).ready( function () {
     });
 
     $('.modal-background').click(function() {
+        $('#scoreModal').modal('hide');
+    })
+
+    $('#modal-close').click(function() {
         $('#scoreModal').modal('hide');
     })
 
