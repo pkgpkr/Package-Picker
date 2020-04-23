@@ -20,7 +20,7 @@ class RecommenderService:
 
         self.major_version_regex = re.compile(r'pkg:npm/.*@\d+')
         self.name_only_regex = re.compile(r'pkg:npm/(.*)@\d+')
-        self.max_recommendations = 1000
+        self.max_recommendations = 10000
 
     def strip_to_major_version(self, dependencies):
         """
@@ -67,6 +67,7 @@ class RecommenderService:
                     s.package_a IN (SELECT id FROM packages WHERE name in ({str(packages)[1:-1]}))
                     AND
                     s.package_b NOT IN (SELECT id FROM packages WHERE name in ({str(packages)[1:-1]}))
+                    ORDER BY s.similarity DESC
                     LIMIT {self.max_recommendations}
                     """)
 
