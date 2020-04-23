@@ -60,12 +60,12 @@ def main():
     # Map the package identifiers back to their pre-vectorized values
     MAPPING = create_map([lit(x) for x in chain(*enumerate(VECTORIZER_MODEL.vocabulary))])
     SIMILARITY_DF = SIMILARITY_DF.withColumn("package_a", MAPPING.getItem(col("a")).cast("integer")) \
-                                .withColumn("package_b", MAPPING.getItem(col("b")).cast("integer"))
+                                 .withColumn("package_b", MAPPING.getItem(col("b")).cast("integer"))
     SIMILARITY_DF = SIMILARITY_DF.drop(col("a")).drop(col("b"))
 
     # Mirror the columns and append to the existing dataframe so we need only query the first column
     SIMILARITY_DF = SIMILARITY_DF.select('package_a', 'package_b', 'similarity') \
-                                .union(SIMILARITY_DF.select('package_b', 'package_a', 'similarity'))
+                                 .union(SIMILARITY_DF.select('package_b', 'package_a', 'similarity'))
 
     # Write similarity scores to the database
     URL_CONNECT = f"jdbc:postgresql://{HOST}/"
