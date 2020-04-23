@@ -47,6 +47,12 @@ body {
   position: relative;
 }
 
+
 #manual-input {
   width: 50%;
 }
+
+.pkgpkrscore_value {
+  display: none;
+}
+

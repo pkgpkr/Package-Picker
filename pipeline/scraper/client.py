@@ -35,8 +35,13 @@ try:
         CREATE TABLE packages (
             id SERIAL PRIMARY KEY,
             name TEXT UNIQUE NOT NULL,
-            downloads_last_month INTEGER,
+            monthly_downloads_last_month INTEGER,
+            monthly_downloads_a_year_ago INTEGER,
+            absolute_trend INTEGER,
+            relative_trend INTEGER,
             categories TEXT[],
+            popularity INTEGER,
+            bounded_popularity INTEGER,
             modified TIMESTAMPTZ,
             retrieved TIMESTAMPTZ NOT NULL
         );
