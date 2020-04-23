@@ -88,8 +88,11 @@ def update_package_metadata(database, name, monthly_downloads_last_month, monthl
         # Remove any commas, curly braces, single quotes, and double quotes in the categories
         temp = [re.sub(r"[\,\{\}\'\"\[\]]", "", category) for category in categories]
 
+        # Remove any empty entries
+        entries = [element for element in temp if len(element)]
+
         # Convert to an array literal for PostgreSQL
-        category_string = str(temp).replace("'", "").replace("[", "{").replace("]", "}")
+        category_string = str(entries).replace("'", "").replace("[", "{").replace("]", "}")
 
     cur.execute(UPDATE_PACKAGE_METADATA_SQL, (monthly_downloads_last_month,
                                               monthly_downloads_a_year_ago,
