@@ -71,7 +71,7 @@
                             <th>Popularity</th>
                             <th>Similarity</th>
                             <th>Categories</th>
-                            <th id="version-date-header">Version Date</th>
+                            <th>Version Date</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -107,22 +107,30 @@
                 ajax: '{{ recommendation_url }}',
                 scroller: true,
                 order: [[3, "desc"]],
+                "autoWidth": false,
                 columnDefs : [
-                    // Render recommendation link
+                    // Package
+                    {
+                        "targets": 0,
+                        "width": "10em"
+                    },
+                    // Recommendation link
                     {
                         "targets": 1,
                         "render": function (data, type, row, meta) {
                             return '<a href="' + data[1] + '">' + row[1] + '</a>'
-                        }
+                        },
+                        "width": "10em"
                     },
-                    // Render PkgPkr Score
+                    // PkgPkr Score
                     {
                         "targets": 3,
                         "render": function (data, type, row, meta) {
                             return '<img class="pkgpkrscore_img" src="/static/images/' + data + '.png"><p class="pkgpkrscore_value">' + data + '</p>'
-                        }
+                        },
+                        "width": "3em"
                     },
-                    // Render categories
+                    // Categories
                     {
                         "targets": 8,
                         "render": function (data, type, row, meta) {
@@ -139,7 +147,12 @@
                             return html_str;
                         }
                     },
-                    // Hide URL and component scores
+                    // Version date
+                    {
+                        "targets": 9,
+                        "width": "6em"
+                    },
+                    // Hide URL and component score columns
                     {
                         "targets": [2, 4, 5, 6, 7],
                         "visible": false
