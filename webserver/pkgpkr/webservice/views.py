@@ -19,6 +19,8 @@ from .recommender_service import RecommenderService
 # Instantiate service class
 RECOMMENDER_SERVICE = RecommenderService()
 
+MANUAL_ENTRY_REPO_NAME = 'MANUAL'
+
 
 def index(request):
     """ Return landing page"""
@@ -126,6 +128,34 @@ def repositories(request):
         'one_or_more_with_dependencies': one_or_more_with_dependencies
     })
 
+def manual_input(request):
+
+    if request.method == 'POST':
+        dependencies_muliline = request.POST.get('dependencies')
+
+        dependencies = f'{{ "dependencies" : {{ {dependencies_muliline} }} }}'
+        print(dependencies)
+        # dependencies_list = dependencies_muliline.splitlines()
+        #
+        #
+        # dependencies = {}
+        # for d in dependencies_list:
+        #
+        #     # Remove whitespace and commas, split into left : right by colon
+        #     d = d.strip().strip(',').split(':')
+        #
+        #     # Add to list of dictionaries
+        #     dependencies[d[0]] = d[1]
+
+        request.session['dependencies'] = dependencies
+
+
+
+        return HttpResponseRedirect(reverse('recommendations', args= (MANUAL_ENTRY_REPO_NAME,)))
+
+    return render(request, "webservice/manual-input.html", {})
+
+
 
 def recommendations(request, name):
     """
@@ -134,20 +164,31 @@ def recommendations(request, name):
     :param name: repo name
     :return:
     """
-    # Assure login
-    if not request.session.get('github_token'):
-        return HttpResponseRedirect(reverse("index"))
+
+    branch_name = None
+    branch_names = None
 
     # Convert encoded URL back to string e.g. hello%2world -> hello/world
     repo_name = urllib.parse.unquote_plus(name)
 
-    # Fetch branch name out of HTTP GET Param
-    branch_name = request.GET.get('branch', default='master')
+    if name == MANUAL_ENTRY_REPO_NAME:
+        dependencies_dict = request.session.get('dependencies')
 
-    # Get depencies for current repo, and branch names for the repo
-    dependencies, branch_names = github_util.get_dependencies(request.session['github_token'],
-                                                              repo_name,
-                                                              branch_name)
+        dependencies = github_util.parse_dependencies(dependencies_dict)
+
+
+    else:
+        # Assure login
+        if not request.session.get('github_token'):
+            return HttpResponseRedirect(reverse("index"))
+
+        # Fetch branch name out of HTTP GET Param
+        branch_name = request.GET.get('branch', default='master')
+
+        # Get depencies for current repo, and branch names for the repo
+        dependencies, branch_names = github_util.get_dependencies(request.session['github_token'],
+                                                                  repo_name,
+                                                                  branch_name)
 
     # Get predicitons
     recommended_dependencies = RECOMMENDER_SERVICE.get_recommendations(dependencies)

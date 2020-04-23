@@ -46,3 +46,7 @@ body {
   min-height: 100%;
   position: relative;
 }
+
+#manual-input {
+  width: 50%;
+}

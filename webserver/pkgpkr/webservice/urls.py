@@ -13,5 +13,6 @@ urlpatterns = [
     path("callback", views.callback, name="callback"),
     path("logout", views.logout, name="logout"),
     path("repositories", views.repositories, name="repositories"),
-    path("repositories/<str:name>", views.recommendations, name="recommendations")
+    path("repositories/<str:name>", views.recommendations, name="recommendations"),
+    path("manual-input", views.manual_input, name="manual-input")
 ]
