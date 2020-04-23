@@ -2,14 +2,12 @@
 Get package recommendations from our database
 """
 
-import math
 import re
 import psycopg2
 
 from pkgpkr.settings import DB_HOST
 from pkgpkr.settings import DB_USER
 from pkgpkr.settings import DB_PASSWORD
-from pkgpkr.settings import NPM_DEPENDENCY_BASE_URL
 
 class RecommenderService:
     """
@@ -60,16 +58,16 @@ class RecommenderService:
         packages = self.strip_to_major_version(dependencies)
         cur.execute(f"""
                     SELECT
-                    REPLACE(a.name, 'pkg:npm/', ''),
-                    REPLACE(b.name, 'pkg:npm/', ''),
-                    CONCAT('{NPM_DEPENDENCY_BASE_URL}/', REGEXP_REPLACE(b.name, 'pkg:npm/(.*)@\\d+', '\\1')),
-                    CEIL(CEIL(10 * s.similarity) * 0.5 + b.bounded_popularity * 0.3 + b.absolute_trend * 0.1 + b.relative_trend * 0.1),
+                    a.short_name,
+                    b.short_name,
+                    b.url,
+                    CEIL(10 * s.similarity * 0.5 + b.bounded_popularity * 0.3 + b.absolute_trend * 0.1 + b.relative_trend * 0.1),
                     b.absolute_trend,
                     b.relative_trend,
                     b.bounded_popularity,
-                    CEIL(10 * s.similarity),
+                    s.bounded_similarity,
                     b.categories,
-                    TO_CHAR(b.modified, 'yyyy-mm-dd')
+                    b.display_date
                     FROM similarity s
                     INNER JOIN packages a ON s.package_a = a.id
                     INNER JOIN packages b ON s.package_b = b.id

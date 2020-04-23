@@ -12,6 +12,7 @@ from pyspark.sql.functions import col, collect_list, create_map, lit
 from pyspark.sql import SparkSession
 from pyspark import SparkContext
 
+NPM_DEPENDENCY_BASE_URL = 'https://npmjs.com/package'
 SC = SparkContext("local[1]", "pkgpkr")
 
 # Connect to the database
@@ -183,6 +184,43 @@ CUR.execute(MONTHLY_DOWNLOADS_LAST_MONTH_NULL_TO_ZERO)
 CUR.execute(MONTHLY_DOWNLOADS_A_YEAR_AGO_NULL_TO_ZERO)
 CUR.execute(ABSOLUTE_TREND_UPDATE)
 CUR.execute(RELATIVE_TREND_UPDATE)
+
+#
+# Preprocessing on the packages table
+#
+
+SHORT_NAME_UPDATE = """
+UPDATE packages
+SET short_name = s.temp
+FROM (
+  SELECT id, REGEXP_REPLACE(name, 'pkg:[^/]+/(.*)', '\\1') AS temp
+  FROM packages
+) s
+WHERE packages.id = s.id;
+"""
+
+URL_UPDATE = """
+UPDATE packages
+SET url = s.temp
+FROM (
+  SELECT id, CONCAT('{NPM_DEPENDENCY_BASE_URL}/', REGEXP_REPLACE(name, 'pkg:npm/(.*)@\\d+', '\\1')) AS temp
+  FROM packages
+) s
+WHERE packages.id = s.id;
+"""
+
+DISPLAY_DATE_UPDATE = """
+UPDATE packages
+SET display_date = s.temp
+FROM (
+  SELECT id, TO_CHAR(modified, 'yyyy-mm-dd') AS temp FROM packages
+) s
+WHERE packages.id = s.id;
+"""
+
+CUR.execute(SHORT_NAME_UPDATE)
+CUR.execute(URL_UPDATE)
+CUR.execute(DISPLAY_DATE_UPDATE)
 
 # Commit changes and close the database connection
 DB.commit()
