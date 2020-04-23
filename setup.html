@@ -208,6 +208,8 @@
 <span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">packages</span> <span class="p">(</span>
   <span class="nb">id</span> <span class="n">SERIAL</span> <span class="n">PRIMARY</span> <span class="n">KEY</span><span class="p">,</span>
   <span class="n">name</span> <span class="n">TEXT</span> <span class="n">UNIQUE</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
+  <span class="n">short_name</span> <span class="n">TEXT</span><span class="p">,</span>
+  <span class="n">url</span> <span class="n">TEXT</span><span class="p">,</span>
   <span class="n">monthly_downloads_last_month</span> <span class="n">INTEGER</span><span class="p">,</span>
   <span class="n">monthly_downloads_a_year_ago</span> <span class="n">INTEGER</span><span class="p">,</span>
   <span class="n">absolute_trend</span> <span class="n">INTEGER</span><span class="p">,</span>
@@ -216,6 +218,7 @@
   <span class="n">popularity</span> <span class="n">INTEGER</span><span class="p">,</span>
   <span class="n">bounded_popularity</span> <span class="n">INTEGER</span><span class="p">,</span>
   <span class="n">modified</span> <span class="n">TIMESTAMPTZ</span><span class="p">,</span>
+  <span class="n">display_date</span> <span class="n">TEXT</span><span class="p">,</span>
   <span class="n">retrieved</span> <span class="n">TIMESTAMPTZ</span> <span class="n">NOT</span> <span class="n">NULL</span>
 <span class="p">);</span>
 <span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">dependencies</span> <span class="p">(</span>
@@ -227,8 +230,12 @@
   <span class="n">package_a</span> <span class="n">INTEGER</span> <span class="n">REFERENCES</span> <span class="n">packages</span> <span class="p">(</span><span class="nb">id</span><span class="p">),</span>
   <span class="n">package_b</span> <span class="n">INTEGER</span> <span class="n">REFERENCES</span> <span class="n">packages</span> <span class="p">(</span><span class="nb">id</span><span class="p">),</span>
   <span class="n">similarity</span> <span class="n">FLOAT</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="n">NOT</span> <span class="n">NULL</span><span class="p">,</span>
+  <span class="n">bounded_similarity</span> <span class="n">INTEGER</span><span class="p">,</span>
   <span class="n">CONSTRAINT</span> <span class="n">unique_pkg_to_pkg</span> <span class="n">UNIQUE</span> <span class="p">(</span><span class="n">package_a</span><span class="p">,</span> <span class="n">package_b</span><span class="p">)</span>
 <span class="p">);</span>
+<span class="n">CREATE</span> <span class="n">INDEX</span> <span class="n">ON</span> <span class="n">similarity</span> <span class="p">(</span><span class="n">package_a</span><span class="p">);</span>
+<span class="n">CREATE</span> <span class="n">INDEX</span> <span class="n">ON</span> <span class="n">similarity</span> <span class="p">(</span><span class="n">package_b</span><span class="p">);</span>
+<span class="n">CREATE</span> <span class="n">INDEX</span> <span class="n">ON</span> <span class="n">similarity</span> <span class="p">(</span><span class="n">similarity</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
