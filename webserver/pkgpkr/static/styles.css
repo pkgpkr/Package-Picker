@@ -22,10 +22,6 @@
    visibility: hidden;
 }
 
-#version-date-header {
-  min-width: 150px;
-}
-
 .recommendation-filter {
   width: 400px;
   margin: auto;

@@ -35,27 +35,14 @@ class TestRecommenderService(TestCase):
         """
 
         for recommendation in self.recommendations:
-            self.assertCountEqual(
-                {
-                    'package',
-                    'recommendation',
-                    'url',
-                    'absolute_trend_score',
-                    'relative_trend_score',
-                    'popularity_score',
-                    'similarity_score',
-                    'overall_score',
-                    'keywords',
-                    'date'
-                },
-                recommendation.keys()
-            )
+            self.assertEqual(10, len(recommendation))
 
-            self.assertIsNotNone(recommendation['package'])
-            self.assertIsNotNone(recommendation['recommendation'])
-            self.assertIsNotNone(recommendation['url'])
-            self.assertIsNotNone(recommendation['absolute_trend_score'])
-            self.assertIsNotNone(recommendation['relative_trend_score'])
-            self.assertIsNotNone(recommendation['popularity_score'])
-            self.assertIsNotNone(recommendation['similarity_score'])
-            self.assertIsNotNone(recommendation['overall_score'])
+            # Make sure every entry (except for categories and date) exists
+            self.assertIsNotNone(recommendation[0])
+            self.assertIsNotNone(recommendation[1])
+            self.assertIsNotNone(recommendation[2])
+            self.assertIsNotNone(recommendation[3])
+            self.assertIsNotNone(recommendation[4])
+            self.assertIsNotNone(recommendation[5])
+            self.assertIsNotNone(recommendation[6])
+            self.assertIsNotNone(recommendation[7])

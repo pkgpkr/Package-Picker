@@ -11,19 +11,14 @@
         <div class="container">
             <div class="content is-medium">
                 <h2>Package recommendations for {{ repository_name }}</h2>
-                <p>
-                    This tool recommends packages that frequently appear alongside the packages
-                    in {{ repository_name }}. A score of 10 indicates that the packages are
-                    <em>always</em> used together.
-                </p>
                 <p>Choose a branch:</p>
                 <div class="dropdown is-hoverable">
                     <div class="dropdown-trigger">
                         <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
                             <span>{{ current_branch }}</span>
                             <span class="icon is-small">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-              </span>
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
                         </button>
                     </div>
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
@@ -64,38 +59,19 @@
                         <tr>
                             <th>Package</th>
                             <th>Recommendation</th>
+                            <th>URL</th>
                             <th>PkgPkr Score</th>
                             <th>Absolute Trend</th>
                             <th>Relative Trend</th>
                             <th>Popularity</th>
                             <th>Similarity</th>
                             <th>Categories</th>
-                            <th id="version-date-header">Version Date</th>
+                            <th>Version Date</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for recommendation in recommendations %}
-                            <tr>
-                                <td>{{ recommendation.package }}</td>
-                                <td><a target="_blank"
-                                       href="{{ recommendation.url }}">{{ recommendation.recommendation }}</td>
-                                <td ><img class="pkgpkrscore_img" src="/static/images/{{ recommendation.overall_score }}.png"><p class="pkgpkrscore_value">{{ recommendation.overall_score }}</p></td>
-                                <td>{{ recommendation.absolute_trend_score }}</td>
-                                <td>{{ recommendation.relative_trend_score }}</td>
-                                <td>{{ recommendation.popularity_score }}</td>
-                                <td>{{ recommendation.similarity_score }}</td>
-                                <td>
-                                    {% for keyword in recommendation.keywords %}
-                                        <div class="buttons" style="margin-bottom: 0; display:inline-block;">
-                                            <button class="button is-info is-light is-small is-hovered"
-                                                    onclick="categoryClick('{{ keyword }}')">{{ keyword }}</button>
-                                        </div>
-                                    {% endfor %}
-                                </td>
-                                <td>{{ recommendation.date }}</td>
-                            </tr>
-                        {% endfor %}
-                        <tbody>
+                            <!-- Rows are added dynamically -->
+                        </tbody>
                     </table>
                     <div id="scoreModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                       <div class="modal-dialog" role="document">
@@ -118,4 +94,87 @@
             </div>
         </div>
     </section>
+    <script>
+        $(document).ready(function() {
+            var table = $('#recommendTable').DataTable({
+                "bLengthChange": false,
+                dom: 'tip',
+                ajax: '{{ recommendation_url }}',
+                scroller: true,
+                order: [[3, "desc"]],
+                "autoWidth": false,
+                columnDefs : [
+                    // Package
+                    {
+                        "targets": 0,
+                        "width": "10em"
+                    },
+                    // Recommendation link
+                    {
+                        "targets": 1,
+                        "render": function (data, type, row, meta) {
+                            return '<a href="' + row[2] + '">' + data + '</a>'
+                        },
+                        "width": "10em"
+                    },
+                    // PkgPkr Score
+                    {
+                        "targets": 3,
+                        "render": function (data, type, row, meta) {
+                            return '<img class="pkgpkrscore_img" src="/static/images/' + data + '.png"><p class="pkgpkrscore_value">' + data + '</p>'
+                        },
+                        "width": "3em"
+                    },
+                    // Categories
+                    {
+                        "targets": 8,
+                        "render": function (data, type, row, meta) {
+                            if (!data) {
+                                return "";
+                            }
+
+                            html_str = '<div class="buttons" style="margin-bottom: 0; display:inline-block;">';
+                            for (var i = 0; i < data.length; ++i) {
+                                html_str += '<button class="button is-info is-light is-small is-hovered" \
+                                                     onclick="categoryClick(\'' + data[i] + '\')">' + data[i] + '</button>';
+                            }
+                            html_str += '</div>';
+                            return html_str;
+                        }
+                    },
+                    // Version date
+                    {
+                        "targets": 9,
+                        "width": "6em"
+                    },
+                    // Hide URL and component score columns
+                    {
+                        "targets": [2, 4, 5, 6, 7],
+                        "visible": false
+                    }
+                ]
+            });
+
+            $('#recommendTable tbody ').on('click', 'img', function() {
+                var data = table.row($(this).parents('tr')).data();
+                $('.insertHere').html(
+                    '<table class="table dtr-details" width="100%"><tbody><tr><td>PkgPkr Score<td><td>' + data[2] +
+                    '</td></tr><tr><td>Absolute Trend Score<td><td>' + data[3] +
+                    '</td></tr><tr><td>Relative Trend Score<td><td>' + data[4] +
+                    '</td></tr><tr><td>Popularity Score<td><td>' + data[5] +
+                    '</td></tr><tr><td>Similarity Score<td><td>' + data[6] +
+                    '</td></tr></tbody></table>'
+                );
+                $('#scoreModal').modal('show');
+            });
+
+            $('#categoryName').keyup(function() {
+                table.column(8).search($(this).val()).draw();
+            });
+
+            $('#recommendationFilter').keyup(function() {
+                table.search($(this).val()).draw();
+            });
+        });
+    </script>
 {% endblock %}
