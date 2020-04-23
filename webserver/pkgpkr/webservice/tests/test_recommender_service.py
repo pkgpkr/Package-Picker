@@ -40,8 +40,11 @@ class TestRecommenderService(TestCase):
                     'package',
                     'recommendation',
                     'url',
-                    'similarity',
-                    'average_downloads',
+                    'absolute_trend_score',
+                    'relative_trend_score',
+                    'popularity_score',
+                    'similarity_score',
+                    'overall_score',
                     'keywords',
                     'date'
                 },
@@ -51,5 +54,8 @@ class TestRecommenderService(TestCase):
             self.assertIsNotNone(recommendation['package'])
             self.assertIsNotNone(recommendation['recommendation'])
             self.assertIsNotNone(recommendation['url'])
-            self.assertIsNotNone(recommendation['similarity'])
-            self.assertIsNotNone(recommendation['average_downloads'])
+            self.assertIsNotNone(recommendation['absolute_trend_score'])
+            self.assertIsNotNone(recommendation['relative_trend_score'])
+            self.assertIsNotNone(recommendation['popularity_score'])
+            self.assertIsNotNone(recommendation['similarity_score'])
+            self.assertIsNotNone(recommendation['overall_score'])

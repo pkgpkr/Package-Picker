@@ -32,9 +32,5 @@ def main():
         print("Fetching month " + str(i) + " of " + os.environ['MONTH'])
         run_query(month_calculation.month_delta(today, i), 'Python')
 
-    # TODO: BigQuery from google cloud is too slow and daily limitation is very small, need to find a better way to fetch downloads
-    # Fetch package metadata from npmjs.com
-    #npm_query.run_query()
-
 
 main()

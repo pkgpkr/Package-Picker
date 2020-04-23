@@ -101,8 +101,11 @@ def run_query(today, language='JavaScript'):
                 last_node = result['data']['search']['edges'][-1]['cursor']
             else:
                 break
-        except ValueError:
-            print(f"Could not run query starting at {last_node} for {monthly_search_str}")
+        except ValueError as exc:
+            print(f"Could not run query starting at {last_node} for {monthly_search_str}: {exc}: {result}")
+            break
+        except TypeError as exc:
+            print(f"Could not run query starting at {last_node} for {monthly_search_str}: {exc}: {result}")
             break
 
     # tear down database connection

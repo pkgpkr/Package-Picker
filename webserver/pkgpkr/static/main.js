@@ -15,17 +15,41 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 $(document).ready( function () {
-    var table = $('.display-data-tables').DataTable({
+    var repoTable = $('#repoTable').DataTable({
         "bLengthChange": false,
         dom: 'tip',
         scroller: true
     });
 
-    $('#categoryName').keyup( function() {
-        table.column(3).search($(this).val()).draw();
+    var table = $('#recommendTable').DataTable({
+        "bLengthChange": false,
+        dom: 'tip',
+        scroller: true,
+        order: [[2, "desc"]],
+        columnDefs : [{
+            "targets": [3, 4, 5, 6],
+            "visible": false
+        }]
     });
 
-    $('#recommendationFilter').keyup( function() {
+    $('#recommendTable tbody ').on('click', 'img', function() {
+        var data = table.row($(this).parents('tr')).data();
+        $('.insertHere').html(
+             '<table class="table dtr-details" width="100%"><tbody><tr><td>PkgPkr Score<td><td>' + data[2] +
+             '</td></tr><tr><td>Absolute Trend Score<td><td>' + data[3] +
+             '</td></tr><tr><td>Relative Trend Score<td><td>' + data[4] +
+             '</td></tr><tr><td>Popularity Score<td><td>' + data[5] +
+             '</td></tr><tr><td>Similarity Score<td><td>' + data[6] +
+             '</td></tr></tbody></table>'
+        );
+        $('#scoreModal').modal('show');
+    });
+
+    $('#categoryName').keyup(function() {
+        table.column(7).search($(this).val()).draw();
+    });
+
+    $('#recommendationFilter').keyup(function() {
         table.search($(this).val()).draw();
     });
 });

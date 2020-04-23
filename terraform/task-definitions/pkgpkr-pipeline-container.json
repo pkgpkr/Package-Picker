@@ -15,8 +15,8 @@
         "containerPort": 80
       }
     ],
-    "cpu": 2048,
-    "memoryReservation": 4096,
+    "cpu": 1024,
+    "memoryReservation": 2048,
     "image": "nginx:latest",
     "essential": true,
     "name": "nginx"
