@@ -3,9 +3,11 @@ Views for the web service
 """
 
 import os
+import json
 import urllib.parse
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.urls import reverse
 
 import requests
@@ -19,12 +21,14 @@ from .recommender_service import RecommenderService
 # Instantiate service class
 RECOMMENDER_SERVICE = RecommenderService()
 
-MANUAL_ENTRY_REPO_NAME = 'MANUAL'
+DEMO_REPO_INPUT_NAME = 'DEMO'
 
 
 def index(request):
     """ Return landing page"""
-    return render(request, "webservice/index.html", {})
+    return render(request,
+                  "webservice/index.html",
+                  {'demo_input_repo_name': DEMO_REPO_INPUT_NAME})
 
 
 def about(request):
@@ -130,28 +134,7 @@ def repositories(request):
 
 def manual_input(request):
 
-    if request.method == 'POST':
-        dependencies_muliline = request.POST.get('dependencies')
 
-        dependencies = f'{{ "dependencies" : {{ {dependencies_muliline} }} }}'
-        print(dependencies)
-        # dependencies_list = dependencies_muliline.splitlines()
-        #
-        #
-        # dependencies = {}
-        # for d in dependencies_list:
-        #
-        #     # Remove whitespace and commas, split into left : right by colon
-        #     d = d.strip().strip(',').split(':')
-        #
-        #     # Add to list of dictionaries
-        #     dependencies[d[0]] = d[1]
-
-        request.session['dependencies'] = dependencies
-
-
-
-        return HttpResponseRedirect(reverse('recommendations', args= (MANUAL_ENTRY_REPO_NAME,)))
 
     return render(request, "webservice/manual-input.html", {})
 
@@ -165,18 +148,19 @@ def recommendations(request, name):
     :return:
     """
 
-    branch_name = None
-    branch_names = None
-
     # Convert encoded URL back to string e.g. hello%2world -> hello/world
     repo_name = urllib.parse.unquote_plus(name)
 
-    if name == MANUAL_ENTRY_REPO_NAME:
-        dependencies_dict = request.session.get('dependencies')
+    # Process for DEMO run
+    if request.method == 'POST':
+        dependencies_multiline = request.POST.get('dependencies')
+        dependencies = f'{{ "dependencies" : {{ {dependencies_multiline} }} }}'
+        request.session['dependencies'] = dependencies
 
-        dependencies = github_util.parse_dependencies(dependencies_dict)
+        branch_name = None
+        branch_names = None
 
-
+    # If GET it means it's not a DEMO POST call with manual dependencies inputs
     else:
         # Assure login
         if not request.session.get('github_token'):
@@ -185,17 +169,56 @@ def recommendations(request, name):
         # Fetch branch name out of HTTP GET Param
         branch_name = request.GET.get('branch', default='master')
 
-        # Get depencies for current repo, and branch names for the repo
-        dependencies, branch_names = github_util.get_dependencies(request.session['github_token'],
-                                                                  repo_name,
-                                                                  branch_name)
 
-    # Get predicitons
-    recommended_dependencies = RECOMMENDER_SERVICE.get_recommendations(dependencies)
+        # Get depencies for current repo, and branch names for the repo
+        _, branch_names = github_util.get_dependencies(request.session['github_token'],
+                                                       repo_name,
+                                                       branch_name)
 
     return render(request, "webservice/recommendations.html", {
         'repository_name': repo_name,
-        'recommendations': recommended_dependencies,
+        'recommendation_url': f"/recommendations/{urllib.parse.quote_plus(name)}?branch={branch_name}",
         'branch_names': branch_names,
         'current_branch': branch_name
     })
+
+def recommendations_json(request, name):
+    """
+    Get recommended pacakges for the repo in JSON format
+    :param request:
+    :param name: repo name
+    :return:
+    """
+
+    # Convert encoded URL back to string e.g. hello%2world -> hello/world
+    repo_name = urllib.parse.unquote_plus(name)
+
+
+
+    if name == DEMO_REPO_INPUT_NAME:
+        dependencies_dict = request.session.get('dependencies')
+        dependencies = github_util.parse_dependencies(dependencies_dict)
+
+        # Set to none (will also allow for not showing branch selector
+        branch_name = None
+
+    else:
+        # Fetch branch name out of HTTP GET Param
+        branch_name = request.GET.get('branch', default='master')
+
+        # Get depencies for current repo, and branch names for the repo
+        dependencies, _ = github_util.get_dependencies(request.session['github_token'],
+                                                       repo_name,
+                                                       branch_name)
+
+
+    # Get predictions
+    recommended_dependencies = RECOMMENDER_SERVICE.get_recommendations(dependencies)
+
+    # Setup data to be returned
+    data = {
+        'repository_name': repo_name,
+        'current_branch': branch_name,
+        'data': recommended_dependencies,
+    }
+    return HttpResponse(json.dumps(data), content_type="application/json")

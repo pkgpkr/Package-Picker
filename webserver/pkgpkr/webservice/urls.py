@@ -14,5 +14,5 @@ urlpatterns = [
     path("logout", views.logout, name="logout"),
     path("repositories", views.repositories, name="repositories"),
     path("repositories/<str:name>", views.recommendations, name="recommendations"),
-    path("manual-input", views.manual_input, name="manual-input")
+    path("recommendations/<str:name>", views.recommendations_json, name="recommendations_json")
 ]

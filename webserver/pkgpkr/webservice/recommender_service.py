@@ -2,14 +2,12 @@
 Get package recommendations from our database
 """
 
-import math
 import re
 import psycopg2
 
 from pkgpkr.settings import DB_HOST
 from pkgpkr.settings import DB_USER
 from pkgpkr.settings import DB_PASSWORD
-from pkgpkr.settings import NPM_DEPENDENCY_BASE_URL
 
 class RecommenderService:
     """
@@ -20,7 +18,7 @@ class RecommenderService:
 
         self.major_version_regex = re.compile(r'pkg:npm/.*@\d+')
         self.name_only_regex = re.compile(r'pkg:npm/(.*)@\d+')
-        self.max_recommendations = 1000
+        self.max_recommendations = 10000
 
     def strip_to_major_version(self, dependencies):
         """
@@ -55,11 +53,21 @@ class RecommenderService:
         #    4. Percent trend score
         # 3. Return a list of recommendations with the package for which they were recommended
         # 4. Exclude any recommendations for packages that appear in the dependencies already
-        # 5. Limit results to 1,000 for performance (we should figure out how to raise this)
+        # 5. Limit results to improve performance
         #
         packages = self.strip_to_major_version(dependencies)
         cur.execute(f"""
-                    SELECT DISTINCT ON (b.name) a.name, b.name, b.absolute_trend, b.relative_trend, b.bounded_popularity, s.similarity, b.categories, b.modified
+                    SELECT
+                    a.short_name,
+                    b.short_name,
+                    b.url,
+                    CEIL(CEIL(10 * s.similarity) * 0.5 + b.bounded_popularity * 0.3 + b.absolute_trend * 0.1 + b.relative_trend * 0.1),
+                    b.absolute_trend,
+                    b.relative_trend,
+                    b.bounded_popularity,
+                    s.bounded_similarity,
+                    b.categories,
+                    b.display_date
                     FROM similarity s
                     INNER JOIN packages a ON s.package_a = a.id
                     INNER JOIN packages b ON s.package_b = b.id
@@ -67,73 +75,12 @@ class RecommenderService:
                     s.package_a IN (SELECT id FROM packages WHERE name in ({str(packages)[1:-1]}))
                     AND
                     s.package_b NOT IN (SELECT id FROM packages WHERE name in ({str(packages)[1:-1]}))
-                    ORDER BY b.name, s.similarity DESC
+                    ORDER BY s.similarity DESC
                     LIMIT {self.max_recommendations}
                     """)
 
-        # Add recommendations (including metadata) to results
-        recommended = []
-        for result in cur.fetchall():
-
-            # Package name
-            package = result[0].replace("pkg:npm/", "", 1)
-
-            # Recommendation name
-            recommendation = result[1].replace("pkg:npm/", "", 1)
-
-            # Recommendation URL
-            url = f"{NPM_DEPENDENCY_BASE_URL}/{self.name_only_regex.search(result[1]).group(1)}"
-
-            # Similarity score
-            similarity_score = math.ceil(10 * result[5])
-
-            # Popularity score
-            popularity_score = result[4]
-
-            # Absolute trend score
-            absolute_trend_score = result[2]
-
-            # Relative trend score
-            relative_trend_score = result[3]
-
-            # Weighted overall score
-            weighted_similarity = 0
-            weighted_popularity = 0
-            weighted_absolute_trend = 0
-            weighted_relative_trend = 0
-            if similarity_score:
-                weighted_similarity = similarity_score * 0.5
-            if popularity_score:
-                weighted_popularity = popularity_score * 0.3
-            if absolute_trend_score:
-                weighted_absolute_trend = absolute_trend_score * 0.1
-            if relative_trend_score:
-                weighted_relative_trend = relative_trend_score * 0.1
-            overall_score = math.ceil(weighted_similarity + weighted_popularity + weighted_absolute_trend + weighted_relative_trend)
-
-            # Keywords
-            keywords = result[6]
-
-            # Modified date
-            day = result[7]
-            if day:
-                day = day.strftime('%Y-%m-%d')
-
-            # Add to the list of recommendations
-            recommended.append(
-                {
-                    'package': package,
-                    'recommendation': recommendation,
-                    'url': url,
-                    'absolute_trend_score': absolute_trend_score,
-                    'relative_trend_score': relative_trend_score,
-                    'popularity_score': popularity_score,
-                    'similarity_score': similarity_score,
-                    'overall_score': overall_score,
-                    'keywords': keywords,
-                    'date': day
-                }
-            )
+        # Fetch results
+        recommended = cur.fetchall()
 
         # Disconnect from the database
         cur.close()

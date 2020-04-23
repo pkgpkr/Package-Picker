@@ -12,8 +12,8 @@ from pyspark.sql.functions import col, collect_list, create_map, lit
 from pyspark.sql import SparkSession
 from pyspark import SparkContext
 
-
 def main():
+    NPM_DEPENDENCY_BASE_URL = 'https://npmjs.com/package'
     SC = SparkContext("local[1]", "pkgpkr")
 
     # Connect to the database
@@ -75,6 +75,30 @@ def main():
     SIMILARITY_DF.write.jdbc(URL_CONNECT, TABLE, MODE, PROPERTIES)
 
     #
+    # Update bounded similarity score
+    #
+
+    BOUNDED_SIMILARITY_UPDATE = """
+    UPDATE similarity
+    SET bounded_similarity = s.b_s
+    FROM (
+      SELECT package_a, package_b, WIDTH_BUCKET(similarity, 0, 1, 9) AS b_s
+      FROM similarity
+    ) s
+    WHERE
+    similarity.package_a = s.package_a
+    AND
+    similarity.package_b = s.package_b;
+    """
+
+    # Connect to the database
+    DB = psycopg2.connect(user=USER, password=PASSWORD, host=HOST)
+    CUR = DB.cursor()
+
+    # Execute bounded similarity update
+    CUR.execute(BOUNDED_SIMILARITY_UPDATE)
+
+    #
     # Update popularity scores
     #
 
@@ -104,10 +128,6 @@ def main():
     ) s
     WHERE packages.id = s.id;
     """
-
-    # Connect to the database
-    DB = psycopg2.connect(user=USER, password=PASSWORD, host=HOST)
-    CUR = DB.cursor()
 
     # Execute popularity updates
     CUR.execute(POPULARITY_UPDATE)
@@ -165,6 +185,43 @@ def main():
     CUR.execute(MONTHLY_DOWNLOADS_A_YEAR_AGO_NULL_TO_ZERO)
     CUR.execute(ABSOLUTE_TREND_UPDATE)
     CUR.execute(RELATIVE_TREND_UPDATE)
+
+    #
+    # Preprocessing on the packages table
+    #
+
+    SHORT_NAME_UPDATE = """
+    UPDATE packages
+    SET short_name = s.temp
+    FROM (
+      SELECT id, REGEXP_REPLACE(name, 'pkg:[^/]+/(.*)', '\\1') AS temp
+      FROM packages
+    ) s
+    WHERE packages.id = s.id;
+    """
+
+    URL_UPDATE = f"""
+    UPDATE packages
+    SET url = s.temp
+    FROM (
+      SELECT id, CONCAT('{NPM_DEPENDENCY_BASE_URL}/', REGEXP_REPLACE(name, 'pkg:npm/(.*)@\\d+', '\\1')) AS temp
+      FROM packages
+    ) s
+    WHERE packages.id = s.id;
+    """
+
+    DISPLAY_DATE_UPDATE = """
+    UPDATE packages
+    SET display_date = s.temp
+    FROM (
+      SELECT id, TO_CHAR(modified, 'yyyy-mm-dd') AS temp FROM packages
+    ) s
+    WHERE packages.id = s.id;
+    """
+
+    CUR.execute(SHORT_NAME_UPDATE)
+    CUR.execute(URL_UPDATE)
+    CUR.execute(DISPLAY_DATE_UPDATE)
 
     # Commit changes and close the database connection
     DB.commit()
