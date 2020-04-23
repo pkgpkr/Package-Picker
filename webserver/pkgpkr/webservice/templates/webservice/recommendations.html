@@ -64,6 +64,7 @@
                         <tr>
                             <th>Package</th>
                             <th>Recommendation</th>
+                            <th>URL</th>
                             <th>PkgPkr Score</th>
                             <th>Absolute Trend</th>
                             <th>Relative Trend</th>
@@ -105,30 +106,25 @@
                 dom: 'tip',
                 ajax: '{{ recommendation_url }}',
                 scroller: true,
-                order: [[2, "desc"]],
+                order: [[3, "desc"]],
                 columnDefs : [
                     // Render recommendation link
                     {
                         "targets": 1,
                         "render": function (data, type, row, meta) {
-                            return '<a href="' + data[1] + '">' + data[0] + '</a>'
+                            return '<a href="' + data[1] + '">' + row[1] + '</a>'
                         }
                     },
                     // Render PkgPkr Score
                     {
-                        "targets": 2,
+                        "targets": 3,
                         "render": function (data, type, row, meta) {
                             return '<img class="pkgpkrscore_img" src="/static/images/' + data + '.png"><p class="pkgpkrscore_value">' + data + '</p>'
                         }
                     },
-                    // Hide component scores
-                    {
-                        "targets": [3, 4, 5, 6],
-                        "visible": false
-                    },
                     // Render categories
                     {
-                        "targets": 7,
+                        "targets": 8,
                         "render": function (data, type, row, meta) {
                             if (!data) {
                                 return "";
@@ -142,6 +138,11 @@
                             html_str += '</div>';
                             return html_str;
                         }
+                    },
+                    // Hide URL and component scores
+                    {
+                        "targets": [2, 4, 5, 6, 7],
+                        "visible": false
                     }
                 ]
             });

@@ -73,6 +73,30 @@ PROPERTIES = {"user": USER, "password": PASSWORD, "driver": "org.postgresql.Driv
 SIMILARITY_DF.write.jdbc(URL_CONNECT, TABLE, MODE, PROPERTIES)
 
 #
+# Update bounded similarity score
+#
+
+BOUNDED_SIMILARITY_UPDATE = """
+UPDATE similarity
+SET bounded_similarity = s.b_s
+FROM (
+  SELECT package_a, package_b, WIDTH_BUCKET(similarity, 0, 1, 9) AS b_s
+  FROM similarity
+) s
+WHERE
+similarity.package_a = s.package_a
+AND
+similarity.package_b = s.package_b;
+"""
+
+# Connect to the database
+DB = psycopg2.connect(user=USER, password=PASSWORD, host=HOST)
+CUR = DB.cursor()
+
+# Execute bounded similarity update
+CUR.execute(BOUNDED_SIMILARITY_UPDATE)
+
+#
 # Update popularity scores
 #
 
@@ -102,10 +126,6 @@ FROM (
 ) s
 WHERE packages.id = s.id;
 """
-
-# Connect to the database
-DB = psycopg2.connect(user=USER, password=PASSWORD, host=HOST)
-CUR = DB.cursor()
 
 # Execute popularity updates
 CUR.execute(POPULARITY_UPDATE)
