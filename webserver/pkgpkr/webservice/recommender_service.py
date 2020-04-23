@@ -53,7 +53,7 @@ class RecommenderService:
         #    4. Percent trend score
         # 3. Return a list of recommendations with the package for which they were recommended
         # 4. Exclude any recommendations for packages that appear in the dependencies already
-        # 5. Limit results to 1,000 for performance (we should figure out how to raise this)
+        # 5. Limit results to improve performance
         #
         packages = self.strip_to_major_version(dependencies)
         cur.execute(f"""
@@ -61,7 +61,7 @@ class RecommenderService:
                     a.short_name,
                     b.short_name,
                     b.url,
-                    CEIL(10 * s.similarity * 0.5 + b.bounded_popularity * 0.3 + b.absolute_trend * 0.1 + b.relative_trend * 0.1),
+                    CEIL(CEIL(10 * s.similarity) * 0.5 + b.bounded_popularity * 0.3 + b.absolute_trend * 0.1 + b.relative_trend * 0.1),
                     b.absolute_trend,
                     b.relative_trend,
                     b.bounded_popularity,
