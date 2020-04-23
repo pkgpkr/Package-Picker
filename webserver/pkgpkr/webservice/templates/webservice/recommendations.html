@@ -17,8 +17,8 @@
                         <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
                             <span>{{ current_branch }}</span>
                             <span class="icon is-small">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-              </span>
+                                <i class="fas fa-angle-down" aria-hidden="true"></i>
+                            </span>
                         </button>
                     </div>
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
@@ -113,7 +113,7 @@
                     {
                         "targets": 1,
                         "render": function (data, type, row, meta) {
-                            return '<a href="' + data[1] + '">' + row[1] + '</a>'
+                            return '<a href="' + row[2] + '">' + data + '</a>'
                         },
                         "width": "10em"
                     },
