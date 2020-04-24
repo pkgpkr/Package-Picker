@@ -106,6 +106,9 @@
                 scroller: true,
                 order: [[3, "desc"]],
                 "autoWidth": false,
+                "initComplete": function(settings, json) {
+                    myFunction()
+                },
                 columnDefs : [
                     // Package
                     {
