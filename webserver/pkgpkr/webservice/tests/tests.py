@@ -170,6 +170,14 @@ class LoginTest(LiveServerTestCase):
         self.assertEqual("Recommendations", self.driver.title)
         self.driver.find_element_by_xpath("//*[@id='recommend-table_info' and starts-with(text(), 'Showing 1')]")
 
+        # Click the PkgPkr Score button
+        score_ele = self.driver.find_element_by_xpath("//*[@id='recommend-table']/tbody/tr[1]/td[3]/img")
+        score_ele.click()
+
+        # Make sure the modal opens
+        close_ele = self.driver.find_element_by_xpath("//*[@id='modal-close']")
+        close_ele.click()
+
         # Logout button
         logout_ele = self.driver.find_element_by_xpath(
             "//*[@id='navbarBasicExample']/div[2]/div/div")
