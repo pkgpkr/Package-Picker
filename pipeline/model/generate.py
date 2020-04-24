@@ -71,7 +71,7 @@ def main():
                                  .union(SIMILARITY_DF.select('package_b', 'package_a', 'similarity'))
 
     # Write similarity scores to the database
-    URL_CONNECT = f"jdbc:postgresql://{HOST}/"
+    URL_CONNECT = f"jdbc:postgresql://{HOST}:{PORT}/{DATABASE}"
     TABLE = "similarity"
     MODE = "overwrite"
     PROPERTIES = {"user": USER, "password": PASSWORD, "driver": "org.postgresql.Driver"}
