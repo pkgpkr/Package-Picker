@@ -31,13 +31,13 @@ jobs:
       uses: ammaraskar/sphinx-action@0.4
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        GITHUB_CLIENT_ID: "dummy"
-        GITHUB_CLIENT_SECRET: "dummy"
-        DB_HOST: "dummy"
-        DB_PORT: "dummy"
-        DB_DATABASE: "dummy"
-        DB_USER: "dummy"
-        DB_PASSWORD: "dummy"
+        GITHUB_CLIENT_ID: dummy
+        GITHUB_CLIENT_SECRET: dummy
+        DB_HOST: dummy
+        DB_PORT: dummy
+        DB_DATABASE: dummy
+        DB_USER: dummy
+        DB_PASSWORD: dummy
       with:
         # The folder containing your sphinx docs.
         docs-folder: docs/
