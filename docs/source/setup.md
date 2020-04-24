@@ -9,6 +9,8 @@ AWS_SECRET_ACCESS_KEY # Your AWS account's secret access key
 CLIENT_ID             # ID of the GitHub app used by the web server
 CLIENT_SECRET         # Secret for the GitHub app
 DB_HOST               # Database URL
+DB_PORT               # Database port
+DB_DATABASE           # Database name
 DB_PASSWORD           # Database password
 DB_USER               # Database user
 DOMAIN_NAME           # The domain name where the site is hosted (e.g. https://pkgpkr.com)
@@ -28,8 +30,8 @@ Terraform will provision a database for you (see the AWS section below), otherwi
 If you want to start with some data in the database so you don't have to run the ML pipeline first, run the following commands:
 
 ```
-wget https://pkgpkr-models.s3.amazonaws.com/database.dump
-psql -h <DB host> -U <DB user> <DB name> < database.dump
+wget https://pkgpkr-models.s3.amazonaws.com/big_data.dump.gz
+cat big_data.dump.gz | gunzip | psql -h <DB host> -U <DB user> <DB name>
 ```
 
 ### Fresh start
