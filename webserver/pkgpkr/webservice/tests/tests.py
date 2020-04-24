@@ -82,13 +82,13 @@ class LoginTest(LiveServerTestCase):
             "//tbody/tr[1]/td[1]/a")
         first_repo_ele.click()
 
+        # Wait until the loading animation is disappeared
+        loading_state = self.driver.find_element_by_xpath("//*[@class='pageloader']")
+        WebDriverWait(self.driver, 30).until(EC.invisibility_of_element(loading_state))
+
         # Check if the user at recommendations page
         self.assertEqual("Recommendations", self.driver.title)
-        loading_state = self.driver.find_element_by_xpath("//*[@class='dataTables_empty']")
-        self.assertEqual("Loading...", loading_state.get_attribute('textContent'))
-
-        # Wait for data to load
-        WebDriverWait(self.driver, 30).until(EC.invisibility_of_element(loading_state))
+        element_count_text = self.driver.find_element_by_xpath("//*[@id='recommend-table_info' and starts-with(text(), 'Showing 1')]")
 
         # Check if text in branch selector is `master`
         branch_span = self.driver.find_element_by_xpath("//*[@class='dropdown-trigger']/button/span")
@@ -100,16 +100,17 @@ class LoginTest(LiveServerTestCase):
         branch_dropdown.click()
         branch_to_click.click()
 
+        # Wait until the loading animation is disappeared
+        loading_state = self.driver.find_element_by_xpath("//*[@class='pageloader']")
+        WebDriverWait(self.driver, 30).until(EC.invisibility_of_element(loading_state))
+
+        # Check if the user at recommendations page with different branch
+        self.assertEqual("Recommendations", self.driver.title)
+        element_count_text = self.driver.find_element_by_xpath("//*[@id='recommend-table_info' and starts-with(text(), 'Showing 1')]")
+
         # Assure that we are looking at another branch
         branch_span = self.driver.find_element_by_xpath("//*[@class='dropdown-trigger']/button/span")
         self.assertEqual("test", branch_span.get_attribute('textContent'))
-
-        # Check that we're loading data for the new branch
-        loading_state = self.driver.find_element_by_xpath("//*[@class='dataTables_empty']")
-        self.assertEqual("Loading...", loading_state.get_attribute('textContent'))
-
-        # Wait for data to load
-        WebDriverWait(self.driver, 30).until(EC.invisibility_of_element(loading_state))
 
         # Category border
         category_order_ele = self.driver.find_element_by_xpath(
@@ -125,7 +126,7 @@ class LoginTest(LiveServerTestCase):
         first_category_ele.click()
 
         # Clear button
-        clear_ele = self.driver.find_element_by_xpath("//*[@id='categoryClear']")
+        clear_ele = self.driver.find_element_by_xpath("//*[@id='category-clear']")
         clear_ele.click()
 
         # Filter text inputs
@@ -136,19 +137,18 @@ class LoginTest(LiveServerTestCase):
 
         # The first element from the recommendation list
         first_recommendation_ele = self.driver.find_element_by_xpath(
-            "//*[@id='recommend-table']/tbody/tr/td[2]/a")
+            "//*[@id='recommend-table']/tbody/tr[1]/td[2]/a")
         first_recommendation_ele.click()
 
-        # Verify that we're on npmjs.com
-        self.assertRegex(self.driver.title, r'npm')
+        window_after = self.driver.window_handles[1]
+        self.driver.switch_to_window(window_after)
+        app = self.driver.find_element_by_xpath("//*[@id='app']")
 
-        # Go back to the recommendations page
-        self.driver.back()
+        # Close the npm page
+        self.driver.close()
 
-        # Wait for the data to load
-        loading_state = self.driver.find_element_by_xpath("//*[@class='dataTables_empty']")
-        self.assertEqual("Loading...", loading_state.get_attribute('textContent'))
-        WebDriverWait(self.driver, 30).until(EC.invisibility_of_element(loading_state))
+        window_before = self.driver.window_handles[0]
+        self.driver.switch_to_window(window_before)
 
         # Logout button
         logout_ele = self.driver.find_element_by_xpath(
