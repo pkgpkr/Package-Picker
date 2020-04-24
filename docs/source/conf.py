@@ -15,6 +15,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../..'))
 sys.path.insert(0, os.path.abspath('../../pipeline/scraper'))
+sys.path.insert(0, os.path.abspath('../../pipeline/scraper/psql'))
 sys.path.insert(0, os.path.abspath('../../pipeline/model'))
 sys.path.insert(0, os.path.abspath('../../webserver/pkgpkr'))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'pkgpkr.settings'

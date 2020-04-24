@@ -42,17 +42,17 @@ DATABASE = os.environ.get('DB_DATABASE')
 PORT = os.environ.get('DB_PORT')
 CONN_STRING = f"host={HOST} user={USER} password={PASSWORD} dbname={DATABASE} port={PORT}"
 
-# Assert that the necessary environment variables are present
-assert USER, "DB_USER not set"
-assert PASSWORD, "DB_PASSWORD not set"
-assert HOST, "DB_HOST not set"
-assert DATABASE, "DB_DATABASE not set"
-assert PORT, "DB_PORT not set"
-
 def connect_to_db():
     """
     Connect to the database
     """
+
+    # Assert that the necessary environment variables are present
+    assert USER, "DB_USER not set"
+    assert PASSWORD, "DB_PASSWORD not set"
+    assert HOST, "DB_HOST not set"
+    assert DATABASE, "DB_DATABASE not set"
+    assert PORT, "DB_PORT not set"
 
     database = psycopg2.connect(CONN_STRING)
     return database

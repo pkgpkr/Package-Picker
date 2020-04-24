@@ -26,6 +26,11 @@ npm_query
     :members:
     :undoc-members:
 
+psql
+----------------------
+ .. automodule:: psql
+    :members:
+    :undoc-members:
 
 pypi_query
 ----------------------
