@@ -7,40 +7,15 @@
 {% endblock %}
 
 {% block body %}
-    <!-- <div class="pageloader">
+    <div class="pageloader">
         <img src="/static/images/loading.gif" />
         <img src="/static/images/calculating.gif" />
-    </div> -->
+    </div>
     <section class="section">
         <div class="container">
             <div class="content is-medium">
                 <h2>Package recommendations for {{ repository_name }}</h2>
                 {%  if branch_names %}
-                <!-- <div id="branch-wrapper">
-                    <div id="branch-header">
-                        <p>Branch: </p>
-                    </div>
-                    <div id="branch-dropdown" class="dropdown is-hoverable">
-                        <div class="dropdown-trigger">
-                            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                                <span>{{ current_branch }}</span>
-                                <span class="icon is-small">
-                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
-                                </span>
-                            </button>
-                        </div>
-                        <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                            <div class="dropdown-content">
-                                {% for branch_name in branch_names %}
-
-                                    <a href="?branch={{ branch_name }}" class="dropdown-item">
-                                        {{ branch_name }}
-                                    </a>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
                 <table>
                     <tr>
                         <td id="branch-header"><p>Branch: </p></td>
@@ -110,7 +85,7 @@
                         <div class="modal-background"></div>
                         <div class="modal-card">
                           <header class="modal-card-head">
-                            <p id="modalTitle" class="modal-card-title">PkgPkr Score© Chart</p>
+                            <p id="modalTitle" class="modal-card-title">PkgPkr Score© Calculation</p>
                             <button id="modal-close" class="delete" aria-label="close"></button>
                           </header>
                           <section class="modal-card-body">
@@ -141,7 +116,7 @@
                     {
                         "targets": 1,
                         "render": function (data, type, row, meta) {
-                            return '<a href="' + row[2] + '">' + data + '</a>'
+                            return '<a target="_blank" href="' + row[2] + '">' + data + '</a>'
                         },
                         "width": "10em"
                     },
@@ -189,23 +164,23 @@
                      '<table class="table dtr-details" width="100%"><tbody><tr>' +
                      '<th class="pkgpkr_score_td">PkgPkr<br>Score© <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
                      '<span class="tooltiptext">A score of 10 indicates that the packages are always used together. ' +
-                     '<a target="_blank" href="/about">See more details</a></span></div></th>' +
+                     '<a target="_blank" href="/about#pkgpkr">See more details</a></span></div></th>' +
 
                      '<th class="other_score_td">Used-Together<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
                      '<span class="tooltiptext">A score of 10 indicates that the packages are always used together. ' +
-                     '<a target="_blank" href="/about">See more details</a></span></div></th>' +
+                     '<a target="_blank" href="/about#used-together">See more details</a></span></div></th>' +
 
                      '<th class="other_score_td">Collaborative Filtering<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
                      '<span class="tooltiptext">A score of 10 indicates that the packages are always used together A score of 10 indicates that the packages are always used together. ' +
-                     '<a target="_blank" href="/about">See more details</a></span></div></th>' +
+                     '<a target="_blank" href="/about#collaborative-filtering">See more details</a></span></div></th>' +
 
                      '<th class="other_score_td">Absolute Trend<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
                      '<span class="tooltiptext">A score of 10 indicates that the packages are always used together. ' +
-                     '<a target="_blank" href="/about">See more details</a></span></div></th>' +
+                     '<a target="_blank" href="/about#percent-change-trending">See more details</a></span></div></th>' +
 
                      '<th class="other_score_td">Relative Trend<br>Score <div class="tooltip-left"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
                      '<span class="tooltiptext-left">A score of 10 indicates that the packages are always used together. ' +
-                     '<a target="_blank" href="/about">See more details</a></span></div></th><tr>' +
+                     '<a target="_blank" href="/about#absolute-change-trending">See more details</a></span></div></th><tr>' +
                      '<td>' + '<img src="/static/images/' + data[3] + '.png" style="width:250px;"></td>' +
                      '<td>' + '<img src="/static/images/' + data[4] + '.png" style="width:150px;"></td>' +
                      '<td>' + '<img src="/static/images/' + data[5] + '.png" style="width:150px;"></td>' +

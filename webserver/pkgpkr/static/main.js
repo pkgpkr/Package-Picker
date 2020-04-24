@@ -15,12 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 $(document).ready( function () {
-    var repoTable = $('#repoTable').DataTable({
+    var repoTable = $('#repo-table').DataTable({
         "bLengthChange": false,
         dom: 'tip',
         scroller: true
     });
-    
+
     $('.modal-background').click(function() {
         $('#scoreModal').modal('hide');
     })
@@ -40,7 +40,7 @@ window.addEventListener("load", function() {
 
     setTimeout(function() {
       myFunction()
-    }, 2000);
+    }, 750);
 });
 
 function categoryClick(value) {
