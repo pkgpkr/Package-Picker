@@ -19,7 +19,8 @@ docker build \
       --build-arg DB_PASSWORD=$DB_PASSWORD .
 ```
 
-2. Run the Docker image. It will automatically scrape data and train the model, and quit when done.
+2. Run the Docker image. The image ID is shown after the Docker build successfully
+   completes. It will automatically scrape data and train the model, and quit when done.
 
 `docker run -i -t <id>`
 
