@@ -170,12 +170,14 @@
 <span class="n">CLIENT_ID</span>             <span class="c1"># ID of the GitHub app used by the web server</span>
 <span class="n">CLIENT_SECRET</span>         <span class="c1"># Secret for the GitHub app</span>
 <span class="n">DB_HOST</span>               <span class="c1"># Database URL</span>
-<span class="n">DB_PASSWORD</span>           <span class="c1"># Database password</span>
+<span class="n">DB_PORT</span>               <span class="c1"># Database port</span>
+<span class="n">DB_DATABASE</span>           <span class="c1"># Database name</span>
+<span class="n">DB_PASSWORD</span>           <span class="c1"># Database password (must be set to something even if no password)</span>
 <span class="n">DB_USER</span>               <span class="c1"># Database user</span>
 <span class="n">DOMAIN_NAME</span>           <span class="c1"># The domain name where the site is hosted (e.g. https://pkgpkr.com)</span>
 <span class="n">MONTH</span>                 <span class="c1"># How many months of data to scrape</span>
-<span class="n">SELENIUM_TEST</span>         <span class="c1"># Set to 1 (or any value) if running Selenium tests</span>
-<span class="n">GH_TOKEN</span>              <span class="c1"># Your GitHub API token</span>
+<span class="n">SELENIUM_TEST</span>         <span class="c1"># Set to 1 if running Selenium tests</span>
+<span class="n">GH_TOKEN</span>              <span class="c1"># GitHub API token</span>
 </pre></div>
 </div>
 </div>
@@ -188,8 +190,8 @@
 <div class="section" id="load-data">
 <h3>Load data<a class="headerlink" href="#load-data" title="Permalink to this headline">¶</a></h3>
 <p>If you want to start with some data in the database so you don’t have to run the ML pipeline first, run the following commands:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pkgpkr</span><span class="o">-</span><span class="n">models</span><span class="o">.</span><span class="n">s3</span><span class="o">.</span><span class="n">amazonaws</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">database</span><span class="o">.</span><span class="n">dump</span>
-<span class="n">psql</span> <span class="o">-</span><span class="n">h</span> <span class="o">&lt;</span><span class="n">DB</span> <span class="n">host</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">U</span> <span class="o">&lt;</span><span class="n">DB</span> <span class="n">user</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">DB</span> <span class="n">name</span><span class="o">&gt;</span> <span class="o">&lt;</span> <span class="n">database</span><span class="o">.</span><span class="n">dump</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pkgpkr</span><span class="o">-</span><span class="n">models</span><span class="o">.</span><span class="n">s3</span><span class="o">.</span><span class="n">amazonaws</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">big_data</span><span class="o">.</span><span class="n">dump</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">cat</span> <span class="n">big_data</span><span class="o">.</span><span class="n">dump</span><span class="o">.</span><span class="n">gz</span> <span class="o">|</span> <span class="n">gunzip</span> <span class="o">|</span> <span class="n">psql</span> <span class="o">-</span><span class="n">h</span> <span class="o">&lt;</span><span class="n">DB</span> <span class="n">host</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">U</span> <span class="o">&lt;</span><span class="n">DB</span> <span class="n">user</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">DB</span> <span class="n">name</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 </div>

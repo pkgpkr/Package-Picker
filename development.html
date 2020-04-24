@@ -183,11 +183,14 @@ docker build \
       --build-arg MONTH=$MONTH \
       --build-arg DB_USER=$DB_USER \
       --build-arg DB_HOST=$DB_HOST \
-      --build-arg=DB_PASSWORD=$DB_PASSWORD .
+      --build-arg DB_PORT=$DB_PORT \
+      --build-arg DB_DATABASE=$DB_DATABASE \
+      --build-arg DB_PASSWORD=$DB_PASSWORD .
 </pre></div>
 </div>
 <ol class="simple">
-<li><p>Run the Docker image. It will automatically scrape data and train the model, and quit when done.</p></li>
+<li><p>Run the Docker image. The image ID is shown after the Docker build successfully
+completes. It will automatically scrape data and train the model, and quit when done.</p></li>
 </ol>
 <p><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span> <span class="pre">-i</span> <span class="pre">-t</span> <span class="pre">&lt;id&gt;</span></code></p>
 </div>
@@ -197,6 +200,8 @@ docker build \
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DB_USER=$DB_USER \
 DB_PASSWORD=$DB_PASSWORD \
 DB_HOST=$DB_HOST \
+DB_PORT=$DB_PORT \
+DB_DATABASE=$DB_DATABASE \
 GH_TOKEN=$GH_TOKEN \
 python3 -m unittest scraper/test.py -v
 </pre></div>
@@ -216,6 +221,8 @@ docker build \
       --build-arg CLIENT_ID=$CLIENT_ID \
       --build-arg CLIENT_SECRET=$CLIENT_SECRET \
       --build-arg DB_USER=$DB_USER \
+      --build-arg DB_PORT=$DB_PORT \
+      --build-arg DB_DATABASE=$DB_DATABASE \
       --build-arg DB_PASSWORD=$DB_PASSWORD \
       --build-arg DB_HOST=$DB_HOST .
 </pre></div>
@@ -237,6 +244,8 @@ SELENIUM_TEST=1 \
 CLIENT_ID=$CLIENT_ID \
 CLIENT_SECRET=$CLIENT_SECRET \
 DB_HOST=$DB_HOST \
+DB_PORT=$DB_PORT \
+DB_DATABASE=$DB_DATABASE \
 DB_USER=$DB_USER \
 DB_PASSWORD=$DB_PASSWORD \
 python3 manage.py test

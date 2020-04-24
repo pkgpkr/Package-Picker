@@ -91,6 +91,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-month_calculation">month_calculation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#github-query">github_query</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#npm-query">npm_query</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#psql">psql</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pypi-query">pypi_query</a></li>
 </ul>
 </li>
@@ -186,30 +187,45 @@
 </div>
 <div class="section" id="github-query">
 <h3>github_query<a class="headerlink" href="#github-query" title="Permalink to this headline">¶</a></h3>
-<blockquote>
-<div><span class="target" id="module-github_query"></span><p>Fetch npm dependency information from the GitHub v4 API</p>
-<dl class="py function">
-<dt id="github_query.run_query">
-<code class="sig-prename descclassname">github_query.</code><code class="sig-name descname">run_query</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">today</span></em>, <em class="sig-param"><span class="n">language</span><span class="o">=</span><span class="default_value">'JavaScript'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#github_query.run_query" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch all repositories for the given month</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="github_query.run_query_once">
-<code class="sig-prename descclassname">github_query.</code><code class="sig-name descname">run_query_once</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_per_loop</span></em>, <em class="sig-param"><span class="n">monthly_search_str</span></em>, <em class="sig-param"><span class="n">cursor</span></em>, <em class="sig-param"><span class="n">language</span></em><span class="sig-paren">)</span><a class="headerlink" href="#github_query.run_query_once" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fetch a single page of repositories for the given month</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="github_query.write_db">
-<code class="sig-prename descclassname">github_query.</code><code class="sig-name descname">write_db</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">result</span></em>, <em class="sig-param"><span class="n">language</span><span class="o">=</span><span class="default_value">'JavaScript'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#github_query.write_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write a set of repositories and their dependencies to the database for JS packages</p>
-</dd></dl>
-
-</div></blockquote>
 </div>
 <div class="section" id="npm-query">
 <h3>npm_query<a class="headerlink" href="#npm-query" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="psql">
+<h3>psql<a class="headerlink" href="#psql" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><span class="target" id="module-psql"></span><p>Insert application, package, and dependency data into a PostgreSQL database</p>
+<dl class="py function">
+<dt id="psql.connect_to_db">
+<code class="sig-prename descclassname">psql.</code><code class="sig-name descname">connect_to_db</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#psql.connect_to_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect to the database</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="psql.insert_to_app">
+<code class="sig-prename descclassname">psql.</code><code class="sig-name descname">insert_to_app</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">url</span></em>, <em class="sig-param"><span class="n">followers</span></em>, <em class="sig-param"><span class="n">app_name</span></em>, <em class="sig-param"><span class="n">app_hash</span></em><span class="sig-paren">)</span><a class="headerlink" href="#psql.insert_to_app" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upsert a row into the applications table</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="psql.insert_to_dependencies">
+<code class="sig-prename descclassname">psql.</code><code class="sig-name descname">insert_to_dependencies</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">application_id</span></em>, <em class="sig-param"><span class="n">package_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#psql.insert_to_dependencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upsert a row into the dependency table</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="psql.insert_to_package">
+<code class="sig-prename descclassname">psql.</code><code class="sig-name descname">insert_to_package</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#psql.insert_to_package" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upsert a row into the packages table</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="psql.update_package_metadata">
+<code class="sig-prename descclassname">psql.</code><code class="sig-name descname">update_package_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">monthly_downloads_last_month</span></em>, <em class="sig-param"><span class="n">monthly_downloads_a_year_ago</span></em>, <em class="sig-param"><span class="n">categories</span></em>, <em class="sig-param"><span class="n">modified</span></em><span class="sig-paren">)</span><a class="headerlink" href="#psql.update_package_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update metadata for a particular package</p>
+</dd></dl>
+
+</div></blockquote>
 </div>
 <div class="section" id="pypi-query">
 <h3>pypi_query<a class="headerlink" href="#pypi-query" title="Permalink to this headline">¶</a></h3>
