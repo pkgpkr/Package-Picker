@@ -3,14 +3,19 @@
 }
 
 #selected-category {
-  width: 200px;
+  width: 110px;
 }
 
-#selected-category-input {
-  width: 80px;
+#category-wrapper {
+  display: flex;
 }
 
-#categoryName {
+#category-table {
+  float: left;
+  width: 60%;
+}
+
+#category-name {
   border: none;
   background-color: white;
   font-size:20px;
@@ -18,18 +23,15 @@
   font-weight: bold;
 }
 
-#categoryClear {
+#category-clear {
    visibility: hidden;
 }
 
-#version-date-header {
-  min-width: 150px;
-}
-
 .recommendation-filter {
-  width: 400px;
   margin: auto;
   padding-bottom: 15px;
+  width: 40%;
+  float: right;
 }
 
 html {
@@ -47,7 +49,15 @@ body {
   position: relative;
 }
 
-#recommendTable, #repoTable {
+ #branch-header {
+   width: 110px;
+ }
+
+ #recommend-table-container {
+   overflow: unset !important;
+ }
+
+#recommend-table, #repo-table {
   width: 100%;
 }
 

@@ -4,6 +4,8 @@ Functional tests for the web service using Selenium
 
 from sys import platform
 from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from django.test import LiveServerTestCase
 from pyvirtualdisplay import Display
 
@@ -82,6 +84,11 @@ class LoginTest(LiveServerTestCase):
 
         # Check if the user at recommendations page
         self.assertEqual("Recommendations", self.driver.title)
+        loading_state = self.driver.find_element_by_xpath("//*[@class='dataTables_empty']")
+        self.assertEqual("Loading...", loading_state.get_attribute('textContent'))
+
+        # Wait for data to load
+        WebDriverWait(self.driver, 30).until(EC.invisibility_of_element(loading_state))
 
         # Check if text in branch selector is `master`
         branch_span = self.driver.find_element_by_xpath("//*[@class='dropdown-trigger']/button/span")
@@ -97,33 +104,51 @@ class LoginTest(LiveServerTestCase):
         branch_span = self.driver.find_element_by_xpath("//*[@class='dropdown-trigger']/button/span")
         self.assertEqual("test", branch_span.get_attribute('textContent'))
 
+        # Check that we're loading data for the new branch
+        loading_state = self.driver.find_element_by_xpath("//*[@class='dataTables_empty']")
+        self.assertEqual("Loading...", loading_state.get_attribute('textContent'))
+
+        # Wait for data to load
+        WebDriverWait(self.driver, 30).until(EC.invisibility_of_element(loading_state))
+
         # Category border
-        #category_order_ele = self.driver.find_element_by_xpath(
-        #    "//*[@id='recommendTable']/thead/tr/th[4]")
+        category_order_ele = self.driver.find_element_by_xpath(
+            "//*[@id='recommendTable']/thead/tr/th[4]")
 
         # Click it twice to make sure the first recommendation has at least one category
-        #category_order_ele.click()
-        #category_order_ele.click()
+        category_order_ele.click()
+        category_order_ele.click()
 
         # The first category
-        #first_category_ele = self.driver.find_element_by_xpath(
-        #    "//*[@id='recommendTable']/tbody/tr[1]/td[4]/div[1]/button")
-        #first_category_ele.click()
+        first_category_ele = self.driver.find_element_by_xpath(
+            "//*[@id='recommendTable']/tbody/tr[1]/td[4]/div[1]/button")
+        first_category_ele.click()
 
         # Clear button
-        #clear_ele = self.driver.find_element_by_xpath("//*[@id='categoryClear']")
-        #clear_ele.click()
+        clear_ele = self.driver.find_element_by_xpath("//*[@id='categoryClear']")
+        clear_ele.click()
 
         # Filter text inputs
-        #search_ele_path = "//*[@id='recommendationFilter']"
-        #search_ele = self.driver.find_element_by_xpath(search_ele_path)
-        #search_ele.send_keys("te")
-        #search_ele.clear()
+        search_ele_path = "//*[@id='recommendationFilter']"
+        search_ele = self.driver.find_element_by_xpath(search_ele_path)
+        search_ele.send_keys("te")
+        search_ele.clear()
 
         # The first element from the recommendation list
-        #first_recommendation_ele = self.driver.find_element_by_xpath(
-        #    "//*[@id='recommendTable']/tbody/tr/td[2]/a")
-        #first_recommendation_ele.click()
+        first_recommendation_ele = self.driver.find_element_by_xpath(
+            "//*[@id='recommendTable']/tbody/tr/td[2]/a")
+        first_recommendation_ele.click()
+
+        # Verify that we're on npmjs.com
+        self.assertRegex(self.driver.title, r'npm')
+
+        # Go back to the recommendations page
+        self.driver.back()
+
+        # Wait for the data to load
+        loading_state = self.driver.find_element_by_xpath("//*[@class='dataTables_empty']")
+        self.assertEqual("Loading...", loading_state.get_attribute('textContent'))
+        WebDriverWait(self.driver, 30).until(EC.invisibility_of_element(loading_state))
 
         # Logout button
         logout_ele = self.driver.find_element_by_xpath(

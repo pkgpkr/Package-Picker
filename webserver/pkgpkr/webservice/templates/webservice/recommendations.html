@@ -15,37 +15,69 @@
         <div class="container">
             <div class="content is-medium">
                 <h2>Package recommendations for {{ repository_name }}</h2>
-                <p>Choose a branch:</p>
-                <div class="dropdown is-hoverable">
-                    <div class="dropdown-trigger">
-                        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                            <span>{{ current_branch }}</span>
-                            <span class="icon is-small">
-                <i class="fas fa-angle-down" aria-hidden="true"></i>
-              </span>
-                        </button>
+                {%  if branch_names %}
+                <!-- <div id="branch-wrapper">
+                    <div id="branch-header">
+                        <p>Branch: </p>
                     </div>
-                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                        <div class="dropdown-content">
-                            {% for branch_name in branch_names %}
+                    <div id="branch-dropdown" class="dropdown is-hoverable">
+                        <div class="dropdown-trigger">
+                            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                                <span>{{ current_branch }}</span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                                {% for branch_name in branch_names %}
 
-                                <a href="?branch={{ branch_name }}" class="dropdown-item">
-                                    {{ branch_name }}
-                                </a>
-                            {% endfor %}
+                                    <a href="?branch={{ branch_name }}" class="dropdown-item">
+                                        {{ branch_name }}
+                                    </a>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
-                </div>
-
+                </div> -->
                 <table>
                     <tr>
-                        <td id="selected-category">Selected Category:</td>
-                        <td id="selected-category-input"><input type="text" id="categoryName" name="categoryName"
-                                                                disabled></td>
+                        <td id="branch-header"><p>Branch: </p></td>
+                        <td><div id="branch-dropdown" class="dropdown is-hoverable">
+                            <div class="dropdown-trigger">
+                                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                                    <span>{{ current_branch }}</span>
+                                    <span class="icon is-small">
+                                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                                <div class="dropdown-content">
+                                    {% for branch_name in branch_names %}
+                                        <a href="?branch={{ branch_name }}" class="dropdown-item">
+                                            {{ branch_name }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                {% endif %}
+                <table id="category-table">
+                    <tr>
+                        <td id="selected-category">Category:</td>
                         <td>
-                            <button id="categoryClear" class="button is-light is-small" onclick="categoryClear()">
-                                Clear
-                            </button>
+                            <div id="category-wrapper">
+                                <div>
+                                    <input type="text" id="category-name" name="category-name" disabled>
+                                </div>
+                                <div>
+                                    <button id="category-clear" class="button is-light is-small" onclick="categoryClear()">Clear</button>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 </table>
@@ -53,48 +85,26 @@
                     <p class="control has-icons-right">
                         <input id="recommendationFilter" class="input" type="text" placeholder="Search">
                         <span class="icon is-small is-right">
-            <i class="fas fa-search"></i>
-          </span>
+                            <i class="fas fa-search"></i>
+                        </span>
                     </p>
                 </div>
-                <div class="table-container">
-                    <table id="recommendTable" class="display-data-tables" style="width:100%">
+                <div id="recommend-table-container" class="table-container">
+                    <table id="recommend-table" class="display-data-tables" style="width:100%">
                         <thead>
                         <tr>
                             <th>Package</th>
                             <th>Recommendation</th>
+                            <th>URL</th>
                             <th>PkgPkr Score©</th>
                             <th class="hidden_score_head">Used-Together</th>
                             <th class="hidden_score_head">Collaborative Filtering</th>
                             <th class="hidden_score_head">Absolute Trend</th>
                             <th class="hidden_score_head">Relative Trend</th>
                             <th>Categories</th>
-                            <th id="version-date-header">Version Date</th>
+                            <th>Version Date</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        {% for recommendation in recommendations %}
-                            <tr>
-                                <td>{{ recommendation.package }}</td>
-                                <td><a target="_blank"
-                                       href="{{ recommendation.url }}">{{ recommendation.recommendation }}</td>
-                                <td><img class="pkgpkrscore_img" src="/static/images/{{ recommendation.overall_score }}.png" style="width:250px;"><p class="pkgpkrscore_value">{{ recommendation.overall_score }}</p></td>
-                                <td class="hidden_score"><img src="/static/images/{{ recommendation.similarity_score }}.png" style="width:150px;"><p class="pkgpkrscore_value">{{ recommendation.similarity_score }}</p></td>
-                                <td class="hidden_score"><img src="/static/images/{{ recommendation.popularity_score }}.png" style="width:150px;"><p class="pkgpkrscore_value">{{ recommendation.popularity_score }}</p></td>
-                                <td class="hidden_score"><img src="/static/images/{{ recommendation.absolute_trend_score }}.png" style="width:150px;"><p class="pkgpkrscore_value">{{ recommendation.absolute_trend_score }}</p></td>
-                                <td class="hidden_score"><img src="/static/images/{{ recommendation.relative_trend_score }}.png" style="width:150px;"><p class="pkgpkrscore_value">{{ recommendation.relative_trend_score }}</p></td>
-                                <td>
-                                    {% for keyword in recommendation.keywords %}
-                                        <div class="buttons" style="margin-bottom: 0; display:inline-block;">
-                                            <button class="button is-info is-light is-small is-hovered"
-                                                    onclick="categoryClick('{{ keyword }}')">{{ keyword }}</button>
-                                        </div>
-                                    {% endfor %}
-                                </td>
-                                <td>{{ recommendation.date }}</td>
-                            </tr>
-                        {% endfor %}
-                        <tbody>
                     </table>
                     <div id="scoreModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                         <div class="modal-background"></div>
@@ -112,4 +122,107 @@
             </div>
         </div>
     </section>
+    <script>
+        $(document).ready(function() {
+            var table = $('#recommend-table').DataTable({
+                "bLengthChange": false,
+                dom: 'tip',
+                ajax: '{{ recommendation_url }}',
+                scroller: true,
+                order: [[3, "desc"]],
+                "autoWidth": false,
+                columnDefs : [
+                    // Package
+                    {
+                        "targets": 0,
+                        "width": "10em"
+                    },
+                    // Recommendation link
+                    {
+                        "targets": 1,
+                        "render": function (data, type, row, meta) {
+                            return '<a href="' + row[2] + '">' + data + '</a>'
+                        },
+                        "width": "10em"
+                    },
+                    // PkgPkr Score
+                    {
+                        "targets": 3,
+                        "render": function (data, type, row, meta) {
+                            return '<img class="pkgpkrscore_img" src="/static/images/' + data + '.png" style="width:100px;"><p class="pkgpkrscore_value">' + data + '</p>'
+                        },
+                        "width": "3em"
+                    },
+                    // Categories
+                    {
+                        "targets": 8,
+                        "render": function (data, type, row, meta) {
+                            if (!data) {
+                                return "";
+                            }
+
+                            html_str = '<div class="buttons" style="margin-bottom: 0; display:inline-block;">';
+                            for (var i = 0; i < data.length; ++i) {
+                                html_str += '<button class="button is-info is-light is-small is-hovered" \
+                                                     onclick="categoryClick(\'' + data[i] + '\')">' + data[i] + '</button>';
+                            }
+                            html_str += '</div>';
+                            return html_str;
+                        }
+                    },
+                    // Version date
+                    {
+                        "targets": 9,
+                        "width": "6em"
+                    },
+                    // Hide URL and component score columns
+                    {
+                        "targets": [2, 4, 5, 6, 7],
+                        "visible": false
+                    }
+                ]
+            });
+
+            $('#recommend-table tbody').on('click', 'img', function() {
+                var data = table.row($(this).parents('tr')).data();
+                $('.insertHere').html(
+                     '<table class="table dtr-details" width="100%"><tbody><tr>' +
+                     '<th class="pkgpkr_score_td">PkgPkr<br>Score© <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
+                     '<span class="tooltiptext">A score of 10 indicates that the packages are always used together. ' +
+                     '<a target="_blank" href="/about">See more details</a></span></div></th>' +
+
+                     '<th class="other_score_td">Used-Together<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
+                     '<span class="tooltiptext">A score of 10 indicates that the packages are always used together. ' +
+                     '<a target="_blank" href="/about">See more details</a></span></div></th>' +
+
+                     '<th class="other_score_td">Collaborative Filtering<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
+                     '<span class="tooltiptext">A score of 10 indicates that the packages are always used together A score of 10 indicates that the packages are always used together. ' +
+                     '<a target="_blank" href="/about">See more details</a></span></div></th>' +
+
+                     '<th class="other_score_td">Absolute Trend<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
+                     '<span class="tooltiptext">A score of 10 indicates that the packages are always used together. ' +
+                     '<a target="_blank" href="/about">See more details</a></span></div></th>' +
+
+                     '<th class="other_score_td">Relative Trend<br>Score <div class="tooltip-left"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
+                     '<span class="tooltiptext-left">A score of 10 indicates that the packages are always used together. ' +
+                     '<a target="_blank" href="/about">See more details</a></span></div></th><tr>' +
+                     '<td>' + '<img src="/static/images/' + data[3] + '.png" style="width:250px;"></td>' +
+                     '<td>' + '<img src="/static/images/' + data[4] + '.png" style="width:150px;"></td>' +
+                     '<td>' + '<img src="/static/images/' + data[5] + '.png" style="width:150px;"></td>' +
+                     '<td>' + '<img src="/static/images/' + data[6] + '.png" style="width:150px;"></td>' +
+                     '<td>' + '<img src="/static/images/' + data[7] + '.png" style="width:150px;"></td>' +
+                     '</tr></tbody></table>'
+                );
+                $('#scoreModal').modal('show');
+            });
+
+            $('#category-name').keyup(function() {
+                table.column(8).search($(this).val()).draw();
+            });
+
+            $('#recommendationFilter').keyup(function() {
+                table.search($(this).val()).draw();
+            });
+        });
+    </script>
 {% endblock %}
