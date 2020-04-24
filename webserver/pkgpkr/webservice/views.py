@@ -133,13 +133,6 @@ def repositories(request):
         'one_or_more_with_dependencies': one_or_more_with_dependencies
     })
 
-def manual_input(request):
-
-
-
-    return render(request, "webservice/manual-input.html", {})
-
-
 
 def recommendations(request, name):
     """
