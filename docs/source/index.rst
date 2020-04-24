@@ -26,7 +26,7 @@ Indices and tables
 
 :Authors:
     Daniel Sauble,
-    Gerald Arocenam,
+    Gerald Arocena,
     Dennis Cherchenko,
     Muwei Gu,
     Ed Kang,
