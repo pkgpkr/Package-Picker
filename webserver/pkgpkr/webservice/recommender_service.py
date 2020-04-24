@@ -5,9 +5,7 @@ Get package recommendations from our database
 import re
 import psycopg2
 
-from pkgpkr.settings import DB_HOST
-from pkgpkr.settings import DB_USER
-from pkgpkr.settings import DB_PASSWORD
+from pkgpkr.settings import DB_HOST, DB_PORT, DB_DATABASE, DB_USER, DB_PASSWORD
 
 class RecommenderService:
     """
@@ -40,7 +38,7 @@ class RecommenderService:
         """
 
         # Connect to our database
-        database = psycopg2.connect(f"host={DB_HOST} user={DB_USER} password={DB_PASSWORD}")
+        database = psycopg2.connect(f"host={DB_HOST} port={DB_PORT} dbname={DB_DATABASE} user={DB_USER} password={DB_PASSWORD}")
         cur = database.cursor()
 
         # Get recommendations from our model
