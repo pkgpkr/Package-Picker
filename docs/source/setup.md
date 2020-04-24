@@ -11,7 +11,7 @@ CLIENT_SECRET         # Secret for the GitHub app
 DB_HOST               # Database URL
 DB_PORT               # Database port
 DB_DATABASE           # Database name
-DB_PASSWORD           # Database password
+DB_PASSWORD           # Database password (must be set to something even if no password)
 DB_USER               # Database user
 DOMAIN_NAME           # The domain name where the site is hosted (e.g. https://pkgpkr.com)
 MONTH                 # How many months of data to scrape
