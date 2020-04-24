@@ -70,6 +70,9 @@ def main():
     SIMILARITY_DF = SIMILARITY_DF.select('package_a', 'package_b', 'similarity') \
                                  .union(SIMILARITY_DF.select('package_b', 'package_a', 'similarity'))
 
+    # Add a column of zeros for bounded_similarity
+    SIMILARITY_DF = SIMILARITY_DF.withColumn("bounded_similarity", lit(0))
+
     # Write similarity scores to the database
     URL_CONNECT = f"jdbc:postgresql://{HOST}:{PORT}/{DATABASE}"
     TABLE = "similarity"
