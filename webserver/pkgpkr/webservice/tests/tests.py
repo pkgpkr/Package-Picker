@@ -70,8 +70,8 @@ class LoginTest(LiveServerTestCase):
         self.assertEqual('http://localhost:8000/about', self.driver.current_url)
 
         # My repositories button
-        reps_ele_path = "//*[@id='navbarBasicExample']/div[1]/a[3]"
-        reps_ele = self.driver.find_element_by_xpath(reps_ele_path)
+        reps_ele_path = "//*[@id='navbarBasicExample']/div[1]/a[4]"
+        reps_ele = self.driver.find_element_by_xpath(reps_  ele_path)
         reps_ele.click()
 
         # Check if the user at my repositories page
