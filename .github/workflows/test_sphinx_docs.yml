@@ -30,7 +30,7 @@ jobs:
     - name: Sphinx Build
       uses: ammaraskar/sphinx-action@0.4
       env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        GH_TOKEN: dummy
         GITHUB_CLIENT_ID: dummy
         GITHUB_CLIENT_SECRET: dummy
         DB_HOST: dummy
@@ -44,4 +44,4 @@ jobs:
         # The command used to build your documentation.
         build-command: make html
         # Run before the build command, you can use this to install system level dependencies, for example with "apt-get update -y && apt-get install -y perl"
-        pre-build-command: export GITHUB_CLIENT_ID=dummy
+        pre-build-command: "export GITHUB_CLIENT_ID=dummy"
