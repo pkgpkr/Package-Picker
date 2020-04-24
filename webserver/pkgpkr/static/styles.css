@@ -98,12 +98,20 @@ body {
   width: 11%
 }
 
+.pkgpkrscore_img {
+  cursor: pointer;
+}
+
 .score_explanation {
   vertical-align: middle;
 }
 
-.hidden_score, .hidden_score_head, .pkgpkrscore_value {
+.hidden_score, .pkgpkrscore_value {
   display: none;
+}
+
+.recoomendation-table-header {
+  vertical-align: middle;
 }
 
 .tooltip, .tooltip-left {
@@ -215,4 +223,8 @@ body {
 
 .navbar-item:focus {
   background-color: #008175 !important;
+}
+
+table.dataTable tbody td {
+  vertical-align: center;
 }
