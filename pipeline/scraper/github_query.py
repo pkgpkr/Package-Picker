@@ -12,6 +12,8 @@ from psql import insert_to_app
 from psql import insert_to_dependencies
 from psql import insert_to_package
 
+assert os.environ.get('GH_TOKEN'), "GH_TOKEN not set"
+
 HEADERS = {"Authorization": "Bearer " + os.environ['GH_TOKEN']}
 MAX_NODES_PER_LOOP = 100
 NUMBER_REGEX = re.compile(r'\d+')

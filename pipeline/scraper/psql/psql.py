@@ -35,12 +35,19 @@ INSERT_TO_DEPENDENCIES_SQL = """
     ON CONFLICT DO NOTHING;
     """
 
-USER = os.environ.get('DB_USER') or "postgres"
-PASSWORD = os.environ.get('DB_PASSWORD') or "secret"
-HOST = os.environ.get('DB_HOST') or "localhost"
-DATABASE = os.environ.get('DB_DATABASE') or "postgres"
-PORT = os.environ.get('DB_PORT') or "5432"
+USER = os.environ.get('DB_USER')
+PASSWORD = os.environ.get('DB_PASSWORD')
+HOST = os.environ.get('DB_HOST')
+DATABASE = os.environ.get('DB_DATABASE')
+PORT = os.environ.get('DB_PORT')
 CONN_STRING = f"host={HOST} user={USER} password={PASSWORD} dbname={DATABASE} port={PORT}"
+
+# Assert that the necessary environment variables are present
+assert USER, "DB_USER not set"
+assert PASSWORD, "DB_PASSWORD not set"
+assert HOST, "DB_HOST not set"
+assert DATABASE, "DB_DATABASE not set"
+assert PORT, "DB_PORT not set"
 
 def connect_to_db():
     """

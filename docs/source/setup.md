@@ -15,7 +15,7 @@ DB_PASSWORD           # Database password
 DB_USER               # Database user
 DOMAIN_NAME           # The domain name where the site is hosted (e.g. https://pkgpkr.com)
 MONTH                 # How many months of data to scrape
-SELENIUM_TEST         # Set to 1 (or any value) if running Selenium tests
+SELENIUM_TEST         # Set to 1 if running Selenium tests
 GH_TOKEN              # GitHub API token (with repo scope)
 ```
 
