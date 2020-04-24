@@ -29,8 +29,6 @@ jobs:
     # Build Sphinx
     - name: Sphinx Build
       uses: ammaraskar/sphinx-action@0.4
-      env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
         # The folder containing your sphinx docs.
         docs-folder: docs/

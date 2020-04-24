@@ -17,10 +17,22 @@ def main():
     SC = SparkContext("local[1]", "pkgpkr")
 
     # Connect to the database
-    USER = os.environ.get("DB_USER")
-    PASSWORD = os.environ.get("DB_PASSWORD")
-    HOST = os.environ.get("DB_HOST")
-    DB = psycopg2.connect(user=USER, password=PASSWORD, host=HOST)
+    USER = os.environ.get('DB_USER')
+    PASSWORD = os.environ.get('DB_PASSWORD')
+    HOST = os.environ.get('DB_HOST')
+    DATABASE = os.environ.get('DB_DATABASE')
+    PORT = os.environ.get('DB_PORT')
+    CONN_STRING = f"host={HOST} user={USER} password={PASSWORD} dbname={DATABASE} port={PORT}"
+
+    # Assert that the necessary environment variables are present
+    assert USER, "DB_USER not set"
+    assert PASSWORD, "DB_PASSWORD not set"
+    assert HOST, "DB_HOST not set"
+    assert DATABASE, "DB_DATABASE not set"
+    assert PORT, "DB_PORT not set"
+
+    # Connect to the database
+    DB = psycopg2.connect(CONN_STRING)
     CUR = DB.cursor()
 
     # Load the raw data into Spark
@@ -67,8 +79,11 @@ def main():
     SIMILARITY_DF = SIMILARITY_DF.select('package_a', 'package_b', 'similarity') \
                                  .union(SIMILARITY_DF.select('package_b', 'package_a', 'similarity'))
 
+    # Add a column of zeros for bounded_similarity
+    SIMILARITY_DF = SIMILARITY_DF.withColumn("bounded_similarity", lit(0))
+
     # Write similarity scores to the database
-    URL_CONNECT = f"jdbc:postgresql://{HOST}/"
+    URL_CONNECT = f"jdbc:postgresql://{HOST}:{PORT}/{DATABASE}"
     TABLE = "similarity"
     MODE = "overwrite"
     PROPERTIES = {"user": USER, "password": PASSWORD, "driver": "org.postgresql.Driver"}
@@ -92,7 +107,7 @@ def main():
     """
 
     # Connect to the database
-    DB = psycopg2.connect(user=USER, password=PASSWORD, host=HOST)
+    DB = psycopg2.connect(CONN_STRING)
     CUR = DB.cursor()
 
     # Execute bounded similarity update
