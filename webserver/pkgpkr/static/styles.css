@@ -189,9 +189,9 @@ body {
 }
 
 .pageloader.hidden {
-  animation: fadeOut 2s;
+  animation: fadeOut 0.5s;
   animation-fill-mode: forwards;
-  -webkit-animation: fadeOut 2s;
+  -webkit-animation: fadeOut 0.5s;
   -webkit-animation-fill-mode: forwards;
 }
 
