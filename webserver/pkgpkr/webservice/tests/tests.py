@@ -59,7 +59,7 @@ class LoginTest(LiveServerTestCase):
         login_button.click()
 
         # Check if the user redirected back to the main page
-        self.assertEqual('http://localhost:8000/', self.driver.current_url)
+        self.assertEqual(f'http://localhost:{LoginTest.port}/', self.driver.current_url)
 
         # About button
         about_ele = self.driver.find_element_by_xpath(
@@ -67,7 +67,7 @@ class LoginTest(LiveServerTestCase):
         about_ele.click()
 
         # Check if the user at about page
-        self.assertEqual('http://localhost:8000/about', self.driver.current_url)
+        self.assertEqual(f'http://localhost:{LoginTest.port}/about', self.driver.current_url)
 
         # My repositories button
         reps_ele_path = "//*[@id='navbarBasicExample']/div[1]/a[4]"
@@ -75,7 +75,7 @@ class LoginTest(LiveServerTestCase):
         reps_ele.click()
 
         # Check if the user at my repositories page
-        self.assertEqual('http://localhost:8000/repositories', self.driver.current_url)
+        self.assertEqual(f'http://localhost:{LoginTest.port}/repositories', self.driver.current_url)
 
         # The first element from the repos list
         first_repo_ele = self.driver.find_element_by_xpath(
@@ -88,7 +88,7 @@ class LoginTest(LiveServerTestCase):
 
         # Check if the user at recommendations page
         self.assertEqual("Recommendations", self.driver.title)
-        element_count_text = self.driver.find_element_by_xpath("//*[@id='recommend-table_info' and starts-with(text(), 'Showing 1')]")
+        self.driver.find_element_by_xpath("//*[@id='recommend-table_info' and starts-with(text(), 'Showing 1')]")
 
         # Check if text in branch selector is `master`
         branch_span = self.driver.find_element_by_xpath("//*[@class='dropdown-trigger']/button/span")
@@ -137,18 +137,38 @@ class LoginTest(LiveServerTestCase):
 
         # The first element from the recommendation list
         first_recommendation_ele = self.driver.find_element_by_xpath(
-            "//*[@id='recommend-table']/tbody/tr[1]/td[2]/a")
+            "//*[@id='recommend-table']/tbody/tr[1]/td[2]/a[@target='package_details']")
         first_recommendation_ele.click()
 
-        window_after = self.driver.window_handles[1]
-        self.driver.switch_to_window(window_after)
-        app = self.driver.find_element_by_xpath("//*[@id='app']")
+        # Ensure that the package detail window opens as expected
+        self.driver.switch_to_window("package_details")
+        self.driver.find_element_by_xpath("//*[@id='app']")
 
         # Close the npm page
         self.driver.close()
-
         window_before = self.driver.window_handles[0]
         self.driver.switch_to_window(window_before)
+
+        # Go back to the home page
+        home_ele = self.driver.find_element_by_xpath(
+            "//*[@id='navbarBasicExample']/div[1]/a[1]")
+        home_ele.click()
+
+        # Check if the user is on the home page
+        self.assertEqual(f'http://localhost:{LoginTest.port}/', self.driver.current_url)
+
+        # Try the recommendations demo
+        demo_ele = self.driver.find_element_by_xpath(
+            "//*[@id='recommendation-button']")
+        demo_ele.click()
+
+        # Wait until the loading animation is disappeared
+        loading_state = self.driver.find_element_by_xpath("//*[@class='pageloader']")
+        WebDriverWait(self.driver, 30).until(EC.invisibility_of_element(loading_state))
+
+        # Check if the user at recommendations page
+        self.assertEqual("Recommendations", self.driver.title)
+        self.driver.find_element_by_xpath("//*[@id='recommend-table_info' and starts-with(text(), 'Showing 1')]")
 
         # Logout button
         logout_ele = self.driver.find_element_by_xpath(
