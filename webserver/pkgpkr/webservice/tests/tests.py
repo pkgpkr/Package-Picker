@@ -71,7 +71,7 @@ class LoginTest(LiveServerTestCase):
 
         # My repositories button
         reps_ele_path = "//*[@id='navbarBasicExample']/div[1]/a[4]"
-        reps_ele = self.driver.find_element_by_xpath(reps_  ele_path)
+        reps_ele = self.driver.find_element_by_xpath(reps_ele_path)
         reps_ele.click()
 
         # Check if the user at my repositories page
