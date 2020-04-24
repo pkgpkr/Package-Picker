@@ -17,10 +17,13 @@ def main():
     SC = SparkContext("local[1]", "pkgpkr")
 
     # Connect to the database
-    USER = os.environ.get("DB_USER")
-    PASSWORD = os.environ.get("DB_PASSWORD")
-    HOST = os.environ.get("DB_HOST")
-    DB = psycopg2.connect(user=USER, password=PASSWORD, host=HOST)
+    USER = os.environ.get('DB_USER') or "postgres"
+    PASSWORD = os.environ.get('DB_PASSWORD') or "secret"
+    HOST = os.environ.get('DB_HOST') or "localhost"
+    DATABASE = os.environ.get('DB_DATABASE') or "postgres"
+    PORT = os.environ.get('DB_PORT') or "5432"
+    CONN_STRING = f"host={HOST} user={USER} password={PASSWORD} dbname={DATABASE} port={PORT}"
+    DB = psycopg2.connect(CONN_STRING)
     CUR = DB.cursor()
 
     # Load the raw data into Spark
