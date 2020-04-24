@@ -41,7 +41,8 @@ def login(request):
         request.session['github_info'] = None  # To keep user infor (e.g. name, avatar url)
 
     # For Selenium testing
-    if os.environ.get('SELENIUM_TEST'):
+    if os.environ.get('SELENIUM_TEST') == '1':
+        assert os.environ.get('GH_TOKEN'), "GH_TOKEN not set"
         request.session['github_token'] = os.environ.get('GH_TOKEN')
         request.session['github_info'] = github_util.get_user_info(request.session['github_token'])
 

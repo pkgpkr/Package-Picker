@@ -126,6 +126,8 @@ STATICFILES_DIRS = [
 GITHUB_CLIENT_ID = os.environ.get('CLIENT_ID')
 GITHUB_CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
 DB_HOST = os.environ.get('DB_HOST')
+DB_PORT = os.environ.get('DB_PORT')
+DB_DATABASE = os.environ.get('DB_DATABASE')
 DB_USER = os.environ.get('DB_USER')
 DB_PASSWORD = os.environ.get('DB_PASSWORD')
 

@@ -35,15 +35,24 @@ INSERT_TO_DEPENDENCIES_SQL = """
     ON CONFLICT DO NOTHING;
     """
 
-USER = os.environ.get('DB_USER') or "postgres"
-PASSWORD = os.environ.get('DB_PASSWORD') or "secret"
-HOST = os.environ.get('DB_HOST') or "localhost"
-CONN_STRING = f"host={HOST} user={USER} password={PASSWORD}"
+USER = os.environ.get('DB_USER')
+PASSWORD = os.environ.get('DB_PASSWORD')
+HOST = os.environ.get('DB_HOST')
+DATABASE = os.environ.get('DB_DATABASE')
+PORT = os.environ.get('DB_PORT')
+CONN_STRING = f"host={HOST} user={USER} password={PASSWORD} dbname={DATABASE} port={PORT}"
 
 def connect_to_db():
     """
     Connect to the database
     """
+
+    # Assert that the necessary environment variables are present
+    assert USER, "DB_USER not set"
+    assert PASSWORD, "DB_PASSWORD not set"
+    assert HOST, "DB_HOST not set"
+    assert DATABASE, "DB_DATABASE not set"
+    assert PORT, "DB_PORT not set"
 
     database = psycopg2.connect(CONN_STRING)
     return database
