@@ -132,13 +132,13 @@ DB_USER = os.environ.get('DB_USER')
 DB_PASSWORD = os.environ.get('DB_PASSWORD')
 
 # Assert that the necessary environment variables are present
-assert GITHUB_CLIENT_ID, "GITHUB_CLIENT_ID not set"
-assert GITHUB_CLIENT_SECRET, "GITHUB_CLIENT_SECRET not set"
-assert DB_HOST, "DB_HOST not set"
-assert DB_PORT, "DB_PORT not set"
-assert DB_DATABASE, "DB_DATABASE not set"
-assert DB_USER, "DB_USER not set"
-assert DB_PASSWORD, "DB_PASSWORD not set"
+#assert GITHUB_CLIENT_ID, "GITHUB_CLIENT_ID not set"
+#assert GITHUB_CLIENT_SECRET, "GITHUB_CLIENT_SECRET not set"
+#assert DB_HOST, "DB_HOST not set"
+#assert DB_PORT, "DB_PORT not set"
+#assert DB_DATABASE, "DB_DATABASE not set"
+#assert DB_USER, "DB_USER not set"
+#assert DB_PASSWORD, "DB_PASSWORD not set"
 
 # Github auth config
 GITHUB_SCOPE = 'repo'
