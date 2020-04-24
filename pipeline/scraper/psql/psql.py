@@ -38,7 +38,9 @@ INSERT_TO_DEPENDENCIES_SQL = """
 USER = os.environ.get('DB_USER') or "postgres"
 PASSWORD = os.environ.get('DB_PASSWORD') or "secret"
 HOST = os.environ.get('DB_HOST') or "localhost"
-CONN_STRING = f"host={HOST} user={USER} password={PASSWORD}"
+DATABASE = os.environ.get('DB_DATABASE') or "postgres"
+PORT = os.environ.get('DB_PORT') or "5432"
+CONN_STRING = f"host={HOST} user={USER} password={PASSWORD} dbname={DATABASE} port={PORT}"
 
 def connect_to_db():
     """
