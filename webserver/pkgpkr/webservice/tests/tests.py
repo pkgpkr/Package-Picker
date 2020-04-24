@@ -59,7 +59,7 @@ class LoginTest(LiveServerTestCase):
         login_button.click()
 
         # Check if the user redirected back to the main page
-        self.assertEqual('http://localhost:8000/', self.driver.current_url)
+        self.assertEqual(f'http://localhost:{LoginTest.port}/', self.driver.current_url)
 
         # About button
         about_ele = self.driver.find_element_by_xpath(
@@ -67,28 +67,28 @@ class LoginTest(LiveServerTestCase):
         about_ele.click()
 
         # Check if the user at about page
-        self.assertEqual('http://localhost:8000/about', self.driver.current_url)
+        self.assertEqual(f'http://localhost:{LoginTest.port}/about', self.driver.current_url)
 
         # My repositories button
-        reps_ele_path = "//*[@id='navbarBasicExample']/div[1]/a[3]"
+        reps_ele_path = "//*[@id='navbarBasicExample']/div[1]/a[4]"
         reps_ele = self.driver.find_element_by_xpath(reps_ele_path)
         reps_ele.click()
 
         # Check if the user at my repositories page
-        self.assertEqual('http://localhost:8000/repositories', self.driver.current_url)
+        self.assertEqual(f'http://localhost:{LoginTest.port}/repositories', self.driver.current_url)
 
         # The first element from the repos list
         first_repo_ele = self.driver.find_element_by_xpath(
             "//tbody/tr[1]/td[1]/a")
         first_repo_ele.click()
 
+        # Wait until the loading animation is disappeared
+        loading_state = self.driver.find_element_by_xpath("//*[@class='pageloader']")
+        WebDriverWait(self.driver, 30).until(EC.invisibility_of_element(loading_state))
+
         # Check if the user at recommendations page
         self.assertEqual("Recommendations", self.driver.title)
-        loading_state = self.driver.find_element_by_xpath("//*[@class='dataTables_empty']")
-        self.assertEqual("Loading...", loading_state.get_attribute('textContent'))
-
-        # Wait for data to load
-        WebDriverWait(self.driver, 30).until(EC.invisibility_of_element(loading_state))
+        self.driver.find_element_by_xpath("//*[@id='recommend-table_info' and starts-with(text(), 'Showing 1')]")
 
         # Check if text in branch selector is `master`
         branch_span = self.driver.find_element_by_xpath("//*[@class='dropdown-trigger']/button/span")
@@ -100,20 +100,21 @@ class LoginTest(LiveServerTestCase):
         branch_dropdown.click()
         branch_to_click.click()
 
+        # Wait until the loading animation is disappeared
+        loading_state = self.driver.find_element_by_xpath("//*[@class='pageloader']")
+        WebDriverWait(self.driver, 30).until(EC.invisibility_of_element(loading_state))
+
+        # Check if the user at recommendations page with different branch
+        self.assertEqual("Recommendations", self.driver.title)
+        element_count_text = self.driver.find_element_by_xpath("//*[@id='recommend-table_info' and starts-with(text(), 'Showing 1')]")
+
         # Assure that we are looking at another branch
         branch_span = self.driver.find_element_by_xpath("//*[@class='dropdown-trigger']/button/span")
         self.assertEqual("test", branch_span.get_attribute('textContent'))
 
-        # Check that we're loading data for the new branch
-        loading_state = self.driver.find_element_by_xpath("//*[@class='dataTables_empty']")
-        self.assertEqual("Loading...", loading_state.get_attribute('textContent'))
-
-        # Wait for data to load
-        WebDriverWait(self.driver, 30).until(EC.invisibility_of_element(loading_state))
-
         # Category border
         category_order_ele = self.driver.find_element_by_xpath(
-            "//*[@id='recommendTable']/thead/tr/th[4]")
+            "//*[@id='recommend-table']/thead/tr/th[4]")
 
         # Click it twice to make sure the first recommendation has at least one category
         category_order_ele.click()
@@ -121,11 +122,11 @@ class LoginTest(LiveServerTestCase):
 
         # The first category
         first_category_ele = self.driver.find_element_by_xpath(
-            "//*[@id='recommendTable']/tbody/tr[1]/td[4]/div[1]/button")
+            "//*[@id='recommend-table']/tbody/tr[1]/td[4]/div[1]/button")
         first_category_ele.click()
 
         # Clear button
-        clear_ele = self.driver.find_element_by_xpath("//*[@id='categoryClear']")
+        clear_ele = self.driver.find_element_by_xpath("//*[@id='category-clear']")
         clear_ele.click()
 
         # Filter text inputs
@@ -136,19 +137,46 @@ class LoginTest(LiveServerTestCase):
 
         # The first element from the recommendation list
         first_recommendation_ele = self.driver.find_element_by_xpath(
-            "//*[@id='recommendTable']/tbody/tr/td[2]/a")
+            "//*[@id='recommend-table']/tbody/tr[1]/td[2]/a[@target='package_details']")
         first_recommendation_ele.click()
 
-        # Verify that we're on npmjs.com
-        self.assertRegex(self.driver.title, r'npm')
+        # Ensure that the package detail window opens as expected
+        self.driver.switch_to_window("package_details")
+        self.driver.find_element_by_xpath("//*[@id='app']")
 
-        # Go back to the recommendations page
-        self.driver.back()
+        # Close the npm page
+        self.driver.close()
+        window_before = self.driver.window_handles[0]
+        self.driver.switch_to_window(window_before)
 
-        # Wait for the data to load
-        loading_state = self.driver.find_element_by_xpath("//*[@class='dataTables_empty']")
-        self.assertEqual("Loading...", loading_state.get_attribute('textContent'))
+        # Go back to the home page
+        home_ele = self.driver.find_element_by_xpath(
+            "//*[@id='navbarBasicExample']/div[1]/a[1]")
+        home_ele.click()
+
+        # Check if the user is on the home page
+        self.assertEqual(f'http://localhost:{LoginTest.port}/', self.driver.current_url)
+
+        # Try the recommendations demo
+        demo_ele = self.driver.find_element_by_xpath(
+            "//*[@id='recommendation-button']")
+        demo_ele.click()
+
+        # Wait until the loading animation is disappeared
+        loading_state = self.driver.find_element_by_xpath("//*[@class='pageloader']")
         WebDriverWait(self.driver, 30).until(EC.invisibility_of_element(loading_state))
+
+        # Check if the user at recommendations page
+        self.assertEqual("Recommendations", self.driver.title)
+        self.driver.find_element_by_xpath("//*[@id='recommend-table_info' and starts-with(text(), 'Showing 1')]")
+
+        # Click the PkgPkr Score button
+        score_ele = self.driver.find_element_by_xpath("//*[@id='recommend-table']/tbody/tr[1]/td[3]/img")
+        score_ele.click()
+
+        # Make sure the modal opens
+        close_ele = self.driver.find_element_by_xpath("//*[@id='modal-close']")
+        close_ele.click()
 
         # Logout button
         logout_ele = self.driver.find_element_by_xpath(

@@ -21,10 +21,14 @@ from .recommender_service import RecommenderService
 # Instantiate service class
 RECOMMENDER_SERVICE = RecommenderService()
 
+DEMO_REPO_INPUT_NAME = 'DEMO'
+
 
 def index(request):
     """ Return landing page"""
-    return render(request, "webservice/index.html", {})
+    return render(request,
+                  "webservice/index.html",
+                  {'demo_input_repo_name': DEMO_REPO_INPUT_NAME})
 
 
 def about(request):
@@ -137,20 +141,33 @@ def recommendations(request, name):
     :param name: repo name
     :return:
     """
-    # Assure login
-    if not request.session.get('github_token'):
-        return HttpResponseRedirect(reverse("index"))
 
     # Convert encoded URL back to string e.g. hello%2world -> hello/world
     repo_name = urllib.parse.unquote_plus(name)
 
-    # Fetch branch name out of HTTP GET Param
-    branch_name = request.GET.get('branch', default='master')
+    # Process for DEMO run
+    if request.method == 'POST':
+        dependencies_multiline = request.POST.get('dependencies')
+        dependencies = f'{{ "dependencies" : {{ {dependencies_multiline} }} }}'
+        request.session['dependencies'] = dependencies
 
-    # Get depencies for current repo, and branch names for the repo
-    _, branch_names = github_util.get_dependencies(request.session['github_token'],
-                                                   repo_name,
-                                                   branch_name)
+        branch_name = None
+        branch_names = None
+
+    # If GET it means it's not a DEMO POST call with manual dependencies inputs
+    else:
+        # Assure login
+        if not request.session.get('github_token'):
+            return HttpResponseRedirect(reverse("index"))
+
+        # Fetch branch name out of HTTP GET Param
+        branch_name = request.GET.get('branch', default='master')
+
+
+        # Get depencies for current repo, and branch names for the repo
+        _, branch_names = github_util.get_dependencies(request.session['github_token'],
+                                                       repo_name,
+                                                       branch_name)
 
     return render(request, "webservice/recommendations.html", {
         'repository_name': repo_name,
@@ -170,13 +187,24 @@ def recommendations_json(request, name):
     # Convert encoded URL back to string e.g. hello%2world -> hello/world
     repo_name = urllib.parse.unquote_plus(name)
 
-    # Fetch branch name out of HTTP GET Param
-    branch_name = request.GET.get('branch', default='master')
 
-    # Get depencies for current repo, and branch names for the repo
-    dependencies, _ = github_util.get_dependencies(request.session['github_token'],
-                                                   repo_name,
-                                                   branch_name)
+
+    if name == DEMO_REPO_INPUT_NAME:
+        dependencies_dict = request.session.get('dependencies')
+        dependencies = github_util.parse_dependencies(dependencies_dict)
+
+        # Set to none (will also allow for not showing branch selector
+        branch_name = None
+
+    else:
+        # Fetch branch name out of HTTP GET Param
+        branch_name = request.GET.get('branch', default='master')
+
+        # Get depencies for current repo, and branch names for the repo
+        dependencies, _ = github_util.get_dependencies(request.session['github_token'],
+                                                       repo_name,
+                                                       branch_name)
+
 
     # Get predictions
     recommended_dependencies = RECOMMENDER_SERVICE.get_recommendations(dependencies)

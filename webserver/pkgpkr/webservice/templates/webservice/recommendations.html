@@ -7,41 +7,53 @@
 {% endblock %}
 
 {% block body %}
+    <div class="pageloader">
+        <img src="/static/images/loading.gif" />
+        <img src="/static/images/retrieving.gif" />
+        <img src="/static/images/recommendations.gif" />
+    </div>
     <section class="section">
         <div class="container">
             <div class="content is-medium">
                 <h2>Package recommendations for {{ repository_name }}</h2>
-                <p>Choose a branch:</p>
-                <div class="dropdown is-hoverable">
-                    <div class="dropdown-trigger">
-                        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                            <span>{{ current_branch }}</span>
-                            <span class="icon is-small">
-                                <i class="fas fa-angle-down" aria-hidden="true"></i>
-                            </span>
-                        </button>
-                    </div>
-                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                        <div class="dropdown-content">
-                            {% for branch_name in branch_names %}
-
-                                <a href="?branch={{ branch_name }}" class="dropdown-item">
-                                    {{ branch_name }}
-                                </a>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-
+                {%  if branch_names %}
                 <table>
                     <tr>
-                        <td id="selected-category">Selected Category:</td>
-                        <td id="selected-category-input"><input type="text" id="categoryName" name="categoryName"
-                                                                disabled></td>
+                        <td id="branch-header"><p>Branch: </p></td>
+                        <td><div id="branch-dropdown" class="dropdown is-hoverable">
+                            <div class="dropdown-trigger">
+                                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                                    <span>{{ current_branch }}</span>
+                                    <span class="icon is-small">
+                                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                                <div class="dropdown-content">
+                                    {% for branch_name in branch_names %}
+                                        <a href="?branch={{ branch_name }}" class="dropdown-item">
+                                            {{ branch_name }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                {% endif %}
+                <table id="category-table">
+                    <tr>
+                        <td id="selected-category">Category:</td>
                         <td>
-                            <button id="categoryClear" class="button is-light is-small" onclick="categoryClear()">
-                                Clear
-                            </button>
+                            <div id="category-wrapper">
+                                <div>
+                                    <input type="text" id="category-name" name="category-name" disabled>
+                                </div>
+                                <div>
+                                    <button id="category-clear" class="button is-light is-small" onclick="categoryClear()">Clear</button>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 </table>
@@ -49,46 +61,38 @@
                     <p class="control has-icons-right">
                         <input id="recommendationFilter" class="input" type="text" placeholder="Search">
                         <span class="icon is-small is-right">
-            <i class="fas fa-search"></i>
-          </span>
+                            <i class="fas fa-search"></i>
+                        </span>
                     </p>
                 </div>
-                <div class="table-container">
-                    <table id="recommendTable" class="display-data-tables">
+                <div id="recommend-table-container" class="table-container">
+                    <table id="recommend-table" class="display-data-tables" style="width:100%">
                         <thead>
                         <tr>
-                            <th>Package</th>
-                            <th>Recommendation</th>
+                            <th class="recoomendation-table-header" style="vertical-align: middle;">Package</th>
+                            <th class="recoomendation-table-header" style="vertical-align: middle;">Recommendation</th>
                             <th>URL</th>
-                            <th>PkgPkr Score</th>
+                            <th class="recoomendation-table-header" style="vertical-align: middle;">PkgPkr Score©</th>
+                            <th>Used-Together</th>
+                            <th>Collaborative Filtering</th>
                             <th>Absolute Trend</th>
                             <th>Relative Trend</th>
-                            <th>Popularity</th>
-                            <th>Similarity</th>
-                            <th>Categories</th>
-                            <th>Version Date</th>
+                            <th class="recoomendation-table-header" style="vertical-align: middle;">Categories</th>
+                            <th class="recoomendation-table-header" style="vertical-align: middle;">Version Date</th>
                         </tr>
                         </thead>
-                        <tbody>
-                            <!-- Rows are added dynamically -->
-                        </tbody>
                     </table>
                     <div id="scoreModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                      <div class="modal-dialog" role="document">
                         <div class="modal-background"></div>
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-                          </div>
-                          <div class="modal-body">
+                        <div class="modal-card">
+                          <header class="modal-card-head">
+                            <p id="modalTitle" class="modal-card-title">PkgPkr Score© Calculation</p>
+                            <button id="modal-close" class="delete" aria-label="close"></button>
+                          </header>
+                          <section class="modal-card-body">
                             <div class="insertHere"></div>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                          </div>
+                          </section>
                         </div>
-                      </div>
                     </div>
                 </div>
             </div>
@@ -96,13 +100,16 @@
     </section>
     <script>
         $(document).ready(function() {
-            var table = $('#recommendTable').DataTable({
+            var table = $('#recommend-table').DataTable({
                 "bLengthChange": false,
                 dom: 'tip',
                 ajax: '{{ recommendation_url }}',
                 scroller: true,
                 order: [[3, "desc"]],
                 "autoWidth": false,
+                "initComplete": function(settings, json) {
+                    myFunction()
+                },
                 columnDefs : [
                     // Package
                     {
@@ -113,7 +120,7 @@
                     {
                         "targets": 1,
                         "render": function (data, type, row, meta) {
-                            return '<a href="' + row[2] + '">' + data + '</a>'
+                            return '<a target="package_details" href="' + row[2] + '">' + data + '</a>'
                         },
                         "width": "10em"
                     },
@@ -121,7 +128,7 @@
                     {
                         "targets": 3,
                         "render": function (data, type, row, meta) {
-                            return '<img class="pkgpkrscore_img" src="/static/images/' + data + '.png"><p class="pkgpkrscore_value">' + data + '</p>'
+                            return '<img class="pkgpkrscore_img" src="/static/images/' + data + '.png" style="width:100px;"><p class="pkgpkrscore_value">' + data + '</p>'
                         },
                         "width": "3em"
                     },
@@ -155,20 +162,40 @@
                 ]
             });
 
-            $('#recommendTable tbody ').on('click', 'img', function() {
+            $('#recommend-table tbody').on('click', 'img', function() {
                 var data = table.row($(this).parents('tr')).data();
                 $('.insertHere').html(
-                    '<table class="table dtr-details" width="100%"><tbody><tr><td>PkgPkr Score<td><td>' + data[2] +
-                    '</td></tr><tr><td>Absolute Trend Score<td><td>' + data[3] +
-                    '</td></tr><tr><td>Relative Trend Score<td><td>' + data[4] +
-                    '</td></tr><tr><td>Popularity Score<td><td>' + data[5] +
-                    '</td></tr><tr><td>Similarity Score<td><td>' + data[6] +
-                    '</td></tr></tbody></table>'
+                     '<table class="table dtr-details" width="100%"><tbody><tr>' +
+                     '<th class="pkgpkr_score_td">PkgPkr<br>Score© <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
+                     '<span class="tooltiptext">A score of 10 indicates that the packages are always used together. ' +
+                     '<a target="_blank" href="/about#pkgpkr">See more details</a></span></div></th>' +
+
+                     '<th class="other_score_td">Used-Together<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
+                     '<span class="tooltiptext">A score of 10 indicates that the packages are always used together. ' +
+                     '<a target="_blank" href="/about#used-together">See more details</a></span></div></th>' +
+
+                     '<th class="other_score_td">Collaborative Filtering<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
+                     '<span class="tooltiptext">A score of 10 indicates that the packages are always used together A score of 10 indicates that the packages are always used together. ' +
+                     '<a target="_blank" href="/about#collaborative-filtering">See more details</a></span></div></th>' +
+
+                     '<th class="other_score_td">Absolute Trend<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
+                     '<span class="tooltiptext">A score of 10 indicates that the packages are always used together. ' +
+                     '<a target="_blank" href="/about#percent-change-trending">See more details</a></span></div></th>' +
+
+                     '<th class="other_score_td">Relative Trend<br>Score <div class="tooltip-left"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
+                     '<span class="tooltiptext-left">A score of 10 indicates that the packages are always used together. ' +
+                     '<a target="_blank" href="/about#absolute-change-trending">See more details</a></span></div></th><tr>' +
+                     '<td>' + '<img src="/static/images/' + data[3] + '.png" style="width:250px;"></td>' +
+                     '<td>' + '<img src="/static/images/' + data[4] + '.png" style="width:150px;"></td>' +
+                     '<td>' + '<img src="/static/images/' + data[5] + '.png" style="width:150px;"></td>' +
+                     '<td>' + '<img src="/static/images/' + data[6] + '.png" style="width:150px;"></td>' +
+                     '<td>' + '<img src="/static/images/' + data[7] + '.png" style="width:150px;"></td>' +
+                     '</tr></tbody></table>'
                 );
                 $('#scoreModal').modal('show');
             });
 
-            $('#categoryName').keyup(function() {
+            $('#category-name').keyup(function() {
                 table.column(8).search($(this).val()).draw();
             });
 

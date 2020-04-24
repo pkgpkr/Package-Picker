@@ -56,12 +56,18 @@
                 <p class="text-icon">About</p>
               </a>
 
+              <a class="navbar-item" target="_blank" href="https://pkgpkr.github.io/Package-Picker/">
+                <i class="fas fa-file-alt"></i>
+                <p class="text-icon">Document</p>
+              </a>
+
               {% if request.session.github_token %}
               <a class="navbar-item" href="{% url 'repositories' %}">
                 <i class="fas fa-list"></i>
                 <p class="text-icon">My Repositories</p>
               </a>
               {% endif %}
+
             </div>
 
             <div class="navbar-end">
@@ -111,13 +117,6 @@
             </p>
           </div>
         </div>
-        <div class="level-right">
-          <div class="level-item">
-            <p>
-              Icons courtesy of <a href="https://fontawesome.com/license" target="_blank">Font Awesome</a>
-            </p>
-          </div>
-      </div>
     </footer>
   <script type='text/javascript' src="{% static 'main.js' %}"></script>
   </body>

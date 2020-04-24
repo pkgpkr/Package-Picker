@@ -15,18 +15,39 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 $(document).ready( function () {
-    var repoTable = $('#repoTable').DataTable({
+    var repoTable = $('#repo-table').DataTable({
         "bLengthChange": false,
         dom: 'tip',
         scroller: true
     });
+
+    $('.modal-background').click(function() {
+        $('#scoreModal').modal('hide');
+    })
+
+    $('#modal-close').click(function() {
+        $('#scoreModal').modal('hide');
+    })
 });
 
+function myFunction() {
+  var element = document.getElementsByClassName("pageloader");
+  element[0].classList.add("hidden");
+}
+
+// window.addEventListener("load", function() {
+//     const loader = document.querySelector(".pageloader");
+//
+//     setTimeout(function() {
+//       myFunction()
+//     }, 500);
+// });
+
 function categoryClick(value) {
-    var categoryName = document.getElementById('categoryName');
+    var categoryName = document.getElementById('category-name');
     categoryName.value = value;
     triggerEvent(categoryName, 'keyup');
-    document.getElementById('categoryClear').style.visibility = "visible";
+    document.getElementById('category-clear').style.visibility = "visible";
 }
 
 function triggerEvent(el, type){
@@ -36,8 +57,8 @@ function triggerEvent(el, type){
 }
 
 function categoryClear() {
-    var categoryName = document.getElementById('categoryName');
-    document.getElementById('categoryName').value = '';
+    var categoryName = document.getElementById('category-name');
+    document.getElementById('category-name').value = '';
     triggerEvent(categoryName, 'keyup');
-    document.getElementById('categoryClear').style.visibility = "hidden";
+    document.getElementById('category-clear').style.visibility = "hidden";
 }
