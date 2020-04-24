@@ -95,7 +95,7 @@ def main():
     """
 
     # Connect to the database
-    DB = psycopg2.connect(user=USER, password=PASSWORD, host=HOST)
+    DB = psycopg2.connect(CONN_STRING)
     CUR = DB.cursor()
 
     # Execute bounded similarity update
