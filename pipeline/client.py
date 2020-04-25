@@ -61,9 +61,7 @@ CREATE INDEX ON similarity (package_a);
 CREATE INDEX ON similarity (package_b);
 CREATE INDEX ON similarity (similarity);
     """
-    CURSOR.execute(APPLICATIONS_TABLE)
-    CURSOR.execute(PACKAGES_TABLE)
-    CURSOR.execute(DEPENDENCIES_TABLE)
+    CURSOR.execute(INIT_TABLES)
     CONNECTION.commit()
     RESULT = os.system(f"""
 DB_USER={USER} \
