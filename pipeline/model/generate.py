@@ -14,6 +14,7 @@ from pyspark import SparkContext
 
 def main():
     NPM_DEPENDENCY_BASE_URL = 'https://npmjs.com/package'
+    PYPI_DEPENDENCY_BASE_URL = 'https://pypi.org/project'
     SC = SparkContext("local[1]", "pkgpkr")
 
     # Connect to the database
@@ -215,12 +216,24 @@ def main():
     WHERE packages.id = s.id;
     """
 
-    URL_UPDATE = f"""
+    NPM_URL_UPDATE = f"""
     UPDATE packages
     SET url = s.temp
     FROM (
       SELECT id, CONCAT('{NPM_DEPENDENCY_BASE_URL}/', REGEXP_REPLACE(name, 'pkg:npm/(.*)@\\d+', '\\1')) AS temp
       FROM packages
+      WHERE name LIKE 'pkg:npm%'
+    ) s
+    WHERE packages.id = s.id;
+    """
+
+    PYPI_URL_UPDATE = f"""
+    UPDATE packages
+    SET url = s.temp
+    FROM (
+      SELECT id, CONCAT('{PYPI_DEPENDENCY_BASE_URL}/', REGEXP_REPLACE(name, 'pkg:pypi/(.*)@\\d+', '\\1')) AS temp
+      FROM packages
+      WHERE name LIKE 'pkg:pypi%'
     ) s
     WHERE packages.id = s.id;
     """
@@ -235,7 +248,8 @@ def main():
     """
 
     CUR.execute(SHORT_NAME_UPDATE)
-    CUR.execute(URL_UPDATE)
+    CUR.execute(NPM_URL_UPDATE)
+    CUR.execute(PYPI_URL_UPDATE)
     CUR.execute(DISPLAY_DATE_UPDATE)
 
     # Commit changes and close the database connection
