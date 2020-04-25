@@ -32,5 +32,5 @@ COPY . /code/
 
 RUN wget https://jdbc.postgresql.org/download/postgresql-42.2.11.jar
 
-CMD python3 scraper/script.py && spark-submit --driver-class-path=postgresql-42.2.11.jar --jars=postgresql-42.2.11.jar --driver-memory 12g model/generate.py
+CMD python3 run_scraper.py && spark-submit --driver-class-path=postgresql-42.2.11.jar --jars=postgresql-42.2.11.jar --driver-memory 12g train_model.py
 

@@ -4,9 +4,9 @@ Scrape data for the ML pipeline
 
 import datetime
 import os
-import month_calculation
-import github
-import npm
+from scraper.month_calculation import month_delta
+from scraper import github
+from scraper import npm
 
 
 def main():
@@ -22,7 +22,7 @@ def main():
     # Fetch applications from GitHub for javascript
     for i in range(0, int(os.environ['MONTH'])):
         print("Fetching month " + str(i) + " of " + os.environ['MONTH'])
-        github.run_query(month_calculation.month_delta(today, i))
+        github.run_query(month_delta(today, i))
 
     # Fetch package metadata from npmjs.com
     npm.run_query()
@@ -30,7 +30,7 @@ def main():
     # Fetch applications from GitHub for python
     for i in range(0, int(os.environ['MONTH'])):
         print("Fetching month " + str(i) + " of " + os.environ['MONTH'])
-        github.run_query(month_calculation.month_delta(today, i), 'Python')
+        github.run_query(month_delta(today, i), 'Python')
 
 
 main()

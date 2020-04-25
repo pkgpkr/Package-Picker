@@ -5,8 +5,8 @@ Fetch package metadata from the npmjs registry API
 import datetime
 import requests
 import simplejson
-from month_calculation import month_delta
-from psql import connect_to_db, update_package_metadata
+from .month_calculation import month_delta
+from .psql import connect_to_db, update_package_metadata
 
 NPM_DEPENDENCY_META_URL = 'https://registry.npmjs.org'
 NPM_DEPENDENCY_URL = 'https://npmjs.com/package'

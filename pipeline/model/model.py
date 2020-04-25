@@ -2,9 +2,7 @@
 Train an item-to-item collaborative filtering model based on similarity matrices
 """
 
-import os
 from itertools import chain
-import psycopg2
 from pyspark.mllib.linalg.distributed import RowMatrix
 from pyspark.mllib.linalg import Vectors
 from pyspark.ml.feature import CountVectorizer
@@ -234,40 +232,3 @@ def package_table_postprocessing(cursor):
     cursor.execute(SHORT_NAME_UPDATE)
     cursor.execute(URL_UPDATE)
     cursor.execute(DISPLAY_DATE_UPDATE)
-
-def main():
-
-    # Connect to the database
-    USER = os.environ.get('DB_USER')
-    PASSWORD = os.environ.get('DB_PASSWORD')
-    HOST = os.environ.get('DB_HOST')
-    DATABASE = os.environ.get('DB_DATABASE')
-    PORT = os.environ.get('DB_PORT')
-    CONN_STRING = f"host={HOST} user={USER} password={PASSWORD} dbname={DATABASE} port={PORT}"
-
-    # Assert that the necessary environment variables are present
-    assert USER, "DB_USER not set"
-    assert PASSWORD, "DB_PASSWORD not set"
-    assert HOST, "DB_HOST not set"
-    assert DATABASE, "DB_DATABASE not set"
-    assert PORT, "DB_PORT not set"
-
-    # Connect to the database
-    DB = psycopg2.connect(CONN_STRING)
-    CUR = DB.cursor()
-
-    # ML pipeline
-    scores = get_similarity_dataframe(CUR)
-    write_similarity_scores(scores, HOST, PORT, DATABASE, "similarity", USER, PASSWORD)
-    update_bounded_similarity_scores(CUR)
-    update_popularity_scores(CUR)
-    update_trending_scores(CUR)
-    package_table_postprocessing(CUR)
-
-    # Commit changes and close the database connection
-    DB.commit()
-    CUR.close()
-    DB.close()
-
-if __name__ == "__main__":
-   main()
