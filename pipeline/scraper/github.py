@@ -6,11 +6,11 @@ import os.path
 import json
 import re
 import requests
-from .month_calculation import get_monthly_search_str
-from .psql import connect_to_db
-from .psql import insert_to_app
-from .psql import insert_to_dependencies
-from .psql import insert_to_package
+from month_calculation import get_monthly_search_str
+from psql import connect_to_db
+from psql import insert_to_app
+from psql import insert_to_dependencies
+from psql import insert_to_package
 
 assert os.environ.get('GH_TOKEN'), "GH_TOKEN not set"
 

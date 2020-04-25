@@ -12,38 +12,20 @@ from pyspark.sql.functions import col, collect_list, create_map, lit
 from pyspark.sql import SparkSession
 from pyspark import SparkContext
 
-def main():
-    NPM_DEPENDENCY_BASE_URL = 'https://npmjs.com/package'
+def get_similarity_dataframe(cursor):
+    """
+    Compute a similarity matrix from the dependency table
+    :param cursor: Database cursor
+    :return: Spark DataFrame
+    """
+
     SC = SparkContext("local[1]", "pkgpkr")
 
-    # Connect to the database
-    USER = os.environ.get('DB_USER')
-    PASSWORD = os.environ.get('DB_PASSWORD')
-    HOST = os.environ.get('DB_HOST')
-    DATABASE = os.environ.get('DB_DATABASE')
-    PORT = os.environ.get('DB_PORT')
-    CONN_STRING = f"host={HOST} user={USER} password={PASSWORD} dbname={DATABASE} port={PORT}"
-
-    # Assert that the necessary environment variables are present
-    assert USER, "DB_USER not set"
-    assert PASSWORD, "DB_PASSWORD not set"
-    assert HOST, "DB_HOST not set"
-    assert DATABASE, "DB_DATABASE not set"
-    assert PORT, "DB_PORT not set"
-
-    # Connect to the database
-    DB = psycopg2.connect(CONN_STRING)
-    CUR = DB.cursor()
-
     # Load the raw data into Spark
-    CUR.execute("SELECT * FROM dependencies")
-    DEPENDENCIES = CUR.fetchall()
+    cursor.execute("SELECT * FROM dependencies")
+    DEPENDENCIES = cursor.fetchall()
     SPARK = SparkSession.builder.master("local[1]").appName("pkgpkr").getOrCreate()
     DF = SPARK.createDataFrame(DEPENDENCIES).toDF("application_id", "package_id")
-
-    # Close the database connection
-    CUR.close()
-    DB.close()
 
     # Restructure the dataframe in preparation for one-hot encoding
     GROUPED = DF.groupBy("application_id").agg(collect_list("package_id"))
@@ -80,18 +62,29 @@ def main():
                                  .union(SIMILARITY_DF.select('package_b', 'package_a', 'similarity'))
 
     # Add a column of zeros for bounded_similarity
-    SIMILARITY_DF = SIMILARITY_DF.withColumn("bounded_similarity", lit(0))
+    return SIMILARITY_DF.withColumn("bounded_similarity", lit(0))
 
-    # Write similarity scores to the database
-    URL_CONNECT = f"jdbc:postgresql://{HOST}:{PORT}/{DATABASE}"
-    TABLE = "similarity"
-    MODE = "overwrite"
-    PROPERTIES = {"user": USER, "password": PASSWORD, "driver": "org.postgresql.Driver"}
-    SIMILARITY_DF.write.jdbc(URL_CONNECT, TABLE, MODE, PROPERTIES)
+def write_similarity_scores(scores, host, port, database, table, user, password):
+    """
+    Write similarity scores to the database
+    :param scores: DataFrame containing pairs of packages and their similarity score
+    :param host: Database host
+    :param port: Database port
+    :param database: Database name
+    :param table: Database table for the similarity scores
+    :param user: Database user
+    :param password: Database password
+    """
 
-    #
-    # Update bounded similarity score
-    #
+    connection_string = f"jdbc:postgresql://{host}:{port}/{database}"
+    properties = {"user": user, "password": password, "driver": "org.postgresql.Driver"}
+    scores.write.jdbc(connection_string, table, "overwrite", properties)
+
+def update_bounded_similarity_scores(cursor):
+    """
+    Update bounded similarity score
+    :param cursor: Database cursor
+    """
 
     BOUNDED_SIMILARITY_UPDATE = """
     UPDATE similarity
@@ -106,16 +99,14 @@ def main():
     similarity.package_b = s.package_b;
     """
 
-    # Connect to the database
-    DB = psycopg2.connect(CONN_STRING)
-    CUR = DB.cursor()
-
     # Execute bounded similarity update
-    CUR.execute(BOUNDED_SIMILARITY_UPDATE)
+    cursor.execute(BOUNDED_SIMILARITY_UPDATE)
 
-    #
-    # Update popularity scores
-    #
+def update_popularity_scores(cursor):
+    """
+    Update popularity scores
+    :param cursor: Database cursor
+    """
 
     POPULARITY_UPDATE = """
     UPDATE packages
@@ -145,13 +136,15 @@ def main():
     """
 
     # Execute popularity updates
-    CUR.execute(POPULARITY_UPDATE)
-    CUR.execute(POPULARITY_NULL_TO_ZERO)
-    CUR.execute(BOUNDED_POPULARITY_UPDATE)
+    cursor.execute(POPULARITY_UPDATE)
+    cursor.execute(POPULARITY_NULL_TO_ZERO)
+    cursor.execute(BOUNDED_POPULARITY_UPDATE)
 
-    #
-    # Update trending scores
-    #
+def update_trending_scores(cursor):
+    """
+    Update trending scores
+    :param cursor: Database cursor
+    """
 
     MONTHLY_DOWNLOADS_LAST_MONTH_NULL_TO_ZERO = """
     UPDATE packages
@@ -196,15 +189,19 @@ def main():
     """
 
     # Execute trending updates
-    CUR.execute(MONTHLY_DOWNLOADS_LAST_MONTH_NULL_TO_ZERO)
-    CUR.execute(MONTHLY_DOWNLOADS_A_YEAR_AGO_NULL_TO_ZERO)
-    CUR.execute(ABSOLUTE_TREND_UPDATE)
-    CUR.execute(RELATIVE_TREND_UPDATE)
+    cursor.execute(MONTHLY_DOWNLOADS_LAST_MONTH_NULL_TO_ZERO)
+    cursor.execute(MONTHLY_DOWNLOADS_A_YEAR_AGO_NULL_TO_ZERO)
+    cursor.execute(ABSOLUTE_TREND_UPDATE)
+    cursor.execute(RELATIVE_TREND_UPDATE)
 
-    #
-    # Preprocessing on the packages table
-    #
+def package_table_postprocessing(cursor):
+    """
+    Preprocessing on the packages table
+    :param cursor: Database cursor
+    """
 
+    NPM_DEPENDENCY_BASE_URL = 'https://npmjs.com/package'
+    
     SHORT_NAME_UPDATE = """
     UPDATE packages
     SET short_name = s.temp
@@ -234,9 +231,38 @@ def main():
     WHERE packages.id = s.id;
     """
 
-    CUR.execute(SHORT_NAME_UPDATE)
-    CUR.execute(URL_UPDATE)
-    CUR.execute(DISPLAY_DATE_UPDATE)
+    cursor.execute(SHORT_NAME_UPDATE)
+    cursor.execute(URL_UPDATE)
+    cursor.execute(DISPLAY_DATE_UPDATE)
+
+def main():
+
+    # Connect to the database
+    USER = os.environ.get('DB_USER')
+    PASSWORD = os.environ.get('DB_PASSWORD')
+    HOST = os.environ.get('DB_HOST')
+    DATABASE = os.environ.get('DB_DATABASE')
+    PORT = os.environ.get('DB_PORT')
+    CONN_STRING = f"host={HOST} user={USER} password={PASSWORD} dbname={DATABASE} port={PORT}"
+
+    # Assert that the necessary environment variables are present
+    assert USER, "DB_USER not set"
+    assert PASSWORD, "DB_PASSWORD not set"
+    assert HOST, "DB_HOST not set"
+    assert DATABASE, "DB_DATABASE not set"
+    assert PORT, "DB_PORT not set"
+
+    # Connect to the database
+    DB = psycopg2.connect(CONN_STRING)
+    CUR = DB.cursor()
+
+    # ML pipeline
+    scores = get_similarity_dataframe(CUR)
+    write_similarity_scores(scores, HOST, PORT, DATABASE, "similarity", USER, PASSWORD)
+    update_bounded_similarity_scores(CUR)
+    update_popularity_scores(CUR)
+    update_trending_scores(CUR)
+    package_table_postprocessing(CUR)
 
     # Commit changes and close the database connection
     DB.commit()
