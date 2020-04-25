@@ -2,11 +2,11 @@ name: Pipeline Tests
 on:
   push:
     paths:
-      - 'pipeline/scraper/**'
+      - 'pipeline/**'
       - '.github/workflows/test_pipeline.yml'
   pull_request:
     paths:
-      - 'pipeline/scraper/**'
+      - 'pipeline/**'
       - '.github/workflows/test_pipeline.yml'
 
 jobs:
