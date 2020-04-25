@@ -16,22 +16,17 @@
                       {% csrf_token %}
                       <!-- change style after get actual contents -->
                       <div style="width: 100%; height: 350px;">
-                          <div style="float: left; width: 48%;">
-                              <p>Modern applications rely heavily on OSS packages. So how do you find
-                                good ones? Search engines only know what you tell them, and humans
-                                can't keep track of the millions of OSS packages available.
-                                Modern applications rely heavily on OSS packages. So how do you find
-                                  good ones? Search engines only know what you tell them, and humans
-                                  can't keep track of the millions of OSS packages available</p>
-                          </div>
-                          <div class="field" style="float: right; width: 48%;">
-                              <label class="label">Write/Paste Dependencies (One per line)</label>
-                              <div class="control">
-                                      <textarea id='manual-input' class="textarea" name="dependencies"
-                                                placeholder="Dependency 1&#x0a;Dependency 2&#x0a;Dependency 3&#x0a;..."
-                                                rows="10">"accepts": "~1.3.7",&#13;&#10;"array-flatten": "1.1.1",&#13;&#10;"body-parser": "1.19.0",&#13;&#10;"content-disposition": "0.5.3",&#13;&#10;"content-type": "~1.0.4",&#13;&#10;"cookie": "0.4.0",&#13;&#10;"cookie-signature": "1.0.6"</textarea>
-                              </div>
-                          </div>
+                        <div class="field" style="float: right; width: 48%;">
+                            <label class="label">Add one dependency per line (you can even copy them from your package.json file!_</label>
+                            <div class="control">
+                                    <textarea id='manual-input' class="textarea" name="dependencies"
+                                              placeholder="Dependency 1&#x0a;Dependency 2&#x0a;Dependency 3&#x0a;..."
+                                              rows="10">"accepts": "~1.3.7",&#13;&#10;"array-flatten": "1.1.1",&#13;&#10;"body-parser": "1.19.0",&#13;&#10;"content-disposition": "0.5.3",&#13;&#10;"content-type": "~1.0.4",&#13;&#10;"cookie": "0.4.0",&#13;&#10;"cookie-signature": "1.0.6"</textarea>
+                            </div>
+                        </div>
+                        <div style="float: left; width: 48%;">
+                            <p>Modern applications rely heavily on Open-Source-Software packages.  But how do you find the good ones?  Search engines only know what you ask them, and humans can't follow the millions of packages available.  Package Picker© and its algorithm is here to help.</p>
+                        </div>
                       </div>
                       <div id="recommendation-wrapper" class="field is-grouped">
                           <div class="control">
