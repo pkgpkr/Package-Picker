@@ -99,6 +99,7 @@ body {
 
 .pkgpkrscore_img {
   cursor: pointer;
+  width: 100px;
 }
 
 .pkgpkrscore_img:hover {
@@ -152,7 +153,7 @@ body {
   border-color: transparent transparent #555 transparent;
 }
 
-.tooltip:hover .tooltiptext, .tooltip-left:hover .tooltiptext-left {
+.tooltip:hover .tooltiptext, .tooltip-left:hover .tooltiptext-left, .tooltip-recommendtion:hover .tooltiptext-recommendtion {
   visibility: visible;
   opacity: 1;
 }
@@ -180,6 +181,41 @@ body {
   position: absolute;
   bottom: 100%;
   right: 15.5%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #555 transparent;
+}
+
+.tooltip-recommendtion {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-recommendtion .tooltiptext-recommendtion {
+  visibility: hidden;
+  min-width: 120px;
+  max-width: 100%;
+  background-color: #555;
+  color: #fff;
+  border-radius: 6px;
+  padding: 5px 10px 10px 10px;
+  position: absolute;
+  z-index: 1;
+  top: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-weight: normal;
+  font-size: 14px;
+}
+
+.tooltip-recommendtion .tooltiptext-recommendtion::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 17%;
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
@@ -220,13 +256,27 @@ body {
   }
 }
 
+#main-banner {
+  background-image: linear-gradient(141deg,#00756A 0,#00756A 71%,#00756A 100%) !important;
+}
+
+#main-footer {
+  background-color: #044C6B !important;
+}
+
+#title-text {
+  color: #f2f2f2;
+}
+
 .navbar-item {
-  color: white !important;
+  color: #f2f2f2 !important;
 }
 
 .navbar-item:focus {
-  background-color: #008175 !important;
+  background-color: transparent !important;
 }
+
+
 
 table.dataTable tbody td {
   vertical-align: center;

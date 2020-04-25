@@ -35,14 +35,6 @@ function myFunction() {
   element[0].classList.add("hidden");
 }
 
-// window.addEventListener("load", function() {
-//     const loader = document.querySelector(".pageloader");
-//
-//     setTimeout(function() {
-//       myFunction()
-//     }, 500);
-// });
-
 function categoryClick(value) {
     var categoryName = document.getElementById('category-name');
     categoryName.value = value;
