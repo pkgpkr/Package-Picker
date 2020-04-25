@@ -4,14 +4,20 @@ Test script for the ML pipeline scraper
 
 import unittest
 import datetime
-import month_calculation
-from psql import connect_to_db
-from psql import insert_to_app
-from psql import insert_to_dependencies
-from psql import insert_to_package
-from psql import update_package_metadata
-from github_query import run_query
-from github_query import run_query_once
+import os
+
+from scraper.psql import connect_to_db
+from scraper.psql import insert_to_app
+from scraper.psql import insert_to_dependencies
+from scraper.psql import insert_to_package
+from scraper.psql import update_package_metadata
+from scraper.github import run_query
+from scraper.github import run_query_once
+from scraper.month_calculation import get_monthly_search_str
+from scraper.month_calculation import month_delta
+
+print(f"os.environ['GH_TOKEN']: {os.environ['GH_TOKEN']}")
+assert os.environ.get('GH_TOKEN'), "GH_TOKEN not set"
 
 def make_orderer():
     """
@@ -45,22 +51,22 @@ class TestMyClass(unittest.TestCase):
 
         # Test no offset
         november = datetime.date(2018, 10, 31)
-        self.assertEqual(month_calculation.month_delta(november, 0), datetime.date(2018, 10, 31))
+        self.assertEqual(month_delta(november, 0), datetime.date(2018, 10, 31))
 
         # Test one offset
-        self.assertEqual(month_calculation.month_delta(november, 1), datetime.date(2018, 9, 30))
+        self.assertEqual(month_delta(november, 1), datetime.date(2018, 9, 30))
 
         # Test 12 offset
-        self.assertEqual(month_calculation.month_delta(november, 12), datetime.date(2017, 10, 31))
+        self.assertEqual(month_delta(november, 12), datetime.date(2017, 10, 31))
 
         # Test 60 offset
-        self.assertEqual(month_calculation.month_delta(november, 60), datetime.date(2013, 10, 31))
+        self.assertEqual(month_delta(november, 60), datetime.date(2013, 10, 31))
 
         # Test leap year
-        self.assertEqual(month_calculation.month_delta(november, 224), datetime.date(2000, 2, 29))
+        self.assertEqual(month_delta(november, 224), datetime.date(2000, 2, 29))
 
         # Test non-leap year
-        self.assertEqual(month_calculation.month_delta(november, 8), datetime.date(2018, 2, 28))
+        self.assertEqual(month_delta(november, 8), datetime.date(2018, 2, 28))
 
     @ORDERED
     def test_run_query(self):
@@ -86,7 +92,6 @@ class TestMyClass(unittest.TestCase):
                 print("\nJS query finished")
                 result = None
                 result = run_query_once(i, month_str, cursor, "Python")
-                print(result)
                 self.assertIsNotNone(result['data']['search']['edges'])
                 print("\nPython query finished")
             except ValueError:

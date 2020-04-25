@@ -66,7 +66,7 @@ DB_USER={USER} \
 DB_PASSWORD={PASSWORD} \
 DB_HOST={HOST} \
 GH_TOKEN={REAL_TOKEN} \
-python3 -m unittest test.py -v
+python3 -m unittest -v
                        """)
 
 except psycopg2.Error as error:
