@@ -6,15 +6,18 @@ import os
 
 from unittest import TestCase
 
-from webservice.github_util import dependencies_name_to_purl
+from pkgpkr.settings import SUPPORTED_LANGUAGES, JAVASCRIPT, PYTHON
+from webservice.github_util import javascript_dependencies_name_to_purl, python_dependencies_name_to_purl
 from webservice.github_util import parse_dependencies
 from webservice.github_util import get_user_info
 from webservice.github_util import is_user_authenticated
 from webservice.github_util import get_user_name
 from webservice.github_util import get_repositories
 from webservice.github_util import get_dependencies
+from webservice.tests.samples.sample_requirements_txt import SAMPLE_REQUIREMNTS_TXT
 
 from .samples.sample_package_json import SAMPLE_PACKAGE_JSON
+
 
 class TestGithubUtil(TestCase):
     """
@@ -23,6 +26,9 @@ class TestGithubUtil(TestCase):
 
     def setUp(self):
         self.github_token = os.environ.get('GH_TOKEN')
+
+        self.language_to_sampe_file_map = {JAVASCRIPT: SAMPLE_PACKAGE_JSON,
+                                           PYTHON: SAMPLE_REQUIREMNTS_TXT}
 
     def test_get_user_info(self):
         """
@@ -57,12 +63,15 @@ class TestGithubUtil(TestCase):
 
         repos = get_repositories(self.github_token)
 
-        self.assertLessEqual(len(repos), 100)
-        self.assertIn('pkgpkr1/express', [repo['nameWithOwner'] for repo in repos])
+        javascript_repos = repos[JAVASCRIPT]
+        self.assertIn('pkgpkr1/express', [repo['nameWithOwner'] for repo in javascript_repos])
 
-    def test_dependencies_name_to_purl(self):
+        python_repos = repos[PYTHON]
+        self.assertIn('pkgpkr1/inter', [repo['nameWithOwner'] for repo in python_repos])
+
+    def test_javascript_dependencies_name_to_purl(self):
         """
-        Ensure that we can convert dependency names to PURL format
+        Ensure that we can convert Javascript dependency names to PURL format
         """
 
         depencencies = {
@@ -73,7 +82,7 @@ class TestGithubUtil(TestCase):
             "qs": "6.7.0"
         }
 
-        purl_dependencies = dependencies_name_to_purl(depencencies)
+        purl_dependencies = javascript_dependencies_name_to_purl(depencencies)
 
         # Assure each of expected values are in the returned list
         self.assertIn('pkg:npm/accepts@1.3.7', purl_dependencies)
@@ -84,6 +93,39 @@ class TestGithubUtil(TestCase):
 
         # Assure length is same
         self.assertEqual(len(purl_dependencies), len(depencencies.keys()))
+
+    def test_python_dependencies_name_to_purl(self):
+        """
+        Ensure that we can convert Python dependency names to PURL format
+        """
+
+        depencencies = """
+            fonttools[lxml,unicode,ufo]>=4.0.2
+            ufo2ft[pathops]<=2.9.1
+            defcon[lxml]===0.6.0
+            skia-pathops
+            # only used for DesignSpaceDocumentReader in fontbuild
+            MutatorMath==2.1.2rc0
+            # for woff2
+            brotli>=1.0.7, <1.0.3
+            joblib>1.0.7, <=1.0.3
+            requests>0.0.1
+        """
+
+        purl_dependencies = python_dependencies_name_to_purl(depencencies)
+
+        # Assure each of expected values are in the returned list
+        self.assertIn('pkg:pypi/fonttools@4.0.2', purl_dependencies)
+        self.assertIn('pkg:pypi/ufo2ft@2.9.1', purl_dependencies)
+        self.assertIn('pkg:pypi/defcon@0.6.0', purl_dependencies)
+        self.assertIn('pkg:pypi/skia-pathops', purl_dependencies)
+        self.assertIn('pkg:pypi/MutatorMath@2.1.2rc0', purl_dependencies)
+        self.assertIn('pkg:pypi/brotli@1.0.7', purl_dependencies)
+        self.assertIn('pkg:pypi/joblib@1.0.3', purl_dependencies)
+        self.assertIn('pkg:pypi/requests', purl_dependencies)
+
+        # Assure length is same
+        self.assertEqual(len(purl_dependencies), 8)
 
     def test_get_dependencies(self):
         """
@@ -103,7 +145,6 @@ class TestGithubUtil(TestCase):
 
         self.assertTrue(includes_package)
 
-
         # Assure branch names contains specific branches
 
         self.assertIn('master', branch_names)
@@ -114,19 +155,9 @@ class TestGithubUtil(TestCase):
         """
         Ensure that we can parse a sample package.json object
         """
+        for language, language_attributes in SUPPORTED_LANGUAGES.items():
+            # Get dependencies
+            dependencies = parse_dependencies(self.language_to_sampe_file_map[language], language)
 
-        # Get dependencies
-        dependencies = parse_dependencies(SAMPLE_PACKAGE_JSON)
-
-        # Assure at least 5 predictions
-        self.assertGreaterEqual(len(dependencies), 5)
-
-        count = 0
-
-        # Count how often npm dependency is found
-        for dependency in dependencies:
-            if 'pkg:npm/' in dependency:
-                count += 1
-
-        # Assure at least five start with 'pkg:npm/'
-        self.assertGreaterEqual(count, 5)
+            # Assure at least 5 predictions
+            self.assertGreaterEqual(len(dependencies), 5)

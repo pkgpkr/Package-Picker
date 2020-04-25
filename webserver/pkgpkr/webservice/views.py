@@ -14,7 +14,7 @@ import requests
 
 from webservice.github_util import parse_dependencies
 from pkgpkr.settings import GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, \
-    GITHUB_OATH_AUTH_PATH, GITHUB_OATH_ACCESS_TOKEN_PATH
+    GITHUB_OATH_AUTH_PATH, GITHUB_OATH_ACCESS_TOKEN_PATH, JAVASCRIPT
 from . import github_util
 from .recommender_service import RecommenderService
 
@@ -99,38 +99,35 @@ def repositories(request):
         return HttpResponseRedirect(reverse("index"))
 
     # Get all repos
-    repos = github_util.get_repositories(request.session['github_token'])
+    repos_per_language = github_util.get_repositories(request.session['github_token'])
 
-    # To track if any useful repos at all
-    one_or_more_with_dependencies = False
+    combined_repos = dict()
 
-    for repo in repos:
-        # Updated Date
-        date_time = repo['updatedAt']
+    for language, repos in repos_per_language.items():
 
-        # Convert time format e.g. 2020-03-16T13:03:34Z -> 2020-03-16
-        date = date_time.split('T')[0]
+        for repo in repos:
 
-        repo['date'] = date
+            # Skip if repo has no dependencies
+            if not repo['object']:
+                continue
 
-        # Convert string to encoded URL e.g. hello/world -> hello%2world
-        repo['nameWithOwnerEscaped'] = urllib.parse.quote_plus(repo['nameWithOwner'])
+            # Updated Date
+            date_time = repo['updatedAt']
 
-        repo['dependencies'] = None
+            # Convert time format e.g. 2020-03-16T13:03:34Z -> 2020-03-16
+            date = date_time.split('T')[0]
 
-        # Check if repo has package.json
-        if repo['object']:
+            repo['date'] = date
 
-            # Get dependencies if any
-            repo['dependencies'] = parse_dependencies(repo['object']['text'])
+            # Convert string to encoded URL e.g. hello/world -> hello%2world
+            repo['nameWithOwnerEscaped'] = urllib.parse.quote_plus(repo['nameWithOwner'])
 
-            # Note if at least some dependencies found
-            if repo['dependencies']:
-                one_or_more_with_dependencies = True
+            # Get dependencies if any,  remember if at least some dependencies found
+            if parse_dependencies(repo['object']['text'], language):
+                combined_repos[repo['nameWithOwner']] = repo
 
     return render(request, "webservice/repositories.html", {
-        'repos': repos,
-        'one_or_more_with_dependencies': one_or_more_with_dependencies
+        'repos': combined_repos.values()
     })
 
 
@@ -163,7 +160,6 @@ def recommendations(request, name):
         # Fetch branch name out of HTTP GET Param
         branch_name = request.GET.get('branch', default='master')
 
-
         # Get depencies for current repo, and branch names for the repo
         _, branch_names = github_util.get_dependencies(request.session['github_token'],
                                                        repo_name,
@@ -176,6 +172,7 @@ def recommendations(request, name):
         'current_branch': branch_name
     })
 
+
 def recommendations_json(request, name):
     """
     Get recommended pacakges for the repo in JSON format
@@ -187,16 +184,17 @@ def recommendations_json(request, name):
     # Convert encoded URL back to string e.g. hello%2world -> hello/world
     repo_name = urllib.parse.unquote_plus(name)
 
-
-
     if name == DEMO_REPO_INPUT_NAME:
         dependencies_dict = request.session.get('dependencies')
-        dependencies = github_util.parse_dependencies(dependencies_dict)
+        dependencies = github_util.parse_dependencies(dependencies_dict, JAVASCRIPT)
 
         # Set to none (will also allow for not showing branch selector
         branch_name = None
 
     else:
+        if not request.session.get('github_token'):
+            return HttpResponse('Unauthorized', status=401)
+
         # Fetch branch name out of HTTP GET Param
         branch_name = request.GET.get('branch', default='master')
 
@@ -204,7 +202,6 @@ def recommendations_json(request, name):
         dependencies, _ = github_util.get_dependencies(request.session['github_token'],
                                                        repo_name,
                                                        branch_name)
-
 
     # Get predictions
     recommended_dependencies = RECOMMENDER_SERVICE.get_recommendations(dependencies)
