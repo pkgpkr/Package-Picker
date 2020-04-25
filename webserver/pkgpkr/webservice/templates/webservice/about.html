@@ -8,64 +8,63 @@
 <section class="section">
   <div class="container">
       <div class="content is-medium">
-          <h2>About</h2>
-          <div style="width: 100%; height: 500px; padding: 200px 0 100px 0;">
+        <h2 id="home-title">About</h2>
+          <div class="about-main-div">
               <a name="pkgpkr"></a>
-              <div style="float: left; width: 50%;">
+              <div class="about-sub-div">
                   <h3>How do we calculate the Package Picker© Score?</h3>
                   <p>The Package Picker© score is calculated by taking into account several metrics.  It uses a weighted average of four key scores: Used-together score, collaborative-filtering score, Percent change trending score, absolute change trending score.  Each one of these scores is defined on a scale of 1 to 10 with 10 being the best.</p>
 
               </div>
-              <div style="float: left; width: 50%;">
+              <div class="about-sub-div">
                   <img src="/static/images/happiness.jpg" />
               </div>
           </div>
-          <div style="width: 100%; height: 500px; padding: 200px 0 100px 0;">
+          <div class="about-main-div">
               <a name="used-together"></a>
-              <div style="float: left; width: 50%;">
+              <div class="about-sub-div">
                   <img src="/static/images/used-together.svg" style="height: 400px;" />
               </div>
-              <div style="float: left; width: 50%;">
+              <div class="about-sub-div">
                   <h3>What is Used-Together Score?</h3>
                   <p>It is how often packages appear in the same dependency list. e.g. in Javascript projects, this would be how often two packages appear in the same package.json file.  </p>
-                  
+
               </div>
           </div>
-          <div style="width: 100%; height: 500px; padding: 200px 0 100px 0;">
+          <div class="about-main-div">
               <a name="collaborative-filtering"></a>
-              <div style="float: left; width: 50%;">
+              <div class="about-sub-div">
                   <h3>What is the Collaborative Filtering Score?</h3>
                   <p>This is the <i>similarity</i>score.  If you use Package A, what is the probability that you will like Package B?</p>
               </div>
-              <div style="float: left; width: 50%;">
+              <div class="about-sub-div">
                   <img src="/static/images/used-together.svg" style="height: 400px;" />
               </div>
           </div>
-          <div style="width: 100%; height: 500px; padding: 200px 0 100px 0;">
+          <div class="about-main-div">
               <a name="percent-change-trending"></a>
-              <div style="float: left; width: 50%;">
+              <div class="about-sub-div">
                   <img src="/static/images/used-together.svg" style="height: 400px;" />
               </div>
-              <div style="float: left; width: 50%;">
+              <div class="about-sub-div">
                   <h3>What is the Absolute Change Trending Score?</h3>
                   <p>This score captures how much a package has increases in use since this time last year.  This score takes difference between the download count of the package today and the download count of the package one year ago in the absolute count.  Then this difference is compared to all the other packages in the database and fitted to a bell-curve distribution.  Think of this score as the popularity-contest score, the packages with the most increase in downloads since this time last year will be rewards by this score.</p>
               </div>
           </div>
-          <div style="width: 100%; height: 500px; padding: 200px 0 100px 0;">
+          <div class="about-main-div">
               <a name="absolute-change-trending"></a>
-              <div style="float: left; width: 50%;">
-                  <h3>What Is Relative Change Trending Score?</h3>
+              <div class="about-sub-div">
+                  <h3>What is Relative Change Trending Score?</h3>
                   <p>This score is similar to the Absolute Change Trending Score, but here it compares the package in terms of percent growth.  It measures the percentage growth of this package.  It takes the number of downloads today divided by the number of downloads a year ago.  Then this difference is compared to all the other packages in the database and fitted to a bell-curve distribution.  Think of this score as the <i>niche</i>popularity-contest score e.g. a small bio-medical software package that has gained 1,000% growth in use since Coronavirus won't be overshadowed, by some common StringUtils package.  This allows more niche packages to get the recognition they deserve.</p>
               </div>
-              <div style="float: left; width: 50%;">
+              <div class="about-sub-div">
                   <img src="/static/images/used-together.svg" style="height: 400px;" />
               </div>
           </div>
       </div>
     </div>
-</<section>
 </section>
-<section class="section" style="padding: 200px 0 0 0;">
+<section class="section">
   <div class="container has-text-centered">
     <div class="content is-medium">
       <h2>
@@ -90,22 +89,10 @@
       <p>
         Lorem ipsum
       </p>
-      <h3>
-        Reference D
-      </h3>
-      <p>
-        Good packages are often the ones your company already uses.
-      </p>
-      <h3>
-        Reference E
-      </h3>
-      <p>
-        Good packages are the needles in a haystack of millions of packages.
-      </p>
     </div>
   </div>
 </section>
-<section class="section" style="padding: 200px 0 0 0;">
+<section id="thanks-to" class="section">
   <div class="container has-text-centered">
     <div class="content is-medium">
       <h3>

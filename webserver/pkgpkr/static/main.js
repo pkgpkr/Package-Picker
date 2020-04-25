@@ -22,17 +22,26 @@ $(document).ready( function () {
     });
 
     $('.modal-background').click(function() {
+        console.log("hi");
         $('#scoreModal').modal('hide');
     })
 
     $('#modal-close').click(function() {
         $('#scoreModal').modal('hide');
     })
+
+    var page_title = window.document.title;
+
+    if (page_title.match("My Repositories") || page_title.match("Recommendations")) {
+        $('#title-text-parent').addClass('smaller-banner-z-index');
+        $('#title-text').addClass('smaller-banner');
+        $('#subtitle-text').addClass('hidden-banner');
+    }
 });
 
 function myFunction() {
-  var element = document.getElementsByClassName("pageloader");
-  element[0].classList.add("hidden");
+    var element = document.getElementsByClassName("pageloader");
+    element[0].classList.add("hidden");
 }
 
 function categoryClick(value) {
