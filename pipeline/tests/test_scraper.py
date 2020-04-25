@@ -4,14 +4,9 @@ Test script for the ML pipeline scraper
 
 import unittest
 import datetime
-import month_calculation
-from psql import connect_to_db
-from psql import insert_to_app
-from psql import insert_to_dependencies
-from psql import insert_to_package
-from psql import update_package_metadata
-from github_query import run_query
-from github_query import run_query_once
+from scraper import month_calculation
+from scraper.psql import connect_to_db, insert_to_app, insert_to_dependencies, insert_to_package, update_package_metadata
+from scraper import github
 
 def make_orderer():
     """
@@ -32,7 +27,7 @@ def make_orderer():
 ORDERED, COMPARE = make_orderer()
 unittest.defaultTestLoader.sortTestMethodsUsing = COMPARE
 
-class TestMyClass(unittest.TestCase):
+class TestScraper(unittest.TestCase):
     """
     Tests for the ML pipeline scraper
     """
@@ -69,7 +64,7 @@ class TestMyClass(unittest.TestCase):
         """
 
         distant_past = datetime.date(2011, 1, 1)
-        run_query(distant_past)
+        github.run_query(distant_past)
 
     @ORDERED
     def test_run_query_once(self):
@@ -81,16 +76,12 @@ class TestMyClass(unittest.TestCase):
         cursor = None
         for i in [1, 10, 100]:
             try:
-                result = run_query_once(i, month_str, cursor, "JavaScript")               
+                result = github.run_query_once(i, month_str, cursor, "JavaScript")               
                 self.assertIsNotNone(result['data']['search']['edges'])
-                print("\nJS query finished")
                 result = None
-                result = run_query_once(i, month_str, cursor, "Python")
-                print(result)
+                result = github.run_query_once(i, month_str, cursor, "Python")
                 self.assertIsNotNone(result['data']['search']['edges'])
-                print("\nPython query finished")
             except ValueError:
-                print(result)
                 self.assertIsNone(result)
 
 
