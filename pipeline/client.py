@@ -9,7 +9,7 @@ try:
     USER = 'postgres'
     PASSWORD = 'postgres'
     DATABASE = 'postgres'
-    REAL_TOKEN = os.environ['GH_TOKEN']
+    REAL_TOKEN = os.environ['GITHUB_TOKEN']
     HOST = 'localhost'
     CONNECTION = None
     RESULT = None
