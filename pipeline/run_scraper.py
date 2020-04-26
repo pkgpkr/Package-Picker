@@ -22,16 +22,16 @@ def main():
 
     # Fetch applications from GitHub for javascript
     for i in range(0, 30 * int(os.environ['MONTH'])):
-         print("Fetching day " + str(i) + " for JS")
-         run_query(today - datetime.timedelta(days=i))
+        print("Fetching day " + str(i) + " for JS")
+        run_query(today - datetime.timedelta(days=i))
 
     # Fetch package metadata from npmjs.com
     npm.run_query()
 
     # Fetch applications from GitHub for python
     for i in range(0, 30 * int(os.environ['MONTH'])):
-         print("Fetching day " + str(i) + " for python")
-         run_query((today - datetime.timedelta(days=i)), "Python")
+        print("Fetching day " + str(i) + " for python")
+        run_query((today - datetime.timedelta(days=i)), "Python")
 
     # Fetch package metadata from pypi.org
     pypi.run_query()
