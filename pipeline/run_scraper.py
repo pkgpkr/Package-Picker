@@ -4,9 +4,10 @@ Scrape data for the ML pipeline
 
 import datetime
 import os
-from scraper.month_calculation import month_delta
-from scraper import github
-from scraper import npm
+from pipeline.scraper.github import run_query
+import pipeline.scraper.npm as npm
+import pipeline.scraper.pypi as pypi
+import pipeline.scraper.conda as conda
 
 
 def main():
@@ -20,17 +21,20 @@ def main():
     today = datetime.datetime.now()
 
     # Fetch applications from GitHub for javascript
-    for i in range(0, int(os.environ['MONTH'])):
-        print("Fetching month " + str(i) + " of " + os.environ['MONTH'])
-        github.run_query(month_delta(today, i))
+    for i in range(0, 30 * int(os.environ['MONTH'])):
+         print("Fetching day " + str(i) + " for JS")
+         run_query(today - datetime.timedelta(days=i))
 
     # Fetch package metadata from npmjs.com
     npm.run_query()
 
     # Fetch applications from GitHub for python
-    for i in range(0, int(os.environ['MONTH'])):
-        print("Fetching month " + str(i) + " of " + os.environ['MONTH'])
-        github.run_query(month_delta(today, i), 'Python')
+    for i in range(0, 30 * int(os.environ['MONTH'])):
+         print("Fetching day " + str(i) + " for python")
+         run_query((today - datetime.timedelta(days=i)), "Python")
 
+    # Fetch package metadata from pypi.org
+    pypi.run_query()
+    # conda_query.run_query()
 
 main()
