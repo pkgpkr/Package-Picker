@@ -132,7 +132,7 @@ class TestGithubUtil(TestCase):
         Ensure that a repository has a package we expect
         """
 
-        dependencies, branch_names = get_dependencies(self.github_token, 'pkgpkr1/express', 'master')
+        dependencies, branch_names, language = get_dependencies(self.github_token, 'pkgpkr1/express', 'master')
 
         # For partial match, e.g pkg:npm/accepts@1.3.7 -> pkg:npm/accepts
         must_include_package = 'pkg:npm/accepts'
@@ -150,6 +150,7 @@ class TestGithubUtil(TestCase):
         self.assertIn('master', branch_names)
         self.assertIn('test', branch_names)
         self.assertNotIn('branch-that-does-not-exist', branch_names)
+        self.assertEqual('javascript', language)
 
     def test_parse_dependencies(self):
         """

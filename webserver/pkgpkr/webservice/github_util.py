@@ -184,10 +184,11 @@ def get_dependencies(token, repo_full_name, branch_name):
 
     all_parsed_dependencies = list()
     res_to_use_for_brach_fetch = None
+    language = None
 
-    for language in SUPPORTED_LANGUAGES.keys():
+    for lang in SUPPORTED_LANGUAGES.keys():
         # Create expression with branch name in it
-        expression = f"{branch_name}:{SUPPORTED_LANGUAGES[language]['dependencies_file']}"
+        expression = f"{branch_name}:{SUPPORTED_LANGUAGES[lang]['dependencies_file']}"
 
         # Vars for the query
         variables = f"""{{"userString": "{user_name}",
@@ -211,10 +212,11 @@ def get_dependencies(token, repo_full_name, branch_name):
         # Fetch the text that contains the package.json inner text
         text_response = res.json()['data']['repository']['object']['text']
 
-        all_parsed_dependencies += parse_dependencies(text_response, language)
+        all_parsed_dependencies += parse_dependencies(text_response, lang)
 
         # Keep assigning, to use just ones
         res_to_use_for_brach_fetch = res
+        language = lang
 
     # Fetch branch names
     branch_names = [x['name'] for x in res_to_use_for_brach_fetch.json()['data']['repository']['refs']['nodes']]
