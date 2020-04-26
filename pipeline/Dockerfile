@@ -26,11 +26,12 @@ COPY requirements.txt /code/
 RUN echo "deb http://ftp.us.debian.org/debian sid main" > /etc/apt/sources.list
 RUN apt-get update
 RUN apt-get install openjdk-8-jdk -y
+RUN apt-get install libsnappy-dev -y
 RUN pip install -r requirements.txt
 
 COPY . /code/
 
 RUN wget https://jdbc.postgresql.org/download/postgresql-42.2.11.jar
 
-CMD python3 scraper/script.py && spark-submit --driver-class-path=postgresql-42.2.11.jar --jars=postgresql-42.2.11.jar --driver-memory 12g model/generate.py
+CMD python3 run_scraper.py && spark-submit --driver-class-path=postgresql-42.2.11.jar --jars=postgresql-42.2.11.jar --driver-memory 12g train_model.py
 

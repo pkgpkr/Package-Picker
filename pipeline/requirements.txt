@@ -3,3 +3,8 @@ requests==2.23.0
 pyspark==2.4.5
 numpy==1.17.2
 simplejson==3.16.0
+pypistats==0.11.0
+requirements-parser==0.2.0
+# GitHub Action python does not have this default package
+datetime==4.3
+condastats==0.1.3

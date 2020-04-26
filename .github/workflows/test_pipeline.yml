@@ -2,11 +2,11 @@ name: Pipeline Tests
 on:
   push:
     paths:
-      - 'pipeline/scraper/**'
+      - 'pipeline/**'
       - '.github/workflows/test_pipeline.yml'
   pull_request:
     paths:
-      - 'pipeline/scraper/**'
+      - 'pipeline/**'
       - '.github/workflows/test_pipeline.yml'
 
 jobs:
@@ -36,15 +36,11 @@ jobs:
       
       - name: Install dependencies
         run: |
+          sudo apt-get install libsnappy-dev -y
           python -m pip install --upgrade pip
-          python -m pip install psycopg2
-          python -m pip install requests
-          python -m pip install datetime
-          python -m pip install pypistats
-        if: steps.cache.outputs.cache-hit != 'true'
+          python -m pip install -r ./pipeline/requirements.txt
 
       - name: Python run script
-        run: cd ./pipeline/scraper && python client.py
         env:
           DB_USER: postgres
           DB_PASSWORD: postgres
@@ -52,4 +48,5 @@ jobs:
           DB_HOST: localhost
           DB_PORT: 5432
           DB_DATABASE: postgres
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: cd ./pipeline && python client.py
