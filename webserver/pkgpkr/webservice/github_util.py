@@ -219,7 +219,7 @@ def get_dependencies(token, repo_full_name, branch_name):
     # Fetch branch names
     branch_names = [x['name'] for x in res_to_use_for_brach_fetch.json()['data']['repository']['refs']['nodes']]
 
-    return all_parsed_dependencies, branch_names
+    return all_parsed_dependencies, branch_names, language
 
 
 def parse_dependencies(text_response, language):
