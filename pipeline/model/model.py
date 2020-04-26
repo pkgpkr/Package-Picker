@@ -17,48 +17,48 @@ def get_similarity_dataframe(cursor):
     :return: Spark DataFrame
     """
 
-    SC = SparkContext("local[1]", "pkgpkr")
+    context = SparkContext("local[1]", "pkgpkr")
 
     # Load the raw data into Spark
     cursor.execute("SELECT * FROM dependencies")
-    DEPENDENCIES = cursor.fetchall()
-    SPARK = SparkSession.builder.master("local[1]").appName("pkgpkr").getOrCreate()
-    DF = SPARK.createDataFrame(DEPENDENCIES).toDF("application_id", "package_id")
+    dependencies = cursor.fetchall()
+    spark = SparkSession.builder.master("local[1]").appName("pkgpkr").getOrCreate()
+    dataframe = spark.createDataFrame(dependencies).toDF("application_id", "package_id")
 
     # Restructure the dataframe in preparation for one-hot encoding
-    GROUPED = DF.groupBy("application_id").agg(collect_list("package_id"))
-    GROUPED = GROUPED.withColumnRenamed("collect_list(package_id)", "package_ids")
-    GROUPED = GROUPED.withColumn("package_ids", col("package_ids").cast("array<string>"))
+    grouped_dataframe = dataframe.groupBy("application_id").agg(collect_list("package_id"))
+    grouped_dataframe = grouped_dataframe.withColumnRenamed("collect_list(package_id)", "package_ids")
+    grouped_dataframe = grouped_dataframe.withColumn("package_ids", col("package_ids").cast("array<string>"))
 
     # One-hot encode the data (rows are applications, columns are packages)
-    VECTORIZER = CountVectorizer(inputCol="package_ids", outputCol="packages_encoded")
-    VECTORIZER_MODEL = VECTORIZER.fit(GROUPED)
-    TRANSFORMED_DF = VECTORIZER_MODEL.transform(GROUPED)
-    TRANSFORMED_DF = TRANSFORMED_DF.drop(col("package_ids"))
+    vectorizer = CountVectorizer(inputCol="package_ids", outputCol="packages_encoded")
+    vectorizer_model = vectorizer.fit(grouped_dataframe)
+    transformed_dataframe = vectorizer_model.transform(grouped_dataframe)
+    transformed_dataframe = transformed_dataframe.drop(col("package_ids"))
 
     # Extract vectors from the DataFrame in preparation for computing the similarity matrix
-    ARRAY = [Vectors.fromML(row.packages_encoded) for row in TRANSFORMED_DF.collect()]
+    array = [Vectors.fromML(row.packages_encoded) for row in transformed_dataframe.collect()]
 
     # Create a RowMatrix
-    MATRIX = RowMatrix(SC.parallelize(ARRAY, numSlices=100))
+    matrix = RowMatrix(context.parallelize(array, numSlices=100))
 
     # Compute column similarity matrix
-    SIMILARITY = MATRIX.columnSimilarities()
+    similarity = matrix.columnSimilarities()
 
     # Convert the matrix to a DataFrame
-    ENTRIES = SIMILARITY.entries.collect()
-    SIMILARITY_DF = SPARK.createDataFrame(ENTRIES).toDF("a", "b", "similarity")
+    entries = similarity.entries.collect()
+    similarity_dataframe = spark.createDataFrame(entries).toDF("a", "b", "similarity")
 
     # Map the package identifiers back to their pre-vectorized values
-    MAPPING = create_map([lit(x) for x in chain(*enumerate(VECTORIZER_MODEL.vocabulary))])
-    SIMILARITY_DF = SIMILARITY_DF.withColumn("package_a", MAPPING.getItem(col("a")).cast("integer")) \
-                                 .withColumn("package_b", MAPPING.getItem(col("b")).cast("integer"))
-    SIMILARITY_DF = SIMILARITY_DF.drop(col("a")).drop(col("b"))
+    mapping = create_map([lit(x) for x in chain(*enumerate(vectorizer_model.vocabulary))])
+    similarity_dataframe = similarity_dataframe.withColumn("package_a", mapping.getItem(col("a")).cast("integer")) \
+                                 .withColumn("package_b", mapping.getItem(col("b")).cast("integer"))
+    similarity_dataframe = similarity_dataframe.drop(col("a")).drop(col("b"))
 
     # Mirror the columns and append to the existing dataframe so we need only query the first column
-    SIMILARITY_DF = SIMILARITY_DF.select('package_a', 'package_b', 'similarity') \
-                                 .union(SIMILARITY_DF.select('package_b', 'package_a', 'similarity'))
+    similarity_dataframe = similarity_dataframe.select('package_a', 'package_b', 'similarity') \
+                                 .union(similarity_dataframe.select('package_b', 'package_a', 'similarity'))
 
     # Add a column of zeros for bounded_similarity
-    return SIMILARITY_DF.withColumn("bounded_similarity", lit(0))
+    return similarity_dataframe.withColumn("bounded_similarity", lit(0))
     
