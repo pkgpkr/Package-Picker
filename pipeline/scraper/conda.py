@@ -6,7 +6,7 @@ import json
 import requests
 import datetime
 from condastats.cli import overall, pkg_platform, pkg_version, pkg_python, data_source
-from psql import connect_to_db, update_package_metadata
+from scraper.psql import connect_to_db, update_package_metadata
 
 
 def get_package_metadata(dependency):

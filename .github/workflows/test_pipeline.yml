@@ -48,5 +48,5 @@ jobs:
           DB_HOST: localhost
           DB_PORT: 5432
           DB_DATABASE: postgres
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: cd ./pipeline && python client.py

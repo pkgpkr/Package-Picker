@@ -13,7 +13,6 @@ from .psql import insert_to_app
 from .psql import insert_to_dependencies
 from .psql import insert_to_package
 
-print(f"os.environ['GH_TOKEN']: {os.environ['GH_TOKEN']}")
 assert os.environ.get('GH_TOKEN'), "GH_TOKEN not set"
 
 HEADERS = {"Authorization": "Bearer " + os.environ['GH_TOKEN']}
