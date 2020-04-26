@@ -9,7 +9,7 @@ try:
     USER = 'postgres'
     PASSWORD = 'postgres'
     DATABASE = 'postgres'
-    REAL_TOKEN = os.environ['GH_TOKEN']
+    REAL_TOKEN = os.environ['GITHUB_TOKEN']
     HOST = 'localhost'
     CONNECTION = None
     RESULT = None
@@ -66,7 +66,7 @@ DB_USER={USER} \
 DB_PASSWORD={PASSWORD} \
 DB_HOST={HOST} \
 GH_TOKEN={REAL_TOKEN} \
-python3 -m unittest test.py -v
+python3 -m unittest -v
                        """)
 
 except psycopg2.Error as error:
