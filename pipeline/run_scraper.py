@@ -4,10 +4,10 @@ Scrape data for the ML pipeline
 
 import datetime
 import os
-from .github import run_query
-import npm
-import pypi
-import conda
+from pipeline.scraper.github import run_query
+import pipeline.scraper.npm as npm
+import pipeline.scraper.pypi as pypi
+import pipeline.scraper.conda as conda
 
 
 def main():
