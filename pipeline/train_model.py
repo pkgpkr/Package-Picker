@@ -5,6 +5,7 @@ Train the model and do post-processing on the database
 import os
 import psycopg2
 from model import model
+from model import database
 
 def main():
 
@@ -29,11 +30,11 @@ def main():
 
     # ML pipeline
     scores = model.get_similarity_dataframe(CUR)
-    model.write_similarity_scores(scores, HOST, PORT, DATABASE, "similarity", USER, PASSWORD)
-    model.update_bounded_similarity_scores(CUR)
-    model.update_popularity_scores(CUR)
-    model.update_trending_scores(CUR)
-    model.package_table_postprocessing(CUR)
+    database.write_similarity_scores(scores, HOST, PORT, DATABASE, "similarity", USER, PASSWORD)
+    database.update_bounded_similarity_scores(CUR)
+    database.update_popularity_scores(CUR)
+    database.update_trending_scores(CUR)
+    database.package_table_postprocessing(CUR)
 
     # Commit changes and close the database connection
     DB.commit()

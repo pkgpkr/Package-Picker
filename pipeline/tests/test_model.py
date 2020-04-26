@@ -5,7 +5,7 @@ Tests for the pipeline model
 import os
 import unittest
 import psycopg2
-from model.model import update_bounded_similarity_scores, update_popularity_scores, update_trending_scores, package_table_postprocessing
+from model.database import update_bounded_similarity_scores, update_popularity_scores, update_trending_scores, package_table_postprocessing
 
 class TestModel(unittest.TestCase):
     """
