@@ -2,13 +2,13 @@
 Fetch package metadata from the pypi API
 """
 
-import requests
-from psql import connect_to_db, update_package_metadata
-import pypistats
 import json
-import xmlrpc.client
+import requests
+import pypistats
+from .psql import connect_to_db, update_package_metadata
 
-PYPI_DEPENDENCY_META_URL = 'http://pypi.python.org/pypi/'
+
+PYPI_DEPENDENCY_META_URL = 'https://pypi.python.org/pypi/'
 
 
 def run_query():
@@ -21,7 +21,7 @@ def run_query():
     cur = database.cursor()
 
     # Fetch all package names from the database
-    cur.execute("SELECT name FROM packages;")
+    cur.execute("SELECT name FROM packages WHERE name LIKE 'pkg:pypi/%';")
     results = [result[0] for result in cur.fetchall()]
 
     # Fetch all metadata for the packages from npmjs.com and write to the database
@@ -30,7 +30,8 @@ def run_query():
         metadata = get_package_metadata(result)
         update_package_metadata(database,
                                 metadata['name'],
-                                metadata['downloads_last_month'],
+                                metadata['monthly_downloads_last_month'],
+                                metadata['monthly_downloads_a_year_ago'],
                                 metadata['categories'],
                                 metadata['modified'])
 
@@ -44,7 +45,7 @@ def run_query():
 
 def get_package_metadata(dependency):
     """
-    Retrieve the downloads, categories, and modified date for a package
+    Retrieve the downloads, categories, and modified date for a package from pypi API
     """
 
     version_symbol_index = dependency.rfind('@')
@@ -55,13 +56,31 @@ def get_package_metadata(dependency):
 
     entry['name'] = dependency
 
-    result = json.loads(pypistats.recent(dependency_name, "month", format="json"))
-    print(result)
-    entry['downloads_last_month'] = result['data']['last_month']
-    request_url = f'{PYPI_DEPENDENCY_META_URL}{dependency_name}/{dependency[version_symbol_index+1:]}/json'
-    json_result = requests.get(request_url)
-    print(request_url)
-    print(json_result)
-    return entry
+    request_url = f'{PYPI_DEPENDENCY_META_URL}{dependency_name}/json'
+    try:
+        result = json.loads(pypistats.recent(dependency_name, "month", format="json"))
+        entry['monthly_downloads_last_month'] = result['data']['last_month']
+        entry['monthly_downloads_a_year_ago'] = 0
+        json_result = requests.get(request_url).json()
 
-get_package_metadata('pkg:pypi/gunicorn@0.1')
+    # pylint: disable=bare-except
+    except:
+        print(f"Could not request {request_url}")
+        entry['categories'] = None
+        entry['modified'] = None
+        return entry
+
+    try:
+        entry['categories'] = []
+        for item in json_result['info']['classifiers']:
+            if "Topic :: " in item:
+                entry['categories'].insert(-1, item.replace("Topic :: ", ""))
+    except KeyError:
+        entry['categories'] = []
+
+    try:
+        entry['modified'] = json_result['urls'][0]['upload_time_iso_8601']
+    except KeyError:
+        entry['modified'] = None
+    print(f"pypi entry: {entry}")
+    return entry

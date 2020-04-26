@@ -2,37 +2,39 @@
 Test script for the ML pipeline scraper
 """
 
+import os
 import unittest
 import datetime
-from scraper import month_calculation
+import psycopg2
+from scraper.month_calculation import month_delta
 from scraper.psql import connect_to_db, insert_to_app, insert_to_dependencies, insert_to_package, update_package_metadata
 from scraper import github
 
-def make_orderer():
-    """
-    Create helper functions for sorting and comparing objects
-    """
-
-    order = {}
-
-    def orderer(obj):
-        order[obj.__name__] = len(order)
-        return obj
-
-    def comparator(obj_a, obj_b):
-        return [1, -1][order[obj_a] < order[obj_b]]
-
-    return orderer, comparator
-
-ORDERED, COMPARE = make_orderer()
-unittest.defaultTestLoader.sortTestMethodsUsing = COMPARE
+assert os.environ.get('GH_TOKEN'), "GH_TOKEN not set"
 
 class TestScraper(unittest.TestCase):
     """
     Tests for the ML pipeline scraper
     """
 
-    @ORDERED
+    def tearDown(self):
+
+        # Connect to the database
+        user = os.environ.get('DB_USER')
+        password = os.environ.get('DB_PASSWORD')
+        host = os.environ.get('DB_HOST')
+        database = os.environ.get('DB_DATABASE')
+        port = os.environ.get('DB_PORT')
+        connection_string = f"host={host} user={user} password={password} dbname={database} port={port}"
+        database = psycopg2.connect(connection_string)
+        cursor = database.cursor()
+
+        # Clean out all data
+        cursor.execute("DELETE FROM dependencies; DELETE FROM similarity; DELETE FROM applications; DELETE FROM packages;")
+        database.commit()
+        cursor.close()
+        database.close()
+
     def test_month_delta(self):
         """
         Try to calculate month offsets from a given date
@@ -40,24 +42,24 @@ class TestScraper(unittest.TestCase):
 
         # Test no offset
         november = datetime.date(2018, 10, 31)
-        self.assertEqual(month_calculation.month_delta(november, 0), datetime.date(2018, 10, 31))
+        self.assertEqual(month_delta(november, 0), datetime.date(2018, 10, 31))
 
         # Test one offset
-        self.assertEqual(month_calculation.month_delta(november, 1), datetime.date(2018, 9, 30))
+        self.assertEqual(month_delta(november, 1), datetime.date(2018, 9, 30))
 
         # Test 12 offset
-        self.assertEqual(month_calculation.month_delta(november, 12), datetime.date(2017, 10, 31))
+        self.assertEqual(month_delta(november, 12), datetime.date(2017, 10, 31))
 
         # Test 60 offset
-        self.assertEqual(month_calculation.month_delta(november, 60), datetime.date(2013, 10, 31))
+        self.assertEqual(month_delta(november, 60), datetime.date(2013, 10, 31))
 
         # Test leap year
-        self.assertEqual(month_calculation.month_delta(november, 224), datetime.date(2000, 2, 29))
+        self.assertEqual(month_delta(november, 224), datetime.date(2000, 2, 29))
 
         # Test non-leap year
-        self.assertEqual(month_calculation.month_delta(november, 8), datetime.date(2018, 2, 28))
+        self.assertEqual(month_delta(november, 8), datetime.date(2018, 2, 28))
 
-    @ORDERED
+
     def test_run_query(self):
         """
         Try fetching a month of data from the GitHub API
@@ -66,7 +68,7 @@ class TestScraper(unittest.TestCase):
         distant_past = datetime.date(2011, 1, 1)
         github.run_query(distant_past)
 
-    @ORDERED
+
     def test_run_query_once(self):
         """
         Try fetching data from the GitHub API
@@ -84,8 +86,6 @@ class TestScraper(unittest.TestCase):
             except ValueError:
                 self.assertIsNone(result)
 
-
-    @ORDERED
     def test_connect_to_db(self):
         """
         Try connecting to the database
@@ -95,7 +95,6 @@ class TestScraper(unittest.TestCase):
         self.assertIsNotNone(database)
 
 
-    @ORDERED
     def test_insert_to_application(self):
         """
         Try inserting an application into the application table
@@ -116,7 +115,6 @@ class TestScraper(unittest.TestCase):
         self.assertEqual(application_name, app_name)
 
 
-    @ORDERED
     def test_insert_to_packages(self):
         """
         Try inserting a package into the package table
@@ -134,7 +132,6 @@ class TestScraper(unittest.TestCase):
         self.assertEqual(package_name, name)
 
 
-    @ORDERED
     def test_update_package_metadata(self):
         """
         Try to update the metadata associated with a package
@@ -180,7 +177,6 @@ class TestScraper(unittest.TestCase):
         self.assertIsNotNone(modified_date)
 
 
-    @ORDERED
     def test_insert_to_dependencies(self):
         """
         Try to insert a dependency into the dependency table

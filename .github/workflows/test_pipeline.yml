@@ -41,10 +41,10 @@ jobs:
           python -m pip install requests
           python -m pip install datetime
           python -m pip install pypistats
+          python -m pip install requirements-parser
         if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Python run script
-        run: cd ./pipeline && python client.py
         env:
           DB_USER: postgres
           DB_PASSWORD: postgres
@@ -53,3 +53,5 @@ jobs:
           DB_PORT: 5432
           DB_DATABASE: postgres
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: cd ./pipeline && python client.py
