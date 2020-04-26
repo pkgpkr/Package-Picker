@@ -24,7 +24,7 @@ def update_bounded_similarity_scores(cursor):
     :param cursor: Database cursor
     """
 
-    BOUNDED_SIMILARITY_UPDATE = """
+    bounded_similarity_update = """
     UPDATE similarity
     SET bounded_similarity = s.b_s
     FROM (
@@ -38,7 +38,7 @@ def update_bounded_similarity_scores(cursor):
     """
 
     # Execute bounded similarity update
-    cursor.execute(BOUNDED_SIMILARITY_UPDATE)
+    cursor.execute(bounded_similarity_update)
 
 def update_popularity_scores(cursor):
     """
@@ -46,7 +46,7 @@ def update_popularity_scores(cursor):
     :param cursor: Database cursor
     """
 
-    POPULARITY_UPDATE = """
+    popularity_update = """
     UPDATE packages
     SET popularity = s.popularity
     FROM (
@@ -57,13 +57,13 @@ def update_popularity_scores(cursor):
     WHERE packages.id = s.package_b;
     """
 
-    POPULARITY_NULL_TO_ZERO = """
+    popularity_null_to_zero = """
     UPDATE packages
     SET popularity = 0
     WHERE popularity IS NULL;
     """
 
-    BOUNDED_POPULARITY_UPDATE = """
+    bounded_popularity_update = """
     UPDATE packages
     SET bounded_popularity = s.popularity
     FROM (
@@ -74,9 +74,9 @@ def update_popularity_scores(cursor):
     """
 
     # Execute popularity updates
-    cursor.execute(POPULARITY_UPDATE)
-    cursor.execute(POPULARITY_NULL_TO_ZERO)
-    cursor.execute(BOUNDED_POPULARITY_UPDATE)
+    cursor.execute(popularity_update)
+    cursor.execute(popularity_null_to_zero)
+    cursor.execute(bounded_popularity_update)
 
 def update_trending_scores(cursor):
     """
@@ -84,19 +84,19 @@ def update_trending_scores(cursor):
     :param cursor: Database cursor
     """
 
-    MONTHLY_DOWNLOADS_LAST_MONTH_NULL_TO_ZERO = """
+    monthly_downloads_last_month_null_to_zero = """
     UPDATE packages
     SET monthly_downloads_last_month = 0
     WHERE monthly_downloads_last_month IS NULL;
     """
 
-    MONTHLY_DOWNLOADS_A_YEAR_AGO_NULL_TO_ZERO = """
+    monthly_downloads_a_year_ago_null_to_zero = """
     UPDATE packages
     SET monthly_downloads_a_year_ago = 0
     WHERE monthly_downloads_a_year_ago IS NULL;
     """
 
-    ABSOLUTE_TREND_UPDATE = """
+    absolute_trend_update = """
     UPDATE packages
     SET absolute_trend = s.absolute_trend
     FROM (
@@ -111,7 +111,7 @@ def update_trending_scores(cursor):
     WHERE packages.id = s.id;
     """
 
-    RELATIVE_TREND_UPDATE = """
+    relative_trend_update = """
     UPDATE packages
     SET relative_trend = s.relative_trend
     FROM (
@@ -127,10 +127,10 @@ def update_trending_scores(cursor):
     """
 
     # Execute trending updates
-    cursor.execute(MONTHLY_DOWNLOADS_LAST_MONTH_NULL_TO_ZERO)
-    cursor.execute(MONTHLY_DOWNLOADS_A_YEAR_AGO_NULL_TO_ZERO)
-    cursor.execute(ABSOLUTE_TREND_UPDATE)
-    cursor.execute(RELATIVE_TREND_UPDATE)
+    cursor.execute(monthly_downloads_last_month_null_to_zero)
+    cursor.execute(monthly_downloads_a_year_ago_null_to_zero)
+    cursor.execute(absolute_trend_update)
+    cursor.execute(relative_trend_update)
 
 def package_table_postprocessing(cursor):
     """
@@ -138,9 +138,9 @@ def package_table_postprocessing(cursor):
     :param cursor: Database cursor
     """
 
-    NPM_DEPENDENCY_BASE_URL = 'https://npmjs.com/package'
+    npm_dependency_base_url = 'https://npmjs.com/package'
     
-    SHORT_NAME_UPDATE = """
+    short_name_update = """
     UPDATE packages
     SET short_name = s.temp
     FROM (
@@ -150,17 +150,17 @@ def package_table_postprocessing(cursor):
     WHERE packages.id = s.id;
     """
 
-    URL_UPDATE = f"""
+    url_update = f"""
     UPDATE packages
     SET url = s.temp
     FROM (
-      SELECT id, CONCAT('{NPM_DEPENDENCY_BASE_URL}/', REGEXP_REPLACE(name, 'pkg:npm/(.*)@\\d+', '\\1')) AS temp
+      SELECT id, CONCAT('{npm_dependency_base_url}/', REGEXP_REPLACE(name, 'pkg:npm/(.*)@\\d+', '\\1')) AS temp
       FROM packages
     ) s
     WHERE packages.id = s.id;
     """
 
-    DISPLAY_DATE_UPDATE = """
+    display_date_update = """
     UPDATE packages
     SET display_date = s.temp
     FROM (
@@ -169,6 +169,6 @@ def package_table_postprocessing(cursor):
     WHERE packages.id = s.id;
     """
 
-    cursor.execute(SHORT_NAME_UPDATE)
-    cursor.execute(URL_UPDATE)
-    cursor.execute(DISPLAY_DATE_UPDATE)
+    cursor.execute(short_name_update)
+    cursor.execute(url_update)
+    cursor.execute(display_date_update)
