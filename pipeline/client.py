@@ -21,6 +21,7 @@ try:
                                   database=DATABASE)
     with CONNECTION.cursor() as cursor:
       cursor.execute(open("provision_db.sql", "r").read())
+      CONNECTION.commit()
     RESULT = os.system(f"""
 DB_USER={USER} \
 DB_PASSWORD={PASSWORD} \
