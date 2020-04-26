@@ -61,3 +61,4 @@ def get_similarity_dataframe(cursor):
 
     # Add a column of zeros for bounded_similarity
     return SIMILARITY_DF.withColumn("bounded_similarity", lit(0))
+    
