@@ -88,7 +88,7 @@ def write_db(database, result, language="JavaScript"):
                     insert_to_dependencies(database, str(application_id), str(package_id))
             # pylint: disable=bare-except
             except:
-                print(node['url'])
+                print(f"failed fetching for: node['url']")
     database.commit()
 
 def run_query(today, language='JavaScript'):
