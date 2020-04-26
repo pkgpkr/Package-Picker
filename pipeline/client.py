@@ -6,17 +6,18 @@ import os
 import psycopg2
 
 try:
-    USER = 'postgres'
-    PASSWORD = 'postgres'
-    DATABASE = 'postgres'
-    REAL_TOKEN = os.environ['GITHUB_TOKEN']
-    HOST = 'localhost'
+    USER = os.environ['DB_USER']
+    PASSWORD = os.environ['DB_PASSWORD']
+    DATABASE = os.environ['DB_DATABASE']
+    REAL_TOKEN = os.environ['GH_TOKEN']
+    HOST = os.environ['DB_HOST']
+    PORT = os.environ['DB_PORT']
     CONNECTION = None
     RESULT = None
     CONNECTION = psycopg2.connect(user=USER,
                                   password=PASSWORD,
                                   host=HOST,
-                                  port=5432,
+                                  port=PORT,
                                   database=DATABASE)
     with CONNECTION.cursor() as cursor:
       cursor.execute(open("provision_db.sql", "r").read())
@@ -24,6 +25,8 @@ try:
 DB_USER={USER} \
 DB_PASSWORD={PASSWORD} \
 DB_HOST={HOST} \
+DB_PORT={PORT} \
+DB_DATABASE={DATABASE} \
 GH_TOKEN={REAL_TOKEN} \
 python3 -m unittest -v
                        """)
