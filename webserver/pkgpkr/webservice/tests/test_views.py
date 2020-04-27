@@ -8,7 +8,7 @@ from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import AnonymousUser
 
 from webservice import github_util
-from ..views import index, about, login, callback, logout, repositories, recommendations
+from webservice.views import index, about, login, callback, logout, repositories, recommendations
 
 class SimpleTest(TestCase):
     """
