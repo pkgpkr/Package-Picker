@@ -52,6 +52,13 @@ class LoginTest(LiveServerTestCase):
         End to end test of the recommendation workflow
         """
 
+        """
+          ___ _        _   _      ___                  
+         / __| |_ __ _| |_(_)__  | _ \__ _ __ _ ___ ___
+         \__ \  _/ _` |  _| / _| |  _/ _` / _` / -_|_-<
+         |___/\__\__,_|\__|_\__| |_| \__,_\__, \___/__/
+                                          |___/        
+        """
         # get the login buttons
         login_button = self.driver.find_element_by_xpath(
             "//*[@id='navbarBasicExample']/div[2]/div/div")
@@ -69,6 +76,13 @@ class LoginTest(LiveServerTestCase):
         # Check if the user at about page
         self.assertEqual(f'http://localhost:{LoginTest.port}/about', self.driver.current_url)
 
+        """
+             _ ___   ___                  _ _
+          _ | / __| | _ \___ _ __  ___ __(_) |_ ___ _ _ _  _
+         | || \__ \ |   / -_) '_ \/ _ (_-< |  _/ _ \ '_| || |
+          \__/|___/ |_|_\___| .__/\___/__/_|\__\___/_|  \_, |
+                            |_|                         |__/
+        """
         # My repositories button
         reps_ele_path = "//*[@id='navbarBasicExample']/div[1]/a[4]"
         reps_ele = self.driver.find_element_by_xpath(reps_ele_path)
@@ -88,7 +102,8 @@ class LoginTest(LiveServerTestCase):
 
         # Check if the user at recommendations page
         self.assertEqual("Recommendations", self.driver.title)
-        self.driver.find_element_by_xpath("//*[@id='recommend-table_info' and starts-with(text(), 'Showing 1')]")
+        showing_text = self.driver.find_element_by_xpath("//*[@id='recommend-table_info']")
+        self.assertIn('Showing 1', showing_text.get_attribute('textContent'))
 
         # Check if text in branch selector is `master`
         branch_span = self.driver.find_element_by_xpath("//*[@class='dropdown-trigger']/button/span")
@@ -106,7 +121,8 @@ class LoginTest(LiveServerTestCase):
 
         # Check if the user at recommendations page with different branch
         self.assertEqual("Recommendations", self.driver.title)
-        element_count_text = self.driver.find_element_by_xpath("//*[@id='recommend-table_info' and starts-with(text(), 'Showing 1')]")
+        showing_text = self.driver.find_element_by_xpath("//*[@id='recommend-table_info']")
+        self.assertIn('Showing 1', showing_text.get_attribute('textContent'))
 
         # Assure that we are looking at another branch
         branch_span = self.driver.find_element_by_xpath("//*[@class='dropdown-trigger']/button/span")
@@ -149,6 +165,12 @@ class LoginTest(LiveServerTestCase):
         window_before = self.driver.window_handles[0]
         self.driver.switch_to_window(window_before)
 
+        """  _ ___   ___
+          _ | / __| |   \ ___ _ __  ___
+         | || \__ \ | |) / -_) '  \/ _ \
+          \__/|___/ |___/\___|_|_|_\___/
+
+        """
         # Go back to the home page
         home_ele = self.driver.find_element_by_xpath(
             "//*[@id='navbarBasicExample']/div[1]/a[1]")
@@ -168,7 +190,8 @@ class LoginTest(LiveServerTestCase):
 
         # Check if the user at recommendations page
         self.assertEqual("Recommendations", self.driver.title)
-        self.driver.find_element_by_xpath("//*[@id='recommend-table_info' and starts-with(text(), 'Showing 1')]")
+        showing_text = self.driver.find_element_by_xpath("//*[@id='recommend-table_info']")
+        self.assertIn('Showing 1', showing_text.get_attribute('textContent'))
 
         # Click the PkgPkr Score button
         score_ele = self.driver.find_element_by_xpath("//*[@id='recommend-table']/tbody/tr[1]/td[3]/img")
@@ -177,6 +200,48 @@ class LoginTest(LiveServerTestCase):
         # Make sure the modal opens
         close_ele = self.driver.find_element_by_xpath("//*[@id='modal-close']")
         close_ele.click()
+
+
+        """
+          ___      _   _               ___                
+         | _ \_  _| |_| |_  ___ _ _   |   \ ___ _ __  ___ 
+         |  _/ || |  _| ' \/ _ \ ' \  | |) / -_) '  \/ _ \
+         |_|  \_, |\__|_||_\___/_||_| |___/\___|_|_|_\___/
+              |__/                                        
+        """
+        # Go back to the home page
+        home_ele = self.driver.find_element_by_xpath(
+            "//*[@id='navbarBasicExample']/div[1]/a[1]")
+        home_ele.click()
+
+        # Check if the user is on the home page
+        self.assertEqual(f'http://localhost:{LoginTest.port}/', self.driver.current_url)
+
+
+        # Choose the Python from demo dropdown and click recommendation
+        select = self.driver.find_element_by_xpath('//*[@id="lang-select"]')
+        select.click()
+
+        python_option = self.driver.find_element_by_xpath('//*[@id="lang-select"]/option[text()="Python"]')
+        python_option.click()
+
+
+        text_area = self.driver.find_element_by_xpath('//*[@id="manual-input"]')
+        self.assertIn('Django', text_area.get_attribute('value'))
+
+        recommend_btn = self.driver.find_element_by_xpath('//*[@id="recommendation-button"]')
+        recommend_btn.click()
+
+        # # Wait until the loading animation is disappeared
+        loading_state = self.driver.find_element_by_xpath("//*[@class='pageloader']")
+        WebDriverWait(self.driver, 30).until(EC.invisibility_of_element(loading_state))
+
+        # Assure it is showing Python on recommendation page and have results
+        title = self.driver.find_element_by_xpath('/html/body/section[2]//h2')
+        self.assertIn('Python package', title.get_attribute('textContent'))
+        #showing_text = self.driver.find_element_by_xpath("//*[@id='recommend-table_info']")
+        #self.assertIn('Showing 1', showing_text.get_attribute('textContent'))
+
 
         # Logout button
         logout_ele = self.driver.find_element_by_xpath(

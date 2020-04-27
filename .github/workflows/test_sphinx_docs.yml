@@ -4,15 +4,7 @@ name: Sphinx Docs Test
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
-on:
-  push:
-    paths:
-      - 'docs/**'
-      - '.github/workflows/test_sphinx_docs.yml'
-  pull_request:
-    paths:
-      - 'docs/**'
-      - '.github/workflows/test_sphinx_docs.yml'
+on: [push, pull_request]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:

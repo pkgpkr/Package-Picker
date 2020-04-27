@@ -4,8 +4,9 @@ Utility functions for the web server
 
 import json
 import requests
+import requirements
 
-from pkgpkr.settings import GITHUB_USER_INFO_URL
+from pkgpkr.settings import GITHUB_USER_INFO_URL, SUPPORTED_LANGUAGES, JAVASCRIPT, PYTHON
 from pkgpkr.settings import GITHUB_GRAPHQL_URL
 
 
@@ -58,38 +59,45 @@ def get_repositories(token):
     user_name = get_user_name(token)
 
     query = """
-            query GetUserRepositories($userString: String!) {
-                user(login: $userString) {
-                    repositories(first:100) {
-                      nodes {
+            query GetUserRepositories($userString: String!) {{
+                user(login: $userString) {{
+                    repositories(first:100) {{
+                      nodes {{
                         updatedAt
                         nameWithOwner
-                        object(expression: "master:package.json") {
-                            ... on Blob {
+                        object(expression: "master:{0}") {{
+                            ... on Blob {{
                             text
-                            }
-                        }
-                      }
-                    }
-                }
-            }
+                            }}
+                        }}
+                      }}
+                    }}
+                }}
+            }}
             """
 
     variables = f'{{"userString": "{user_name}"}}'
 
-    payload = {'query': query,
-               'variables': variables}
+    combined_nodes = dict()
 
-    header = {'Authorization': 'Bearer ' + token}
+    for language, lang_attributes in SUPPORTED_LANGUAGES.items():
+        query_formatted = query.format(lang_attributes['dependencies_file'])
 
-    res = requests.post(GITHUB_GRAPHQL_URL, headers=header, data=json.dumps(payload))
+        payload = {'query': query_formatted,
+                   'variables': variables}
 
-    return res.json()['data']['user']['repositories']['nodes']
+        header = {'Authorization': 'Bearer ' + token}
+
+        res = requests.post(GITHUB_GRAPHQL_URL, headers=header, data=json.dumps(payload))
+
+        combined_nodes[language] = res.json()['data']['user']['repositories']['nodes']
+
+    return combined_nodes
 
 
-def dependencies_name_to_purl(dependencies):
+def javascript_dependencies_name_to_purl(dependencies):
     """
-    Convert dependency names to the universal Package URL (PURL) format
+    Convert Javascript dependency names to the universal Package URL (PURL) format
     :param dependencies: Array of name@version like names
     """
 
@@ -100,6 +108,48 @@ def dependencies_name_to_purl(dependencies):
         clean_version = version.strip('~').strip('^')
 
         purl_dependencies.append(f'pkg:npm/{name}@{clean_version}')
+
+    return purl_dependencies
+
+
+def python_dependencies_name_to_purl(dependencies):
+    """
+    Convert Python dependencies names to the universal Package URL (PURL) format
+    :param dependencies: List of name straight from requirements text file
+    """
+
+    purl_dependencies = []
+
+    for dependency in dependencies.split('\n'):
+
+        # Strip out whitespace
+        dep = dependency.strip()
+
+        # Filter out empty lines and comments
+        if not dep.strip() or dep.startswith('#'):
+            continue
+
+        # Parse using 3rd party function
+        try:
+            parsed = list(requirements.parse(dep))[0]
+        except Exception as e:
+            print('Error occurred while parsing Python dependency', e)
+            continue
+
+        name = parsed.name
+
+        clean_version = None
+        if parsed.specs:
+            for spec in parsed.specs:
+                # check the specifier (e.g. >=, <) and grabs first one with equal meaning it's legal version allowed
+                if '=' in spec[0]:
+                    clean_version = spec[1]  # this is the version which is idx 1 in the tuple
+                    break
+
+        purl_dependencies.append(f'pkg:pypi/{name}')
+
+        if clean_version:
+            purl_dependencies[-1] += f'@{clean_version}'
 
     return purl_dependencies
 
@@ -135,46 +185,66 @@ def get_dependencies(token, repo_full_name, branch_name):
                 }
                 """
 
-    # Creat expression with branch name in it
-    expression = f"{branch_name}:package.json"
+    all_parsed_dependencies = list()
+    res_to_use_for_brach_fetch = None
+    language = None
 
-    # Vars for the query
-    variables = f"""{{"userString": "{user_name}",
-                      "repositoryString": "{repo_name}",
-                      "expression": "{expression}"}}
-                 """
+    for lang in SUPPORTED_LANGUAGES.keys():
+        # Create expression with branch name in it
+        expression = f"{branch_name}:{SUPPORTED_LANGUAGES[lang]['dependencies_file']}"
 
-    # Construct payload for graphql
-    payload = {'query': query,
-               'variables': variables}
+        # Vars for the query
+        variables = f"""{{"userString": "{user_name}",
+                          "repositoryString": "{repo_name}",
+                          "expression": "{expression}"}}
+                     """
 
-    header = {'Authorization': 'Bearer ' + token}
+        # Construct payload for graphql
+        payload = {'query': query,
+                   'variables': variables}
 
-    # Call v4 API
-    res = requests.post(GITHUB_GRAPHQL_URL, headers=header, data=json.dumps(payload))
+        header = {'Authorization': 'Bearer ' + token}
 
-    # Fetch the text that contains the package.json inner text
-    text_response = res.json()['data']['repository']['object']['text']
+        # Call v4 API
+        res = requests.post(GITHUB_GRAPHQL_URL, headers=header, data=json.dumps(payload))
+
+        # Skip if no dependencies (i.e searching for requirements.txt in JS type of repo)
+        if not res.json()['data']['repository']['object']:
+            continue
+
+        # Fetch the text that contains the package.json inner text
+        text_response = res.json()['data']['repository']['object']['text']
+
+        all_parsed_dependencies += parse_dependencies(text_response, lang)
+
+        # Keep assigning, to use just ones
+        res_to_use_for_brach_fetch = res
+        language = lang
 
     # Fetch branch names
-    branch_names = [x['name'] for x in res.json()['data']['repository']['refs']['nodes']]
+    branch_names = [x['name'] for x in res_to_use_for_brach_fetch.json()['data']['repository']['refs']['nodes']]
 
-    return parse_dependencies(text_response), branch_names
+    return all_parsed_dependencies, branch_names, language
 
 
-def parse_dependencies(text_response):
+def parse_dependencies(text_response, language):
     """
     Take a stringified package.json file and extract its dependencies
     :param text_reponse: A stringified package.json object
+    :param language: Language for which dependencies are for
     :return:
     """
 
-    # Parse text into JSON to allow further manipulations
-    text_response_json = json.loads(text_response)
+    if language == JAVASCRIPT:
+        # Parse text into JSON to allow further manipulations
+        text_response_json = json.loads(text_response)
 
-    # Return only if dependencies are found
-    if text_response_json.get('dependencies'):
-        # Fetch the dependencies and convert into P-URLs pkg:npm/scope/name@version
-        return dependencies_name_to_purl(text_response_json['dependencies'])
+        # Return only if dependencies are found
+        if text_response_json.get('dependencies'):
+            # Fetch the dependencies and convert into P-URLs pkg:npm/scope/name@version
+            return javascript_dependencies_name_to_purl(text_response_json['dependencies'])
+
+    elif language == PYTHON:
+        return python_dependencies_name_to_purl(text_response)
 
     return []
