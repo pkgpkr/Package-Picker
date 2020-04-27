@@ -53,11 +53,11 @@ class LoginTest(LiveServerTestCase):
         """
 
         """
-          ___ _        _   _      ___                  
+          ___ _        _   _      ___
          / __| |_ __ _| |_(_)__  | _ \__ _ __ _ ___ ___
          \__ \  _/ _` |  _| / _| |  _/ _` / _` / -_|_-<
          |___/\__\__,_|\__|_\__| |_| \__,_\__, \___/__/
-                                          |___/        
+                                          |___/
         """
         # get the login buttons
         login_button = self.driver.find_element_by_xpath(
@@ -138,7 +138,7 @@ class LoginTest(LiveServerTestCase):
 
         # The first category
         first_category_ele = self.driver.find_element_by_xpath(
-            "//*[@id='recommend-table']/tbody/tr[1]/td[4]/div[1]/button")
+            "//*[@id='recommend-table']/tbody/tr[1]/td[3]/div[1]/button")
         first_category_ele.click()
 
         # Clear button
@@ -153,7 +153,7 @@ class LoginTest(LiveServerTestCase):
 
         # The first element from the recommendation list
         first_recommendation_ele = self.driver.find_element_by_xpath(
-            "//*[@id='recommend-table']/tbody/tr[1]/td[2]/a[@target='package_details']")
+            "//*[@id='recommend-table']/tbody/tr[1]/td[1]/div")
         first_recommendation_ele.click()
 
         # Ensure that the package detail window opens as expected
@@ -194,7 +194,7 @@ class LoginTest(LiveServerTestCase):
         self.assertIn('Showing 1', showing_text.get_attribute('textContent'))
 
         # Click the PkgPkr Score button
-        score_ele = self.driver.find_element_by_xpath("//*[@id='recommend-table']/tbody/tr[1]/td[3]/img")
+        score_ele = self.driver.find_element_by_xpath("//*[@id='recommend-table']/tbody/tr[1]/td[2]/img")
         score_ele.click()
 
         # Make sure the modal opens
@@ -203,11 +203,11 @@ class LoginTest(LiveServerTestCase):
 
 
         """
-          ___      _   _               ___                
-         | _ \_  _| |_| |_  ___ _ _   |   \ ___ _ __  ___ 
+          ___      _   _               ___
+         | _ \_  _| |_| |_  ___ _ _   |   \ ___ _ __  ___
          |  _/ || |  _| ' \/ _ \ ' \  | |) / -_) '  \/ _ \
          |_|  \_, |\__|_||_\___/_||_| |___/\___|_|_|_\___/
-              |__/                                        
+              |__/
         """
         # Go back to the home page
         home_ele = self.driver.find_element_by_xpath(
