@@ -122,13 +122,16 @@ def python_dependencies_name_to_purl(dependencies):
 
     for dependency in dependencies.split('\n'):
 
+        # Strip out whitespace
+        dep = dependency.strip()
+
         # Filter out empty lines and comments
-        if not dependency or dependency.strip().startswith('#'):
+        if not dep.strip() or dep.startswith('#'):
             continue
 
         # Parse using 3rd party function
         try:
-            parsed = list(requirements.parse(dependency))[0]
+            parsed = list(requirements.parse(dep))[0]
         except Exception as e:
             print('Error occurred while parsing Python dependency', e)
             continue
