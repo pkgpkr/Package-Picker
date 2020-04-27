@@ -148,7 +148,10 @@ class SimpleTest(TestCase):
         # Test success
         request = self.prep_not_github_auth_request('/repositories/DEMO')
         request.method = 'POST'
-        request.POST = {'dependencies': '"accepts": "~1.3.7","array-flatten": "1.1.1","body-parser": "1.19.0"'}
+        request.POST = {
+            'dependencies': '"accepts": "~1.3.7","array-flatten": "1.1.1","body-parser": "1.19.0"',
+            'language': 'javascript'
+        }
         response = recommendations(request, 'DEMO')
         self.assertEqual(response.status_code, 200)
 
