@@ -3,3 +3,4 @@ Django==3.0.4
 requests==2.22.0
 selenium==3.141.0
 pyvirtualdisplay==0.2.5
+requirements-parser==0.2.0

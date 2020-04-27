@@ -15,7 +15,7 @@
     <section class="section">
         <div class="container">
             <div class="content is-medium">
-                <h2>Package recommendations for {{ repository_name }}</h2>
+                <h2>{{ language | title }} package recommendations for {{ repository_name }}</h2>
                 {%  if branch_names %}
                 <table>
                     <tr>
@@ -37,6 +37,7 @@
                                         </a>
                                     {% endfor %}
                                 </div>
+                            </div>
                             </div>
                         </td>
                     </tr>

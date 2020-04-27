@@ -139,6 +139,7 @@ def package_table_postprocessing(cursor):
     """
 
     npm_dependency_base_url = 'https://npmjs.com/package'
+    pypi_dependency_base_url = 'https://pypi.org/project'
     
     short_name_update = """
     UPDATE packages
@@ -150,12 +151,24 @@ def package_table_postprocessing(cursor):
     WHERE packages.id = s.id;
     """
 
-    url_update = f"""
+    npm_url_update = f"""
     UPDATE packages
     SET url = s.temp
     FROM (
       SELECT id, CONCAT('{npm_dependency_base_url}/', REGEXP_REPLACE(name, 'pkg:npm/(.*)@\\d+', '\\1')) AS temp
       FROM packages
+      WHERE name LIKE 'pkg:npm%'
+    ) s
+    WHERE packages.id = s.id;
+    """
+
+    pypi_url_update = f"""
+    UPDATE packages
+    SET url = s.temp
+    FROM (
+      SELECT id, CONCAT('{pypi_dependency_base_url}/', REGEXP_REPLACE(name, 'pkg:pypi/(.*)@\\d+', '\\1')) AS temp
+      FROM packages
+      WHERE name LIKE 'pkg:pypi%'
     ) s
     WHERE packages.id = s.id;
     """
@@ -170,5 +183,6 @@ def package_table_postprocessing(cursor):
     """
 
     cursor.execute(short_name_update)
-    cursor.execute(url_update)
+    cursor.execute(npm_url_update)
+    cursor.execute(pypi_url_update)
     cursor.execute(display_date_update)

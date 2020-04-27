@@ -19,9 +19,20 @@
                         <div class="field" style="float: right; width: 48%;">
                             <label class="label">Add one dependency per line (you can even copy them from your package.json file!_</label>
                             <div class="control">
+
+                            <label>Language:</label>
+                             <div class="select">
+                              <select name='language' id="lang-select" onchange="loadDemoLanguage(this.value);">
+                                   {% for language in supported_languages %}
+                                       <option value = {{ language }}>{{ language }}</option>
+                                   {% endfor %}
+                              </select>
+                            </div>
+                            </div>
+                            <div class="control">
                                     <textarea id='manual-input' class="textarea" name="dependencies"
                                               placeholder="Dependency 1&#x0a;Dependency 2&#x0a;Dependency 3&#x0a;..."
-                                              rows="10">"accepts": "~1.3.7",&#13;&#10;"array-flatten": "1.1.1",&#13;&#10;"body-parser": "1.19.0",&#13;&#10;"content-disposition": "0.5.3",&#13;&#10;"content-type": "~1.0.4",&#13;&#10;"cookie": "0.4.0",&#13;&#10;"cookie-signature": "1.0.6"</textarea>
+                                              rows="10"></textarea>
                             </div>
                         </div>
                         <div style="float: left; width: 48%;">
