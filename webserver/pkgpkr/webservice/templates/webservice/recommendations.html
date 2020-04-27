@@ -70,7 +70,7 @@
                     <table id="recommend-table" class="display-data-tables" style="width:100%">
                         <thead>
                         <tr>
-                            <th class="recoomendation-table-header" style="vertical-align: middle;">Package</th>
+                            <th>Package</th>
                             <th class="recoomendation-table-header" style="vertical-align: middle;">Recommendation</th>
                             <th>URL</th>
                             <th class="recoomendation-table-header" style="vertical-align: middle;">PkgPkr Score</th>
@@ -112,16 +112,13 @@
                     myFunction()
                 },
                 columnDefs : [
-                    // Package
-                    {
-                        "targets": 0,
-                        "width": "10em"
-                    },
                     // Recommendation link
                     {
                         "targets": 1,
                         "render": function (data, type, row, meta) {
-                            return '<a target="package_details" href="' + row[2] + '">' + data + '</a>'
+                            return '<div class="tooltip-recommendtion"><a target="package_details" href="' + row[2] + '">' + data + '</a>' +
+                            '<span class="tooltiptext-recommendtion">Because you use<br>' + row[0] +
+                            '</span></div>'
                         },
                         "width": "10em"
                     },
@@ -129,7 +126,7 @@
                     {
                         "targets": 3,
                         "render": function (data, type, row, meta) {
-                            return '<img class="pkgpkrscore_img" src="/static/images/' + data + '.png" style="width:100px;"><p class="pkgpkrscore_value">' + data + '</p>'
+                            return '<img class="pkgpkrscore_img" src="/static/images/' + data + '.png"><p class="pkgpkrscore_value">' + data + '</p>'
                         },
                         "width": "3em"
                     },
@@ -157,7 +154,7 @@
                     },
                     // Hide URL and component score columns
                     {
-                        "targets": [2, 4, 5, 6, 7],
+                        "targets": [0, 2, 4, 5, 6, 7],
                         "visible": false
                     }
                 ]
