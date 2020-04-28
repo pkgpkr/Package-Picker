@@ -50,8 +50,8 @@
 
 .recommendation-filter {
   margin: auto;
-  padding-bottom: 15px;
-  width: 40%;
+  padding-bottom: 12px;
+  width: 30%;
   float: right;
 }
 
@@ -91,8 +91,9 @@ body {
   margin: 10px;
 }
 
-.explanation_img {
-  height: 200px;
+.original-package {
+    font-size: 15px;
+    color: #929292;
 }
 
 .pkgpkr_score_td {
@@ -159,7 +160,7 @@ body {
   border-color: transparent transparent #555 transparent;
 }
 
-.tooltip:hover .tooltiptext, .tooltip-left:hover .tooltiptext-left, .tooltip-recommendtion:hover .tooltiptext-recommendtion {
+.tooltip:hover .tooltiptext, .tooltip-left:hover .tooltiptext-left {
   visibility: visible;
   opacity: 1;
 }
@@ -187,41 +188,6 @@ body {
   position: absolute;
   bottom: 100%;
   right: 15.5%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent #555 transparent;
-}
-
-.tooltip-recommendtion {
-  position: relative;
-  display: inline-block;
-}
-
-.tooltip-recommendtion .tooltiptext-recommendtion {
-  visibility: hidden;
-  min-width: 120px;
-  max-width: 100%;
-  background-color: #555;
-  color: #fff;
-  border-radius: 6px;
-  padding: 5px 10px 10px 10px;
-  position: absolute;
-  z-index: 1;
-  top: 125%;
-  left: 50%;
-  margin-left: -60px;
-  opacity: 0;
-  transition: opacity 0.3s;
-  font-weight: normal;
-  font-size: 14px;
-}
-
-.tooltip-recommendtion .tooltiptext-recommendtion::after {
-  content: "";
-  position: absolute;
-  bottom: 100%;
-  left: 17%;
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;

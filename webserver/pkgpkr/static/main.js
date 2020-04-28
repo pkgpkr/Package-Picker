@@ -53,6 +53,8 @@ function myFunction() {
 function categoryClick(value) {
     var categoryName = document.getElementById('category-name');
     categoryName.value = value;
+    var categoryLength = 'width: ' + (value.length + 1) * 10 + 'px;'
+    categoryName.setAttribute("style", categoryLength);
     triggerEvent(categoryName, 'keyup');
     document.getElementById('category-clear').style.visibility = "visible";
 }

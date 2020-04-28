@@ -116,8 +116,8 @@
                     {
                         "targets": 1,
                         "render": function (data, type, row, meta) {
-                            return '<a target="package_details" href="' + row[2] + '">' + data + '</a>' +
-                            'Because you use' + row[0]
+                            return '<div><a target="package_details" href="' + row[2] + '">' + data + '</a></div>' +
+                            '<div class="original-package"><p>Because you use ' + row[0] + '</p></div>'
                         },
                         "width": "10em"
                     },
@@ -134,7 +134,7 @@
                         "targets": 8,
                         "render": function (data, type, row, meta) {
                             if (!data) {
-                                return "";
+                                return "N/A";
                             }
 
                             html_str = '<div class="buttons" style="margin-bottom: 0; display:inline-block;">';
