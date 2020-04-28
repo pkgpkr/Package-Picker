@@ -297,6 +297,66 @@ body {
   background-color: transparent !important;
 }
 
+#left-div {
+  float: left;
+  padding: 0 10px 0 80px;
+  min-width: 630px;
+}
+
+#right-div {
+  float: left;
+  padding: 0 10px 0 80px;
+  min-width: 630px;
+}
+
+#pick-div-head {
+  float: left;
+  padding: 8px 10px 0 0;
+}
+
+#pick-select {
+  float: left;
+}
+
+#pick-div-tail {
+  float: left;
+  padding: 8px 0 0 10px;
+}
+
+#pick-textarea {
+  padding: 10px 0 10px 0;
+  width: 85%;
+}
+
+#recommendation-button-div {
+  float: left;
+  width: 55%;
+}
+
+#recommendation-hyperlink-div {
+  float: left;
+  width: 45%;
+  padding: 8px 0 0 0;
+  font-size: 14px;
+}
+
+.bullet-div {
+  padding: 10px 0 100px 0;
+}
+
+.bullet-img-div {
+  float: left;
+}
+
+.bullet-p-div {
+  float: left;
+  padding: 23px 0 0 20px;
+}
+
+.bullet-img {
+  width: 80px;
+}
+
 .about-main-div {
   width: 100%;
   height: 500px;

@@ -91,7 +91,7 @@
                             <button id="modal-close" class="delete" aria-label="close"></button>
                           </header>
                           <section class="modal-card-body">
-                            <div class="insertHere"></div>
+                            <div class="insert-here"></div>
                           </section>
                         </div>
                     </div>
@@ -116,9 +116,8 @@
                     {
                         "targets": 1,
                         "render": function (data, type, row, meta) {
-                            return '<div class="tooltip-recommendtion"><a target="package_details" href="' + row[2] + '">' + data + '</a>' +
-                            '<span class="tooltiptext-recommendtion">Because you use<br>' + row[0] +
-                            '</span></div>'
+                            return '<a target="package_details" href="' + row[2] + '">' + data + '</a>' +
+                            'Because you use' + row[0]
                         },
                         "width": "10em"
                     },
@@ -162,7 +161,7 @@
 
             $('#recommend-table tbody').on('click', 'img', function() {
                 var data = table.row($(this).parents('tr')).data();
-                $('.insertHere').html(
+                $('.insert-here').html(
                      '<table class="table dtr-details" width="100%"><tbody><tr>' +
                      '<th class="pkgpkr_score_td">PkgPkr<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
                      '<span class="tooltiptext">A score of 10 indicates that the packages are always used together. ' +
@@ -184,10 +183,10 @@
                      '<span class="tooltiptext-left">A score of 10 indicates that the packages are always used together. ' +
                      '<a target="_blank" href="/about#absolute-change-trending">See more details</a></span></div></th><tr>' +
                      '<td>' + '<img src="/static/images/' + data[3] + '.png" style="width:250px;"></td>' +
-                     '<td>' + '<img src="/static/images/' + data[4] + '.png" style="width:150px;"></td>' +
-                     '<td>' + '<img src="/static/images/' + data[5] + '.png" style="width:150px;"></td>' +
                      '<td>' + '<img src="/static/images/' + data[6] + '.png" style="width:150px;"></td>' +
                      '<td>' + '<img src="/static/images/' + data[7] + '.png" style="width:150px;"></td>' +
+                     '<td>' + '<img src="/static/images/' + data[4] + '.png" style="width:150px;"></td>' +
+                     '<td>' + '<img src="/static/images/' + data[5] + '.png" style="width:150px;"></td>' +
                      '</tr></tbody></table>'
                 );
                 $('#scoreModal').modal('show');
