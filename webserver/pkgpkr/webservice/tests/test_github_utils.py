@@ -110,6 +110,7 @@ class TestGithubUtil(TestCase):
             brotli>=1.0.7, <1.0.3
             joblib>1.0.7, <=1.0.3
             requests>0.0.1
+            $$$NOT A DEPENDENCY, SHOULD NOT BE PARSED$$$
         """
 
         purl_dependencies = python_dependencies_name_to_purl(depencencies)
