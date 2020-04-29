@@ -25,8 +25,8 @@ def main():
     assert PORT, "DB_PORT not set"
 
     # Connect to the database
-    database = psycopg2.connect(CONN_STRING)
-    cursor = database.cursor()
+    db_handle = psycopg2.connect(CONN_STRING)
+    cursor = db_handle.cursor()
 
     # ML pipeline
     scores = model.get_similarity_dataframe(cursor)
@@ -37,9 +37,9 @@ def main():
     database.package_table_postprocessing(cursor)
 
     # Commit changes and close the database connection
-    database.commit()
+    db_handle.commit()
     cursor.close()
-    database.close()
+    db_handle.close()
 
 if __name__ == "__main__":
    main()
