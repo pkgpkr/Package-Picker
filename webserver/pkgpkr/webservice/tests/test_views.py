@@ -54,7 +54,7 @@ class SimpleTest(TestCase):
         """
         Calls method supplied and evaluate response code
         :param request: Request object prepared for this evaluation
-        :param method: Methdo in views to call
+        :param method: Method in views to call
         :param exp_status_code: Expected status code
         :return: Response, in case more evaluation are needed (e.g. on Url)
         """
@@ -142,6 +142,16 @@ class SimpleTest(TestCase):
         request = self.prep_with_github_auth_request('/repositories/pkgpkr1/express')
         response = recommendations(request, 'pkgpkr1/express')
         self.assertEqual(response.status_code, 200)
+
+        # Test bad demo language
+        request = self.prep_with_github_auth_request('/repositories/pkgpkr1/DEMO')
+        request.method = 'POST'
+        request.POST = {
+            'dependencies': '"accepts": "~1.3.7","array-flatten": "1.1.1","body-parser": "1.19.0"',
+            'language': 'NOT A SUPPORTED LANGUAGE'
+        }
+        response = recommendations(request, 'pkgpkr1/DEMO')
+        self.assertEqual(response.status_code, 404)
 
 
     def test_demo_input(self):

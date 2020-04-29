@@ -8,6 +8,27 @@ import psycopg2
 from model.database import update_bounded_similarity_scores, update_popularity_scores, update_trending_scores, package_table_postprocessing
 
 class TestModel(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        USER = os.environ['DB_USER']
+        PASSWORD = os.environ['DB_PASSWORD']
+        DATABASE = os.environ['DB_DATABASE']
+        REAL_TOKEN = os.environ['GH_TOKEN']
+        HOST = os.environ['DB_HOST']
+        PORT = os.environ['DB_PORT']
+        connection = None
+        result = None
+        cls.connection = psycopg2.connect(user=USER,
+                                      password=PASSWORD,
+                                      host=HOST,
+                                      port=PORT,
+                                      database=DATABASE)
+        f = open("tests/provision_db.sql", "r")
+        cls.connection.cursor().execute(f.read())
+        cls.connection.commit()
+        f.close()
+
+
     """
     Tests for the ML pipeline model
     """
@@ -90,7 +111,7 @@ class TestModel(unittest.TestCase):
             INSERT INTO packages (id, name, monthly_downloads_last_month, monthly_downloads_a_year_ago, categories, modified, retrieved )
             VALUES ({p['id']}, {p['name']}, {p['monthly_downloads_last_month']}, {p['monthly_downloads_a_year_ago']}, {p['categories']}, {p['modified']}, {p['retrieved']});
             """)
-        
+
         # Populate with similarity data
         for p1 in package_data:
             for p2 in package_data:
@@ -155,3 +176,16 @@ class TestModel(unittest.TestCase):
         self.assertEqual(metadata[2], ('globe.gl@2', 'https://npmjs.com/package/globe.gl', '2020-04-10'))
         self.assertEqual(metadata[3], ('react-resize-detector@4', 'https://npmjs.com/package/react-resize-detector', None))
         self.assertEqual(metadata[4], ('@reach/router@1', 'https://npmjs.com/package/@reach/router', '2020-02-27'))
+
+
+    @classmethod
+    def tearDownClass(cls):
+        #closing and cleaning up the test database
+        if cls.connection:
+
+            f = open("tests/deprovision_db.sql", "r")
+            cls.connection.cursor().execute(f.read())
+            cls.connection.commit()
+            cls.connection.close()
+            print("PostgreSQL connection is closed succesfully")
+            f.close()
