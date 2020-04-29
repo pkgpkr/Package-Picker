@@ -30,7 +30,7 @@ Terraform will provision a database for you (see the AWS section below), otherwi
 If you want to start with some data in the database so you don't have to run the ML pipeline first, run the following commands:
 
 ```
-wget https://pkgpkr-models.s3.amazonaws.com/big_data.dump.gz
+wget https://pkgpkr-models.s3.amazonaws.com/database.dump.gz
 cat big_data.dump.gz | gunzip | psql -h <DB host> -U <DB user> <DB name>
 ```
 
