@@ -75,12 +75,17 @@ def get_package_metadata(dependency):
         for item in json_result['info']['classifiers']:
             if "Topic :: " in item:
                 entry['categories'].insert(-1, item.replace("Topic :: ", ""))
-    except KeyError:
+    except KeyError as exc:
+        print(f"Could not fetch categories for {dependency_name}: {exc}")
         entry['categories'] = []
 
     try:
         entry['modified'] = json_result['urls'][0]['upload_time_iso_8601']
-    except KeyError:
+    except KeyError as exc:
+        print(f"Could not fetch modified date for {dependency_name}: {exc}")
+        entry['modified'] = None
+    except IndexError as exc:
+        print(f"Could not fetch modified date for {dependency_name}: {exc}")
         entry['modified'] = None
     print(f"pypi entry: {entry}")
     return entry
