@@ -16,6 +16,27 @@ class TestScraper(unittest.TestCase):
     """
     Tests for the ML pipeline scraper
     """
+    @classmethod
+    def setUpClass(cls):
+
+        USER = os.environ['DB_USER']
+        PASSWORD = os.environ['DB_PASSWORD']
+        DATABASE = os.environ['DB_DATABASE']
+        REAL_TOKEN = os.environ['GH_TOKEN']
+        HOST = os.environ['DB_HOST']
+        PORT = os.environ['DB_PORT']
+        connection = None
+        result = None
+        cls.connection = psycopg2.connect(user=USER,
+                                      password=PASSWORD,
+                                      host=HOST,
+                                      port=PORT,
+                                      database=DATABASE)
+        f = open("tests/provision_db.sql", "r")
+        cls.connection.cursor().execute(f.read())
+        cls.connection.commit()
+        f.close()
+
 
     def tearDown(self):
 
@@ -78,7 +99,7 @@ class TestScraper(unittest.TestCase):
         cursor = None
         for i in [1, 10, 100]:
             try:
-                result = github.run_query_once(i, month_str, cursor, "JavaScript")               
+                result = github.run_query_once(i, month_str, cursor, "JavaScript")
                 self.assertIsNotNone(result['data']['search']['edges'])
                 result = None
                 result = github.run_query_once(i, month_str, cursor, "Python")
@@ -198,5 +219,13 @@ class TestScraper(unittest.TestCase):
         result = cur.fetchall()
         self.assertEqual(result, [(application_id, package_id)])
 
-if __name__ == "__main__":
-    unittest.main()
+    @classmethod
+    def tearDownClass(cls):
+        #closing and cleaning up the test database
+        if cls.connection:
+            f = open("tests/deprovision_db.sql", "r")
+            cls.connection.cursor().execute(f.read())
+            cls.connection.commit()
+            cls.connection.close()
+            print("PostgreSQL connection is closed succesfully")
+            f.close()
