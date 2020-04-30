@@ -113,14 +113,16 @@
                     hideLoadingAnimation();
                     $('time.timeago').timeago();
                 },
+                "drawCallback": function(settings) {
+                    $('time.timeago').timeago();
+                },
                 columnDefs : [
                     // Recommendation link
                     {
                         "targets": 1,
                         "render": function (data, type, row, meta) {
-
                             return '<div><div class="tooltip-date"><a target="package_details" href="' + row[2] + '">' + data + '</a>' +
-                            '<span class="tooltiptext-date">Last Publish: ' +
+                            '<span class="tooltiptext-date">Last Publish: <br>' +
                             '<time class="timeago" datetime="' + row[9] + '"></time></span></div>' +
                             '<div class="original-package"><p>Because you use ' + row[0] + '</p></div>'
                         },
@@ -139,7 +141,7 @@
                         "targets": 8,
                         "render": function (data, type, row, meta) {
                             if (!data) {
-                                return "N/A";
+                                return '<i class="fas fa-ban" style="opacity:0.4;"></i>';
                             }
 
                             html_str = '<div class="buttons" style="margin-bottom: 0; display:inline-block;">';

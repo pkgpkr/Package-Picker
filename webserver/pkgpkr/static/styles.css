@@ -107,6 +107,7 @@ body {
 .pkgpkrscore_img {
   cursor: pointer;
   width: 100px;
+  box-shadow: 2px 2px 4px #000000;
 }
 
 .pkgpkrscore_img:hover {
