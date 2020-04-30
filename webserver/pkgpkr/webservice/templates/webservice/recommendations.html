@@ -101,7 +101,7 @@
         </div>
     </section>
     <script>
-        $(document).ready(function() {
+        $(function(){
             var table = $('#recommend-table').DataTable({
                 "bLengthChange": false,
                 dom: 'tip',
@@ -179,7 +179,7 @@
                 $('.insert-here').html(
                      '<table class="table dtr-details" width="100%"><tbody><tr>' +
                      '<th class="pkgpkr_score_td">PkgPkr<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
-                     '<span class="tooltiptext">A score of 10 indicates that the packages are always used together. ' +
+                     '<span class="tooltiptext">The weighted average of all the score. ' +
                      '<a target="_blank" href="/about#pkgpkr">See more details</a></span></div></th>' +
 
                      '<th class="other_score_td">Used-Together<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
@@ -187,15 +187,15 @@
                      '<a target="_blank" href="/about#used-together">See more details</a></span></div></th>' +
 
                      '<th class="other_score_td">Collaborative Filtering<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
-                     '<span class="tooltiptext">A score of 10 indicates that the packages are always used together A score of 10 indicates that the packages are always used together. ' +
+                     '<span class="tooltiptext">A score of 10 indicates the highest probability that if you will use this package too given your input package. ' +
                      '<a target="_blank" href="/about#collaborative-filtering">See more details</a></span></div></th>' +
 
                      '<th class="other_score_td">Absolute Trend<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
-                     '<span class="tooltiptext">A score of 10 indicates that the packages are always used together. ' +
+                     '<span class="tooltiptext">A score of 10 indicates this package has seen massive growth in terms of raw number of downloads. ' +
                      '<a target="_blank" href="/about#percent-change-trending">See more details</a></span></div></th>' +
 
                      '<th class="other_score_td">Relative Trend<br>Score <div class="tooltip-left"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
-                     '<span class="tooltiptext-left">A score of 10 indicates that the packages are always used together. ' +
+                     '<span class="tooltiptext-left">A score of 10 indicates this package has seen massive growth in terms percent change. ' +
                      '<a target="_blank" href="/about#absolute-change-trending">See more details</a></span></div></th><tr>' +
                      '<td>' + '<img src="/static/images/' + data[3] + '.png" style="width:250px;"></td>' +
                      '<td>' + '<img src="/static/images/' + data[6] + '.png" style="width:150px;"></td>' +

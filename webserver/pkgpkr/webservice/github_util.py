@@ -133,7 +133,7 @@ def python_dependencies_name_to_purl(dependencies):
         try:
             parsed = list(requirements.parse(dep))[0]
         except Exception as e:
-            print('Error occurred while parsing Python dependency', e)
+            print(f'Warning: not able to parse Python dependency: {dep}', e)
             continue
 
         name = parsed.name

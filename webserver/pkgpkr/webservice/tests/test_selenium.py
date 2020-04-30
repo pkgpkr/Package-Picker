@@ -8,6 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from django.test import LiveServerTestCase
 from pyvirtualdisplay import Display
+from contextlib import contextmanager
 
 
 class LoginTest(LiveServerTestCase):
@@ -17,6 +18,14 @@ class LoginTest(LiveServerTestCase):
 
     # Needed to overwrite LiveServerTestCase default port (i.e. 8001)
     port = 8000
+
+    # Wait for a new window to load
+    @contextmanager
+    def wait_for_new_window(self, driver, timeout=10):
+        handles_before = self.driver.window_handles
+        yield
+        WebDriverWait(driver, timeout).until(
+            lambda driver: len(handles_before) != len(driver.window_handles))
 
     def setUp(self):
 
@@ -152,11 +161,12 @@ class LoginTest(LiveServerTestCase):
         search_ele.clear()
 
         # The first element from the recommendation list
-        first_recommendation_ele = self.driver.find_element_by_xpath(
-            "//*[@id='recommend-table']/tbody/tr[1]/td[1]/div")
-        first_recommendation_ele.click()
+        with self.wait_for_new_window(self.driver):
+            first_recommendation_ele = self.driver.find_element_by_xpath(
+                "//*[@id='recommend-table']/tbody/tr[1]/td[1]/div")
+            first_recommendation_ele.click()
 
-        # Ensure that the package detail window opens as expected
+        # Ensure that the package detail window opened as expected
         self.driver.switch_to_window("package_details")
         self.driver.find_element_by_xpath("//*[@id='app']")
 
