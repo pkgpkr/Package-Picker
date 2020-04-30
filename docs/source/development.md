@@ -35,7 +35,7 @@ DB_HOST=$DB_HOST \
 DB_PORT=$DB_PORT \
 DB_DATABASE=$DB_DATABASE \
 GH_TOKEN=$GH_TOKEN \
-python3 -m unittest scraper/test.py -v
+python3 -m unittest -v
 ```
 
 ## Web server

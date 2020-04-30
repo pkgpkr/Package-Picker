@@ -22,16 +22,16 @@
 		</script>
   </head>
   <body>
-    <section class="hero is-medium is-primary is-bold">
+    <section id="main-banner" class="hero is-medium is-primary is-bold">
       <div class="hero-body" style="padding-top: 4rem; padding-bottom: 2rem;">
-        <div class="container has-text-centered">
+        <div id="title-text-parent" class="container has-text-centered">
           <a href="/">
-            <h1 class="title is-1">
+            <h1 id="title-text" class="title is-1">
               <i class="fas fa-box"></i>
               Package Picker
             </h1>
           </a>
-          <h2 class="subtitle">
+          <h2 id="subtitle-text" class="subtitle">
             Better packages, faster
           </h2>
         </div>
@@ -87,8 +87,8 @@
                 {% if not request.session.github_token %}
                 <div class="buttons">
                   <a class="button is-linkl" href="{% url 'login' %}">
-                    <i class="fas fa-sign-in-alt"></i>
-                    <strong><p class="text-icon">Log in</p></strong>
+                    <i class="fab fa-github"></i>
+                    <strong><p class="text-icon">Pick dependencies from Github</p></strong>
                   </a>
                 </div>
                 {% endif %}
@@ -108,7 +108,7 @@
     </section>
     {% block body %}
     {% endblock %}
-    <footer class="footer has-background-black has-text-light">
+    <footer id="main-footer" class="footer has-background-black has-text-light">
       <div class="level">
         <div class="level-left">
           <div class="level-item">

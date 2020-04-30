@@ -8,7 +8,7 @@ from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import AnonymousUser
 
 from webservice import github_util
-from ..views import index, about, login, callback, logout, repositories, recommendations
+from webservice.views import index, about, login, callback, logout, repositories, recommendations, recommendations_json
 
 class SimpleTest(TestCase):
     """
@@ -54,7 +54,7 @@ class SimpleTest(TestCase):
         """
         Calls method supplied and evaluate response code
         :param request: Request object prepared for this evaluation
-        :param method: Methdo in views to call
+        :param method: Method in views to call
         :param exp_status_code: Expected status code
         :return: Response, in case more evaluation are needed (e.g. on Url)
         """
@@ -134,11 +134,60 @@ class SimpleTest(TestCase):
         """
 
         # Test redirect
-        request = self.prep_not_github_auth_request('/repositories')
+        request = self.prep_not_github_auth_request('/repositories/pkgpkr1/express')
         response = recommendations(request, 'pkgpkr1/express')
         self.assertEqual(response.status_code, 302)
 
         # Test success
-        request = self.prep_with_github_auth_request('/repositories')
+        request = self.prep_with_github_auth_request('/repositories/pkgpkr1/express')
         response = recommendations(request, 'pkgpkr1/express')
         self.assertEqual(response.status_code, 200)
+
+        # Test bad demo language
+        request = self.prep_with_github_auth_request('/repositories/pkgpkr1/DEMO')
+        request.method = 'POST'
+        request.POST = {
+            'dependencies': '"accepts": "~1.3.7","array-flatten": "1.1.1","body-parser": "1.19.0"',
+            'language': 'NOT A SUPPORTED LANGUAGE'
+        }
+        response = recommendations(request, 'pkgpkr1/DEMO')
+        self.assertEqual(response.status_code, 404)
+
+
+    def test_demo_input(self):
+        # Test success
+        request = self.prep_not_github_auth_request('/repositories/DEMO')
+        request.method = 'POST'
+        request.POST = {
+            'dependencies': '"accepts": "~1.3.7","array-flatten": "1.1.1","body-parser": "1.19.0"',
+            'language': 'javascript'
+        }
+        response = recommendations(request, 'DEMO')
+        self.assertEqual(response.status_code, 200)
+
+        # Test fail
+        request = self.prep_not_github_auth_request('/repositories/DEMO')
+        request.method = 'GET'
+        response = recommendations(request, 'DEMO')
+        self.assertEqual(response.status_code, 302)
+
+
+    def test_recommendations_json(self):
+        # Test fail
+        request = self.prep_not_github_auth_request('/repositories/pkgpkr1/express')
+        response = recommendations_json(request, 'pkgpkr1/express')
+        self.assertEqual(response.status_code, 401)
+
+        # Test success
+        request = self.prep_with_github_auth_request('/repositories/pkgpkr1/express')
+        response = recommendations_json(request, 'pkgpkr1/express')
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(response.content)
+        self.assertIn('"repository_name": "pkgpkr1/express"', response.content.decode())
+
+        # Test with branch
+        request = self.prep_with_github_auth_request('/repositories/pkgpkr1/express?branch=test')
+        response = recommendations_json(request, 'pkgpkr1/express')
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNotNone(response.content)
+        self.assertIn('"current_branch": "test"', response.content.decode())

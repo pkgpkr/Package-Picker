@@ -14,8 +14,7 @@ class RecommenderService:
 
     def __init__(self):
 
-        self.major_version_regex = re.compile(r'pkg:npm/.*@\d+')
-        self.name_only_regex = re.compile(r'pkg:npm/(.*)@\d+')
+        self.major_version_regex = re.compile(r'pkg:(npm|pypi)/.*@\d+')
         self.max_recommendations = 10000
 
     def strip_to_major_version(self, dependencies):

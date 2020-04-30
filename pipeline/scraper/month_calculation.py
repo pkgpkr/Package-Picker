@@ -14,14 +14,3 @@ def month_delta(date, delta):
                          29 if year % 4 == 0 and (not year % 100 == 0 or year % 400 == 0) else 28,
                          31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1])
     return date.replace(day=day, month=month, year=year)
-
-
-def get_monthly_search_str(start_date):
-    """
-    Get a month-specifying date string for GitHub v4 API
-    """
-
-    end_date = month_delta(start_date, 1)
-    end_date_str = end_date.strftime("%Y-%m-%d")
-    start_date_str = start_date.strftime("%Y-%m-%d")
-    return "created:" + end_date_str + ".." + start_date_str

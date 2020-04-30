@@ -13,7 +13,6 @@ from .psql import insert_to_app
 from .psql import insert_to_dependencies
 from .psql import insert_to_package
 
-print(f"os.environ['GH_TOKEN']: {os.environ['GH_TOKEN']}")
 assert os.environ.get('GH_TOKEN'), "GH_TOKEN not set"
 
 HEADERS = {"Authorization": "Bearer " + os.environ['GH_TOKEN']}
@@ -76,7 +75,6 @@ def write_db(database, result, language="JavaScript"):
                                            hash_value)
             try:
                 for req in requirements.parse(package_str):
-                    print(req.name, req.specs, req.extras)
                     package_name = req.name
                     if len(req.specs) == 0:
                         package_version = ''
@@ -84,7 +82,6 @@ def write_db(database, result, language="JavaScript"):
                         package_version = req.specs[0][1].split('.')[0]
                     dependency_str = 'pkg:pypi/' + package_name + "@" + package_version
                     package_id = insert_to_package(database, dependency_str)
-                    print(package_id)
                     insert_to_dependencies(database, str(application_id), str(package_id))
             # pylint: disable=bare-except
             except:

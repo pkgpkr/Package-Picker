@@ -5,7 +5,7 @@ Fetch package metadata from the pypi API
 import json
 import requests
 import pypistats
-from .psql import connect_to_db, update_package_metadata
+from scraper.psql import connect_to_db, update_package_metadata
 
 
 PYPI_DEPENDENCY_META_URL = 'https://pypi.python.org/pypi/'
@@ -29,11 +29,11 @@ def run_query():
         print(f"Fetching metadata for {result}")
         metadata = get_package_metadata(result)
         update_package_metadata(database,
-                                metadata['name'],
-                                metadata['monthly_downloads_last_month'],
-                                metadata['monthly_downloads_a_year_ago'],
-                                metadata['categories'],
-                                metadata['modified'])
+                                metadata.get('name'),
+                                metadata.get('monthly_downloads_last_month'),
+                                metadata.get('monthly_downloads_a_year_ago'),
+                                metadata.get('categories'),
+                                metadata.get('modified'))
 
         # Commit the changes to the database
         database.commit()
@@ -75,12 +75,17 @@ def get_package_metadata(dependency):
         for item in json_result['info']['classifiers']:
             if "Topic :: " in item:
                 entry['categories'].insert(-1, item.replace("Topic :: ", ""))
-    except KeyError:
+    except KeyError as exc:
+        print(f"Could not fetch categories for {dependency_name}: {exc}")
         entry['categories'] = []
 
     try:
         entry['modified'] = json_result['urls'][0]['upload_time_iso_8601']
-    except KeyError:
+    except KeyError as exc:
+        print(f"Could not fetch modified date for {dependency_name}: {exc}")
+        entry['modified'] = None
+    except IndexError as exc:
+        print(f"Could not fetch modified date for {dependency_name}: {exc}")
         entry['modified'] = None
     print(f"pypi entry: {entry}")
     return entry

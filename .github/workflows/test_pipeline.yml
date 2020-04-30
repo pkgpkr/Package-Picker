@@ -33,16 +33,12 @@ jobs:
 
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
-      
+
       - name: Install dependencies
         run: |
+          sudo apt-get install libsnappy-dev -y
           python -m pip install --upgrade pip
-          python -m pip install psycopg2
-          python -m pip install requests
-          python -m pip install datetime
-          python -m pip install pypistats
-          python -m pip install requirements-parser
-        if: steps.cache.outputs.cache-hit != 'true'
+          python -m pip install -r ./pipeline/requirements.txt
 
       - name: Python run script
         env:
@@ -52,6 +48,5 @@ jobs:
           DB_HOST: localhost
           DB_PORT: 5432
           DB_DATABASE: postgres
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: cd ./pipeline && python client.py
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: cd ./pipeline && python -m unittest

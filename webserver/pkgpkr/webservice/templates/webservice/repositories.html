@@ -5,12 +5,12 @@
 {% endblock %}
 
 {% block body %}
-<section class="section">
+<section id="my-repositories" class="section">
   <div class="container">
     <div class="content is-medium">
       <h2>My Repositories</h2>
       <br>
-      {% if not one_or_more_with_dependencies %}
+      {% if not repos %}
         <p>You have no repositories with package.json</p>
       {% else %}
       <div class="table-container">
@@ -23,12 +23,10 @@
           </thead>
           <tbody>
           {% for repo in repos %}
-            {% if repo.dependencies %}
               <tr>
                 <td><a href="{% url 'recommendations' repo.nameWithOwnerEscaped %} ">{{repo.nameWithOwner}}</a></td>
                 <td>{{repo.date}}</td>
               </tr>
-            {% endif %}
           {% endfor %}
           </tbody>
         </table>

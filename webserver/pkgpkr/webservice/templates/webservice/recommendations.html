@@ -15,7 +15,7 @@
     <section class="section">
         <div class="container">
             <div class="content is-medium">
-                <h2>Package recommendations for {{ repository_name }}</h2>
+                <h2>{{ language | title }} package recommendations for {{ repository_name }}</h2>
                 {%  if branch_names %}
                 <table>
                     <tr>
@@ -37,6 +37,7 @@
                                         </a>
                                     {% endfor %}
                                 </div>
+                            </div>
                             </div>
                         </td>
                     </tr>
@@ -69,16 +70,16 @@
                     <table id="recommend-table" class="display-data-tables" style="width:100%">
                         <thead>
                         <tr>
-                            <th class="recoomendation-table-header" style="vertical-align: middle;">Package</th>
-                            <th class="recoomendation-table-header" style="vertical-align: middle;">Recommendation</th>
+                            <th>Package</th>
+                            <th class="recommendation-table-header" style="vertical-align: middle;">Recommendation</th>
                             <th>URL</th>
-                            <th class="recoomendation-table-header" style="vertical-align: middle;">PkgPkr Score</th>
+                            <th class="recommendation-table-header" style="vertical-align: middle;">PkgPkr Score</th>
                             <th>Used-Together</th>
                             <th>Collaborative Filtering</th>
                             <th>Absolute Trend</th>
                             <th>Relative Trend</th>
-                            <th class="recoomendation-table-header" style="vertical-align: middle;">Categories</th>
-                            <th class="recoomendation-table-header" style="vertical-align: middle;">Version Date</th>
+                            <th class="recommendation-table-header" style="vertical-align: middle;">Categories</th>
+                            <th class="recommendation-table-header" style="vertical-align: middle;">Version Date</th>
                         </tr>
                         </thead>
                     </table>
@@ -99,7 +100,7 @@
         </div>
     </section>
     <script>
-        $(document).ready(function() {
+        $(function(){
             var table = $('#recommend-table').DataTable({
                 "bLengthChange": false,
                 dom: 'tip',
@@ -111,16 +112,13 @@
                     myFunction()
                 },
                 columnDefs : [
-                    // Package
-                    {
-                        "targets": 0,
-                        "width": "10em"
-                    },
                     // Recommendation link
                     {
                         "targets": 1,
                         "render": function (data, type, row, meta) {
-                            return '<a target="package_details" href="' + row[2] + '">' + data + '</a>'
+                            return '<div class="tooltip-recommendtion"><a target="package_details" href="' + row[2] + '">' + data + '</a>' +
+                            '<span class="tooltiptext-recommendtion">Because you use<br>' + row[0] +
+                            '</span></div>'
                         },
                         "width": "10em"
                     },
@@ -128,7 +126,7 @@
                     {
                         "targets": 3,
                         "render": function (data, type, row, meta) {
-                            return '<img class="pkgpkrscore_img" src="/static/images/' + data + '.png" style="width:100px;"><p class="pkgpkrscore_value">' + data + '</p>'
+                            return '<img class="pkgpkrscore_img" src="/static/images/' + data + '.png"><p class="pkgpkrscore_value">' + data + '</p>'
                         },
                         "width": "3em"
                     },
@@ -156,7 +154,7 @@
                     },
                     // Hide URL and component score columns
                     {
-                        "targets": [2, 4, 5, 6, 7],
+                        "targets": [0, 2, 4, 5, 6, 7],
                         "visible": false
                     }
                 ]
@@ -167,7 +165,7 @@
                 $('.insertHere').html(
                      '<table class="table dtr-details" width="100%"><tbody><tr>' +
                      '<th class="pkgpkr_score_td">PkgPkr<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
-                     '<span class="tooltiptext">A score of 10 indicates that the packages are always used together. ' +
+                     '<span class="tooltiptext">The weighted average of all the score. ' +
                      '<a target="_blank" href="/about#pkgpkr">See more details</a></span></div></th>' +
 
                      '<th class="other_score_td">Used-Together<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
@@ -175,15 +173,15 @@
                      '<a target="_blank" href="/about#used-together">See more details</a></span></div></th>' +
 
                      '<th class="other_score_td">Collaborative Filtering<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
-                     '<span class="tooltiptext">A score of 10 indicates that the packages are always used together A score of 10 indicates that the packages are always used together. ' +
+                     '<span class="tooltiptext">A score of 10 indicates the highest probability that if you will use this package too given your input package. ' +
                      '<a target="_blank" href="/about#collaborative-filtering">See more details</a></span></div></th>' +
 
                      '<th class="other_score_td">Absolute Trend<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
-                     '<span class="tooltiptext">A score of 10 indicates that the packages are always used together. ' +
+                     '<span class="tooltiptext">A score of 10 indicates this package has seen massive growth in terms of raw number of downloads. ' +
                      '<a target="_blank" href="/about#percent-change-trending">See more details</a></span></div></th>' +
 
                      '<th class="other_score_td">Relative Trend<br>Score <div class="tooltip-left"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
-                     '<span class="tooltiptext-left">A score of 10 indicates that the packages are always used together. ' +
+                     '<span class="tooltiptext-left">A score of 10 indicates this package has seen massive growth in terms percent change. ' +
                      '<a target="_blank" href="/about#absolute-change-trending">See more details</a></span></div></th><tr>' +
                      '<td>' + '<img src="/static/images/' + data[3] + '.png" style="width:250px;"></td>' +
                      '<td>' + '<img src="/static/images/' + data[4] + '.png" style="width:150px;"></td>' +
