@@ -163,7 +163,7 @@ class LoginTest(LiveServerTestCase):
         # The first element from the recommendation list
         with self.wait_for_new_window(self.driver):
             first_recommendation_ele = self.driver.find_element_by_xpath(
-                "//*[@id='recommend-table']/tbody/tr[1]/td[1]/div")
+                "//*[@id='recommend-table']/tbody/tr[1]/td[1]/div/div[1]")
             first_recommendation_ele.click()
 
         # Ensure that the package detail window opened as expected

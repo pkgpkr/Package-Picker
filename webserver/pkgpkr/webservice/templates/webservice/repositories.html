@@ -18,6 +18,7 @@
           <thead>
             <tr>
               <th>Name</th>
+              <th>Language</th>
               <th>Last Updated Date</th>
             </tr>
           </thead>
@@ -25,6 +26,7 @@
           {% for repo in repos %}
               <tr>
                 <td><a href="{% url 'recommendations' repo.nameWithOwnerEscaped %} ">{{repo.nameWithOwner}}</a></td>
+                <td>{{repo.language}}</td>
                 <td>{{repo.date}}</td>
               </tr>
           {% endfor %}

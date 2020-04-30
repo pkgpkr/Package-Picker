@@ -22,7 +22,6 @@
   opacity: 0.7;
 }
 
-
 #selected-category {
   width: 110px;
 }
@@ -50,8 +49,8 @@
 
 .recommendation-filter {
   margin: auto;
-  padding-bottom: 15px;
-  width: 40%;
+  padding-bottom: 12px;
+  width: 30%;
   float: right;
 }
 
@@ -91,8 +90,9 @@ body {
   margin: 10px;
 }
 
-.explanation_img {
-  height: 200px;
+.original-package {
+    font-size: 15px;
+    color: #929292;
 }
 
 .pkgpkr_score_td {
@@ -106,6 +106,7 @@ body {
 .pkgpkrscore_img {
   cursor: pointer;
   width: 100px;
+  box-shadow: 2px 2px 4px #000000;
 }
 
 .pkgpkrscore_img:hover {
@@ -118,10 +119,6 @@ body {
 
 .hidden_score, .pkgpkrscore_value {
   display: none;
-}
-
-.recommendation-table-header {
-  vertical-align: middle;
 }
 
 .tooltip, .tooltip-left {
@@ -159,7 +156,7 @@ body {
   border-color: transparent transparent #555 transparent;
 }
 
-.tooltip:hover .tooltiptext, .tooltip-left:hover .tooltiptext-left, .tooltip-recommendtion:hover .tooltiptext-recommendtion {
+.tooltip:hover .tooltiptext, .tooltip-left:hover .tooltiptext-left, .tooltip-date:hover .tooltiptext-date {
   visibility: visible;
   opacity: 1;
 }
@@ -193,12 +190,12 @@ body {
   border-color: transparent transparent #555 transparent;
 }
 
-.tooltip-recommendtion {
+.tooltip-date {
   position: relative;
   display: inline-block;
 }
 
-.tooltip-recommendtion .tooltiptext-recommendtion {
+.tooltip-date .tooltiptext-date {
   visibility: hidden;
   min-width: 120px;
   max-width: 100%;
@@ -217,7 +214,7 @@ body {
   font-size: 14px;
 }
 
-.tooltip-recommendtion .tooltiptext-recommendtion::after {
+.tooltip-date .tooltiptext-date::after {
   content: "";
   position: absolute;
   bottom: 100%;
@@ -226,6 +223,10 @@ body {
   border-width: 5px;
   border-style: solid;
   border-color: transparent transparent #555 transparent;
+}
+
+.is-hovered:hover {
+  opacity: 0.7;
 }
 
 .pageloader {
@@ -295,6 +296,118 @@ body {
 
 .navbar-item:focus {
   background-color: transparent !important;
+}
+
+#left-div {
+  float: left;
+  padding: 0 10px 0 80px;
+  min-width: 630px;
+}
+
+#right-div {
+  float: left;
+  padding: 0 10px 0 80px;
+  min-width: 630px;
+}
+
+#pick-div-head {
+  float: left;
+  padding: 8px 10px 0 0;
+}
+
+#pick-select {
+  float: left;
+}
+
+#pick-div-tail {
+  float: left;
+  padding: 8px 0 0 10px;
+}
+
+#pick-textarea {
+  padding: 10px 0 10px 0;
+  width: 85%;
+}
+
+#recommendation-button-div {
+  float: left;
+  width: 55%;
+}
+
+#recommendation-hyperlink-div {
+  float: right;
+  width: 45%;
+  padding: 8px 0 0 0;
+  font-size: 14px;
+}
+
+#recommendation-hyperlink-a {
+  float: right;
+}
+
+
+@media only screen and (max-width: 1420px) {
+  #left-div {
+    float: none;
+    margin: auto;
+    padding: 0 0 200px 0;
+    width: 100%;
+  }
+
+  #right-div {
+    float: none;
+    margin: auto;
+    padding: 0;
+    width: 50%;
+  }
+
+  #pick-textarea {
+    padding: 10px 0 10px 0;
+    width: 100%;
+  }
+
+  #recommendation-hyperlink-div {
+    float: right;
+    width: 45%;
+    padding: 18px 0 0 0;
+    font-size: 14px;
+  }
+
+  .bullet-div {
+    margin: auto;
+    padding: 10px 0 100px 0;
+  }
+
+  .bullet-img-div {
+    float: left;
+    padding: 0 0 0 160px;
+  }
+
+  .bullet-p-div {
+    float: left;
+    padding: 23px 0 0 20px;
+  }
+
+  .bullet-img {
+    width: 80px;
+  }
+}
+
+.bullet-div {
+  padding: 10px 0 100px 0;
+}
+
+.bullet-img-div {
+  float: left;
+}
+
+.bullet-p-div {
+  float: left;
+  padding: 23px 0 0 20px;
+}
+
+.bullet-img {
+  width: 80px;
 }
 
 .about-main-div {

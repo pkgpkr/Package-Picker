@@ -45,7 +45,7 @@ $(document).ready(function () {
     document.getElementById('lang-select').selectedIndex=0;
 });
 
-function myFunction() {
+function hideLoadingAnimation() {
     var element = document.getElementsByClassName("pageloader");
     element[0].classList.add("hidden");
 }
@@ -53,6 +53,8 @@ function myFunction() {
 function categoryClick(value) {
     var categoryName = document.getElementById('category-name');
     categoryName.value = value;
+    var categoryLength = 'width: ' + (value.length + 1) * 10 + 'px;'
+    categoryName.setAttribute("style", categoryLength);
     triggerEvent(categoryName, 'keyup');
     document.getElementById('category-clear').style.visibility = "visible";
 }

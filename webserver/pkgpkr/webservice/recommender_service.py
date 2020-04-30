@@ -64,7 +64,8 @@ class RecommenderService:
                     b.bounded_popularity,
                     s.bounded_similarity,
                     b.categories,
-                    b.display_date
+                    b.display_date,
+                    b.monthly_downloads_last_month
                     FROM similarity s
                     INNER JOIN packages a ON s.package_a = a.id
                     INNER JOIN packages b ON s.package_b = b.id
