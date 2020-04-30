@@ -27,7 +27,7 @@ class TestRecommenderService(TestCase):
         Make sure we can fetch recommendations
         """
 
-        self.assertGreater(len(self.recommendations), 10)
+        self.assertGreater(len(self.recommendations), 11)
 
     def test_get_recommendation_content(self):
         """
@@ -35,7 +35,7 @@ class TestRecommenderService(TestCase):
         """
 
         for recommendation in self.recommendations:
-            self.assertEqual(10, len(recommendation))
+            self.assertEqual(11, len(recommendation))
 
             # Make sure every entry (except for categories and date) exists
             self.assertIsNotNone(recommendation[0])
