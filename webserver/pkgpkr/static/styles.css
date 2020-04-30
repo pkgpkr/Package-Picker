@@ -22,7 +22,6 @@
   opacity: 0.7;
 }
 
-
 #selected-category {
   width: 110px;
 }
@@ -226,6 +225,10 @@ body {
   border-color: transparent transparent #555 transparent;
 }
 
+.is-hovered:hover {
+  opacity: 0.7;
+}
+
 .pageloader {
   position: fixed;
   z-index: 99;
@@ -332,10 +335,62 @@ body {
 }
 
 #recommendation-hyperlink-div {
-  float: left;
+  float: right;
   width: 45%;
   padding: 8px 0 0 0;
   font-size: 14px;
+}
+
+#recommendation-hyperlink-a {
+  float: right;
+}
+
+
+@media only screen and (max-width: 1420px) {
+  #left-div {
+    float: none;
+    margin: auto;
+    padding: 0 0 200px 0;
+    width: 100%;
+  }
+
+  #right-div {
+    float: none;
+    margin: auto;
+    padding: 0;
+    width: 50%;
+  }
+
+  #pick-textarea {
+    padding: 10px 0 10px 0;
+    width: 100%;
+  }
+
+  #recommendation-hyperlink-div {
+    float: right;
+    width: 45%;
+    padding: 18px 0 0 0;
+    font-size: 14px;
+  }
+
+  .bullet-div {
+    margin: auto;
+    padding: 10px 0 100px 0;
+  }
+
+  .bullet-img-div {
+    float: left;
+    padding: 0 0 0 160px;
+  }
+
+  .bullet-p-div {
+    float: left;
+    padding: 23px 0 0 20px;
+  }
+
+  .bullet-img {
+    width: 80px;
+  }
 }
 
 .bullet-div {

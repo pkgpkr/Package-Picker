@@ -123,6 +123,8 @@ def repositories(request):
             # Convert string to encoded URL e.g. hello/world -> hello%2world
             repo['nameWithOwnerEscaped'] = urllib.parse.quote_plus(repo['nameWithOwner'])
 
+            repo['language'] = language
+
             # Get dependencies if any,  remember if at least some dependencies found
             if parse_dependencies(repo['object']['text'], language):
                 combined_repos[repo['nameWithOwner']] = repo
