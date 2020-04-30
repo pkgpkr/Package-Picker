@@ -45,7 +45,7 @@ $(document).ready(function () {
     document.getElementById('lang-select').selectedIndex=0;
 });
 
-function myFunction() {
+function hideLoadingAnimation() {
     var element = document.getElementsByClassName("pageloader");
     element[0].classList.add("hidden");
 }

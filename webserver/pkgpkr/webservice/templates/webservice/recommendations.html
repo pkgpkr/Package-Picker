@@ -15,7 +15,6 @@
     <section class="section">
         <div class="container">
             <div class="content is-medium">
-                <time class="timeago" datetime="2020-01-17"></time>
                 <h2>{{ language | title }} package recommendations for {{ repository_name }}</h2>
                 {%  if branch_names %}
                 <table>
@@ -111,7 +110,8 @@
                 order: [[3, "desc"]],
                 "autoWidth": false,
                 "initComplete": function(settings, json) {
-                    myFunction()
+                    hideLoadingAnimation();
+                    $('time.timeago').timeago();
                 },
                 columnDefs : [
                     // Recommendation link
@@ -119,11 +119,9 @@
                         "targets": 1,
                         "render": function (data, type, row, meta) {
 
-                              //<time class="timeago" datetime="2020-01-17"></time>
                             return '<div><div class="tooltip-date"><a target="package_details" href="' + row[2] + '">' + data + '</a>' +
                             '<span class="tooltiptext-date">Last Publish: ' +
-                            //'<time class="timeago" datetime="' + row[9] + '"></time></span></div>' +
-                            '<time class="timeago" datetime="2020-01-17"></time>' + '</span></div>' +
+                            '<time class="timeago" datetime="' + row[9] + '"></time></span></div>' +
                             '<div class="original-package"><p>Because you use ' + row[0] + '</p></div>'
                         },
                         "width": "10em"
@@ -214,8 +212,6 @@
             $('#recommendationFilter').keyup(function() {
                 table.search($(this).val()).draw();
             });
-
-            $("time.timeago").timeago();
         });
     </script>
 {% endblock %}
