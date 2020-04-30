@@ -1,10 +1,5 @@
-# Our version of PySpark requires Python 3.7
-FROM djsauble/pyspark-tiny:latest
-
-# Activate Python 3.7
-ARG PYTHON_VERSION='3.7.0'
-ARG PYENV_HOME=/root/.pyenv
-ENV PATH $PYENV_HOME/shims:$PYENV_HOME/bin:$PATH
+# Image with Java 8, Python 3.7, PySpark, Snappy, and PostgreSQL JDBC
+FROM djsauble/pkgpkr-pipeline:latest
 
 # Read build-time arguments
 ARG DB_USER
@@ -24,11 +19,12 @@ ENV DB_DATABASE $DB_DATABASE
 ENV DB_PASSWORD $DB_PASSWORD
 ENV GH_TOKEN $GH_TOKEN
 ENV MONTH $MONTH
+ENV PYSPARK_PYTHON /usr/bin/python3.7
 
 # Setup code
 WORKDIR /code
 COPY . /code/
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
-CMD python3 run_scraper.py && spark-submit --driver-class-path=postgresql-42.2.11.jar --jars=postgresql-42.2.11.jar --driver-memory 12g train_model.py
+CMD python3.7 run_scraper.py && spark-submit --driver-class-path=postgresql-42.2.11.jar --jars=postgresql-42.2.11.jar --driver-memory 12g train_model.py
 
