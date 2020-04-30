@@ -15,6 +15,7 @@
     <section class="section">
         <div class="container">
             <div class="content is-medium">
+                <time class="timeago" datetime="2020-01-17"></time>
                 <h2>{{ language | title }} package recommendations for {{ repository_name }}</h2>
                 {%  if branch_names %}
                 <table>
@@ -71,15 +72,16 @@
                         <thead>
                         <tr>
                             <th>Package</th>
-                            <th class="recoomendation-table-header" style="vertical-align: middle;">Recommendation</th>
+                            <th style="vertical-align: middle;">Recommendation</th>
                             <th>URL</th>
-                            <th class="recoomendation-table-header" style="vertical-align: middle;">PkgPkr Score</th>
+                            <th style="vertical-align: middle;">PkgPkr Score</th>
                             <th>Used-Together</th>
                             <th>Collaborative Filtering</th>
                             <th>Absolute Trend</th>
                             <th>Relative Trend</th>
-                            <th class="recoomendation-table-header" style="vertical-align: middle;">Categories</th>
-                            <th class="recoomendation-table-header" style="vertical-align: middle;">Version Date</th>
+                            <th style="vertical-align: middle;">Categories</th>
+                            <th>Version Date</th>
+                            <th style="vertical-align: middle;">Downloads</th>
                         </tr>
                         </thead>
                     </table>
@@ -116,7 +118,12 @@
                     {
                         "targets": 1,
                         "render": function (data, type, row, meta) {
-                            return '<div><a target="package_details" href="' + row[2] + '">' + data + '</a></div>' +
+
+                              //<time class="timeago" datetime="2020-01-17"></time>
+                            return '<div><div class="tooltip-date"><a target="package_details" href="' + row[2] + '">' + data + '</a>' +
+                            '<span class="tooltiptext-date">Last Publish: ' +
+                            //'<time class="timeago" datetime="' + row[9] + '"></time></span></div>' +
+                            '<time class="timeago" datetime="2020-01-17"></time>' + '</span></div>' +
                             '<div class="original-package"><p>Because you use ' + row[0] + '</p></div>'
                         },
                         "width": "10em"
@@ -146,14 +153,22 @@
                             return html_str;
                         }
                     },
-                    // Version date
+                    // Downloads
                     {
-                        "targets": 9,
+                        "targets": 10,
+                        "render": function (data, type, row, meta) {
+                            if (type == 'display') {
+                                var suffixNum = numeral(data).format('0.0a').toString();
+                                return suffixNum;
+                            } else {
+                                return data;
+                            }
+                        },
                         "width": "6em"
                     },
-                    // Hide URL and component score columns
+                    // Hide URL component score columns, and dates
                     {
-                        "targets": [0, 2, 4, 5, 6, 7],
+                        "targets": [0, 2, 4, 5, 6, 7, 9],
                         "visible": false
                     }
                 ]
@@ -199,6 +214,8 @@
             $('#recommendationFilter').keyup(function() {
                 table.search($(this).val()).draw();
             });
+
+            $("time.timeago").timeago();
         });
     </script>
 {% endblock %}

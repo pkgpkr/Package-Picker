@@ -121,10 +121,6 @@ body {
   display: none;
 }
 
-.recoomendation-table-header {
-  vertical-align: middle;
-}
-
 .tooltip, .tooltip-left {
   position: relative;
   display: inline-block;
@@ -160,7 +156,7 @@ body {
   border-color: transparent transparent #555 transparent;
 }
 
-.tooltip:hover .tooltiptext, .tooltip-left:hover .tooltiptext-left {
+.tooltip:hover .tooltiptext, .tooltip-left:hover .tooltiptext-left, .tooltip-date:hover .tooltiptext-date {
   visibility: visible;
   opacity: 1;
 }
@@ -188,6 +184,41 @@ body {
   position: absolute;
   bottom: 100%;
   right: 15.5%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #555 transparent;
+}
+
+.tooltip-date {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-date .tooltiptext-date {
+  visibility: hidden;
+  min-width: 120px;
+  max-width: 100%;
+  background-color: #555;
+  color: #fff;
+  border-radius: 6px;
+  padding: 5px 10px 10px 10px;
+  position: absolute;
+  z-index: 1;
+  top: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-weight: normal;
+  font-size: 14px;
+}
+
+.tooltip-date .tooltiptext-date::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 17%;
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
