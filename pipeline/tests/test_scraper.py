@@ -9,6 +9,7 @@ import psycopg2
 from scraper.month_calculation import month_delta
 from scraper.psql import connect_to_db, insert_to_app, insert_to_dependencies, insert_to_package, update_package_metadata
 from scraper import github
+from scraper import pypi
 
 assert os.environ.get('GH_TOKEN'), "GH_TOKEN not set"
 
@@ -218,6 +219,15 @@ class TestScraper(unittest.TestCase):
         )
         result = cur.fetchall()
         self.assertEqual(result, [(application_id, package_id)])
+
+    def test_get_package_metadata_pypi(self):
+        dependency = 'pkg:pypi/django@2'
+        entry = pypi.get_package_metadata(dependency)
+        self.assertEqual(type(entry['monthly_downloads_last_month']), int)
+        self.assertEqual(type(entry['monthly_downloads_a_year_ago']), int)
+        self.assertEqual(type(entry['categories']), type(['Utilities', 'Internet']))
+        self.assertEqual(type(entry['modified']), str)
+
 
     @classmethod
     def tearDownClass(cls):
