@@ -43,9 +43,10 @@
                                     <button id="recommendation-button" class="button is-large is-link">Get Recommendation</button>
                                 </div>
                                 <div id="recommendation-hyperlink-div">
-                                    <a id="recommendation-hyperlink-a" target="_blank" href="{% url 'about' %}">
-                                        How do we generate our recommendations?
+                                    <b><a id="recommendation-hyperlink-a" target="_blank" href="{% url 'about' %}">
+                                        How do we generate these recommendations?
                                     </a>
+                                  </b>
                                 </div>
                             </div>
                             <div>
@@ -92,24 +93,9 @@
             </div>
             <div id="recommendation-wrapper" class="field is-grouped">
             </div>
-            <!-- change style after get actual contents -->
-            <div style="width: 100%; height: 500px; padding: 200px 0 100px 0;">
-                <div style="float: left; width: 50%;">
-                    <img src="/static/images/package-image.jpg" />
-                </div>
-                <div style="float: left; width: 50%;">
-                    <p>Modern applications rely heavily on OSS packages. So how do you find
-                      good ones? Search engines only know what you tell them, and humans
-                      can't keep track of the millions of OSS packages available.</p>
-                    <p>Our approach is to instead look at the dependencies in your
-                      application. We feed these to a machine learning algorithm, which
-                      recommends packages that are tailored to your specific application.</p>
-                </div>
-            </div>
         </div>
     </div>
 </section>
-<!-- change style after get actual contents -->
 <div class="container has-text-centered" style="padding: 200px 0 200px 0;">
   <div class="content is-medium">
     <h2>
