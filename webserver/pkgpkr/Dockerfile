@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.7-slim
 ARG CLIENT_ID
 ARG CLIENT_SECRET
 ARG DB_USER

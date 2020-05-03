@@ -1,6 +1,7 @@
-# Our version of PySpark requires Python 3.7
-FROM python:3.7
+# Image with Java 8, Python 3.7, PySpark, Snappy, and PostgreSQL JDBC
+FROM djsauble/pkgpkr-pipeline:latest
 
+# Read build-time arguments
 ARG DB_USER
 ARG DB_HOST
 ARG DB_PORT
@@ -9,6 +10,7 @@ ARG DB_PASSWORD
 ARG GH_TOKEN
 ARG MONTH
 
+# Set project-specific environment variables
 ENV PYTHONUNBUFFERED 1
 ENV DB_USER $DB_USER
 ENV DB_HOST $DB_HOST
@@ -17,21 +19,12 @@ ENV DB_DATABASE $DB_DATABASE
 ENV DB_PASSWORD $DB_PASSWORD
 ENV GH_TOKEN $GH_TOKEN
 ENV MONTH $MONTH
+ENV PYSPARK_PYTHON /usr/bin/python3.7
 
-RUN mkdir /code
+# Setup code
 WORKDIR /code
-COPY requirements.txt /code/
-
-# Our version of PySpark requires Java 8
-RUN echo "deb http://ftp.us.debian.org/debian sid main" > /etc/apt/sources.list
-RUN apt-get update
-RUN apt-get install openjdk-8-jdk -y
-RUN apt-get install libsnappy-dev -y
-RUN pip install -r requirements.txt
-
 COPY . /code/
+RUN pip3 install -r requirements.txt
 
-RUN wget https://jdbc.postgresql.org/download/postgresql-42.2.11.jar
-
-CMD python3 run_scraper.py && spark-submit --driver-class-path=postgresql-42.2.11.jar --jars=postgresql-42.2.11.jar --driver-memory 12g train_model.py
+CMD python3.7 run_scraper.py && spark-submit --driver-class-path=postgresql-42.2.11.jar --jars=postgresql-42.2.11.jar --driver-memory 12g train_model.py
 
