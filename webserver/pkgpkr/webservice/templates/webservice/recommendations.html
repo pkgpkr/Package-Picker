@@ -107,6 +107,7 @@
                 dom: 'tip',
                 ajax: {
                     url: '{{ recommendation_url }}',
+                    // error message
                     error: function (jqXHR, textStatus, errorThrown) {
                         alert("Dependencies input you provided is not valid, please try it again.");
                         location.replace("/");
