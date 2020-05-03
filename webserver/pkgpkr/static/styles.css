@@ -83,6 +83,14 @@ html {
 body {
   height: 100%;
   overflow: scroll;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar for IE 10+ */
+}
+
+ /* Hide scrollbar for Safari & Chrome */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
 }
 
 .section {
@@ -107,8 +115,10 @@ body {
 }
 
 .modal-card {
-  top: 200px;
-  width: 1280px;
+  top: 20%;
+  width: 80%;
+  max-width: 1280px;
+  min-width: 860px;
 }
 
 #modalTitle {
@@ -121,11 +131,35 @@ body {
 }
 
 .pkgpkr_score_td {
-  width: 16%
+  width: 16%;
+  font-size: 18px;
 }
 
 .other_score_td {
-  width: 11%
+  width: 11%;
+  font-size: 18px;
+}
+
+.pkgpkr_score_img {
+  width: 250px;
+  height: unset !important;
+  max-width: unset !important;
+}
+
+.other_score_img {
+  width: 150px;
+  height: unset !important;
+  max-width: unset !important;
+}
+
+@media only screen and (max-width: 1280px) {
+  .pkgpkr_score_img {
+    width: 180px;
+  }
+
+  .other_score_img {
+    width: 100px;
+  }
 }
 
 .pkgpkrscore_img {
@@ -323,16 +357,9 @@ body {
   background-color: transparent !important;
 }
 
-#left-div {
+#left-div, #right-div {
   float: left;
   padding: 0 10px 0 80px;
-  min-width: 630px;
-}
-
-#right-div {
-  float: left;
-  padding: 0 10px 0 80px;
-  min-width: 630px;
 }
 
 #pick-div-head {
@@ -368,6 +395,10 @@ body {
 
 #recommendation-hyperlink-a {
   float: right;
+}
+
+#center-div {
+  padding: 0 0 200px 0;
 }
 
 

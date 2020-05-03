@@ -105,7 +105,13 @@
             var table = $('#recommend-table').DataTable({
                 "bLengthChange": false,
                 dom: 'tip',
-                ajax: '{{ recommendation_url }}',
+                ajax: {
+                    url: '{{ recommendation_url }}',
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("Dependencies input you provided is not valid, please try it again.");
+                        location.replace("/");
+                    }
+                },
                 scroller: true,
                 order: [[3, "desc"]],
                 "autoWidth": false,
@@ -190,18 +196,18 @@
                      '<span class="tooltiptext">A score of 10 indicates the highest probability that if you will use this package too given your input package. ' +
                      '<a target="_blank" href="/about#collaborative-filtering">See more details</a></span></div></th>' +
 
-                     '<th class="other_score_td">Absolute Trend<br>Score <div class="tooltip"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
-                     '<span class="tooltiptext">A score of 10 indicates this package has seen massive growth in terms of raw number of downloads. ' +
+                     '<th class="other_score_td">Absolute Trend<br>Score <div class="tooltip-left"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
+                     '<span class="tooltiptext-left">A score of 10 indicates this package has seen massive growth in terms of raw number of downloads. ' +
                      '<a target="_blank" href="/about#percent-change-trending">See more details</a></span></div></th>' +
 
                      '<th class="other_score_td">Relative Trend<br>Score <div class="tooltip-left"><i class="fas fa-question-circle" style="opacity:0.5;"></i>' +
                      '<span class="tooltiptext-left">A score of 10 indicates this package has seen massive growth in terms percent change. ' +
                      '<a target="_blank" href="/about#absolute-change-trending">See more details</a></span></div></th><tr>' +
-                     '<td>' + '<img src="/static/images/' + data[3] + '.png" style="width:250px;"></td>' +
-                     '<td>' + '<img src="/static/images/' + data[6] + '.png" style="width:150px;"></td>' +
-                     '<td>' + '<img src="/static/images/' + data[7] + '.png" style="width:150px;"></td>' +
-                     '<td>' + '<img src="/static/images/' + data[4] + '.png" style="width:150px;"></td>' +
-                     '<td>' + '<img src="/static/images/' + data[5] + '.png" style="width:150px;"></td>' +
+                     '<td>' + '<img class="pkgpkr_score_img" src="/static/images/' + data[3] + '.png"></td>' +
+                     '<td>' + '<img class="other_score_img" src="/static/images/' + data[6] + '.png"></td>' +
+                     '<td>' + '<img class="other_score_img" src="/static/images/' + data[7] + '.png"></td>' +
+                     '<td>' + '<img class="other_score_img" src="/static/images/' + data[4] + '.png"></td>' +
+                     '<td>' + '<img class="other_score_img" src="/static/images/' + data[5] + '.png"></td>' +
                      '</tr></tbody></table>'
                 );
                 $('#scoreModal').modal('show');
