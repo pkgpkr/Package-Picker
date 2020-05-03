@@ -15,16 +15,21 @@
 }
 
 #recommendation-button {
-  background-color: #008175;
+  background-color: #00756A;
 }
 
 #recommendation-button:hover {
   opacity: 0.7;
 }
 
+#branch-table {
+  margin-bottom: 0em !important;
+}
+
 #selected-category {
   width: 110px;
 }
+
 
 #category-wrapper {
   display: flex;
@@ -33,6 +38,7 @@
 #category-table {
   float: left;
   width: 60%;
+  margin-bottom: 0em !important;
 }
 
 #category-name {
@@ -52,6 +58,21 @@
   padding-bottom: 12px;
   width: 30%;
   float: right;
+}
+
+@media only screen and (max-width: 1420px) {
+  #category-table {
+    float: left;
+    width: 100%;
+    margin-bottom: 0em !important;
+  }
+
+  .recommendation-filter {
+    margin: auto;
+    padding: 12px 0 12px 14px;
+    width: 30%;
+    float: left;
+  }
 }
 
 html {
@@ -79,6 +100,10 @@ body {
 
 #recommend-table, #repo-table {
   width: 100%;
+}
+
+.language-logo {
+  width: 100px;
 }
 
 .modal-card {
