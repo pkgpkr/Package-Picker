@@ -9,6 +9,8 @@ import psycopg2
 from scraper.month_calculation import month_delta
 from scraper.psql import connect_to_db, insert_to_app, insert_to_dependencies, insert_to_package, update_package_metadata
 from scraper import github
+from scraper import pypi
+from scraper import npm 
 
 assert os.environ.get('GH_TOKEN'), "GH_TOKEN not set"
 
@@ -83,7 +85,7 @@ class TestScraper(unittest.TestCase):
 
     def test_run_query(self):
         """
-        Try fetching a month of data from the GitHub API
+        Try fetching a month of npm data from the GitHub API
         """
 
         distant_past = datetime.date(2011, 1, 1)
@@ -218,6 +220,104 @@ class TestScraper(unittest.TestCase):
         )
         result = cur.fetchall()
         self.assertEqual(result, [(application_id, package_id)])
+
+    def test_get_package_metadata_pypi(self):
+        """
+        Try to update pypi metadata
+        """
+
+        dependency = 'pkg:pypi/django@2'
+        entry = pypi.get_package_metadata(dependency)
+        self.assertIsInstance(entry['monthly_downloads_last_month'], int)
+        self.assertIsInstance(entry['monthly_downloads_a_year_ago'], int)
+        self.assertIsInstance(entry['categories'], type(['Utilities', 'Internet']))
+        self.assertIsInstance(entry['modified'], str)
+
+    def test_run_query_pypi(self):
+        """
+        Try fetching PyPI metadata
+        """
+
+        database = connect_to_db()
+        cur = database.cursor()
+        name = 'pkg:pypi/django@2'
+        package_id = insert_to_package(database, name)
+        database.commit()
+        self.assertIsInstance(package_id, int)
+        pypi.run_query()
+
+        cur.execute(
+            f"SELECT monthly_downloads_last_month FROM packages WHERE name = '{ name }';"
+        )
+        monthly_downloads_last_month = cur.fetchone()[0]
+        self.assertIsInstance(monthly_downloads_last_month, int)
+
+        cur.execute(
+            f"SELECT monthly_downloads_a_year_ago FROM packages WHERE name = '{ name }';"
+        )
+        monthly_downloads_a_year_ago = cur.fetchone()[0]
+        self.assertIsInstance(monthly_downloads_a_year_ago, int)
+
+        cur.execute(
+            f"SELECT categories FROM packages WHERE name = '{ name }';"
+        )
+        categories = cur.fetchone()[0]
+        self.assertIsInstance(categories, type(['Utilities', 'Internet']))
+
+        cur.execute(
+            f"SELECT modified FROM packages WHERE name = '{ name }';"
+        )
+        modified = cur.fetchone()[0]
+        self.assertIsInstance(modified, datetime.datetime)
+
+    def test_get_package_metadata_npm(self):
+        """
+        Try to update npm metadata
+        """
+
+        dependency = 'pkg:npm/react@2'
+        entry = pypi.get_package_metadata(dependency)
+        self.assertIsInstance(entry['monthly_downloads_last_month'], int)
+        self.assertIsInstance(entry['monthly_downloads_a_year_ago'], int)
+        self.assertIsInstance(entry['categories'], type(['Utilities', 'Internet']))
+        self.assertIsInstance(entry['modified'], str)
+
+    def test_run_query_npm(self):
+        """
+        Try fetching npm metadata
+        """
+
+        database = connect_to_db()
+        cur = database.cursor()
+        name = 'pkg:npm/react@3'
+        package_id = insert_to_package(database, name)
+        database.commit()
+        self.assertIsInstance(package_id, int)
+        npm.run_query()
+
+        cur.execute(
+            f"SELECT monthly_downloads_last_month FROM packages WHERE name = '{ name }';"
+        )
+        monthly_downloads_last_month = cur.fetchone()[0]
+        self.assertIsInstance(monthly_downloads_last_month, int)
+
+        cur.execute(
+            f"SELECT monthly_downloads_a_year_ago FROM packages WHERE name = '{ name }';"
+        )
+        monthly_downloads_a_year_ago = cur.fetchone()[0]
+        self.assertIsInstance(monthly_downloads_a_year_ago, int)
+
+        cur.execute(
+            f"SELECT categories FROM packages WHERE name = '{ name }';"
+        )
+        categories = cur.fetchone()[0]
+        self.assertIsInstance(categories, type(['Utilities', 'Internet']))
+
+        cur.execute(
+            f"SELECT modified FROM packages WHERE name = '{ name }';"
+        )
+        modified = cur.fetchone()[0]
+        self.assertIsInstance(modified, datetime.datetime)
 
     @classmethod
     def tearDownClass(cls):
