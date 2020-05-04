@@ -5,16 +5,19 @@ Views for the web service
 import os
 import json
 import urllib.parse
+
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponseServerError
 from django.http import HttpResponse
 from django.urls import reverse
 
 import requests
+from django.views.decorators.csrf import csrf_exempt
 
 from webservice.github_util import parse_dependencies
 from pkgpkr.settings import GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, \
-    GITHUB_OATH_AUTH_PATH, GITHUB_OATH_ACCESS_TOKEN_PATH, JAVASCRIPT, PYTHON, SUPPORTED_LANGUAGES
+    GITHUB_OATH_AUTH_PATH, GITHUB_OATH_ACCESS_TOKEN_PATH, JAVASCRIPT, PYTHON, SUPPORTED_LANGUAGES, \
+    DEFAULT_MAX_RECOMMENDATIONS
 from . import github_util
 from .recommender_service import RecommenderService
 
@@ -126,7 +129,7 @@ def repositories(request):
             repo['language'] = language
 
             # Get dependencies if any,  remember if at least some dependencies found
-            if parse_dependencies(repo['object']['text'], language):
+            if parse_dependencies(repo['object']['text'], language, True):
                 combined_repos[repo['nameWithOwner']] = repo
 
     return render(request, "webservice/repositories.html", {
@@ -156,9 +159,6 @@ def recommendations(request, name):
         if language not in SUPPORTED_LANGUAGES.keys():
             return HttpResponse(f'Demo language {language} not supported', status=404)
 
-        if language == JAVASCRIPT:
-            dependencies = f'{{ "dependencies" : {{ {dependencies} }} }}'
-
         request.session['dependencies'] = dependencies
         request.session['language'] = language
 
@@ -176,8 +176,8 @@ def recommendations(request, name):
 
         # Get branch names and language (ONLY) for the repo, no need for dependencies yet
         _, branch_names, language = github_util.get_dependencies(request.session['github_token'],
-                                                       repo_name,
-                                                       branch_name)
+                                                                 repo_name,
+                                                                 branch_name)
 
     return render(request, "webservice/recommendations.html", {
         'repository_name': repo_name,
@@ -190,7 +190,7 @@ def recommendations(request, name):
 
 def recommendations_json(request, name):
     """
-    Get recommended pacakges for the repo in JSON format
+    Get recommended packages for the repo in JSON format
     :param request:
     :param name: repo name
     :return:
@@ -213,10 +213,10 @@ def recommendations_json(request, name):
         # Fetch branch name out of HTTP GET Param
         branch_name = request.GET.get('branch', default='master')
 
-        # Get depencies for current repo, and branch names for the repo
+        # Get dependencies for current repo, and branch names for the repo
         dependencies, _, _ = github_util.get_dependencies(request.session['github_token'],
-                                                       repo_name,
-                                                       branch_name)
+                                                          repo_name,
+                                                          branch_name)
 
     # Get predictions
     recommended_dependencies = RECOMMENDER_SERVICE.get_recommendations(dependencies)
@@ -228,3 +228,82 @@ def recommendations_json(request, name):
         'data': recommended_dependencies
     }
     return HttpResponse(json.dumps(data), content_type="application/json")
+
+
+@csrf_exempt
+def recommendations_service_api(request):
+    """
+    Returns package recommendations for API POST call without authentication
+    :param request: POST request of application/json type
+    :return:
+    """
+    if request.method == 'POST':
+
+        # Fetch JSON
+        try:
+            json_data = json.loads(request.body)  # request.raw_post_data w/ Django < 1.4
+        except json.JSONDecodeError:
+            return HttpResponseServerError("Could not parse JSON.")
+
+        # Fetch non-optional keys
+        try:
+            dependencies = json_data['dependencies']
+            language = json_data['language'].lower()
+        except KeyError:
+            return HttpResponseServerError('Required JSON keys: `dependencies`, `language`')
+        except AttributeError as e:
+            return HttpResponseServerError(f'Error casting language to lower(): {e}')
+
+        # Assure proper inputs
+        if language == PYTHON and (not isinstance(dependencies, list) or not dependencies):
+            return HttpResponseServerError('Python dependencies must be non-empty and of type LIST (i.e. [...]).')
+
+        if language == JAVASCRIPT and (not isinstance(dependencies, dict) or not dependencies):
+            return HttpResponseServerError('Javascript dependencies must be non-empty and of type DICT (i.e. {...}).')
+
+        # Convert comma separated dependencies into proper expected format
+        if language == PYTHON:
+            dependencies = '\n'.join(dependencies)
+        elif language == JAVASCRIPT:
+            dependencies = ','.join([f'"{k}":"{v}"' for k, v in dependencies.items()])
+        else:
+            return HttpResponseServerError(f"Language not supported: [{language}].")
+
+        # Parse dependencies
+        dependencies = github_util.parse_dependencies(dependencies, language)
+
+        # Get recommendation all or cutoff if limit specified
+        if 'max_recommendations' in json_data:
+            recommended_dependencies = RECOMMENDER_SERVICE.get_recommendations(dependencies,
+                                                                               json_data['max_recommendations'])
+        else:
+            recommended_dependencies = RECOMMENDER_SERVICE.get_recommendations(dependencies)
+
+        # Convert the output tuples into list of dictionaries with names to return back
+        output_recommended_dependencies = []
+        for recommended_dependency in recommended_dependencies:
+            d = dict()
+
+            d['forPackage'] = recommended_dependency[0]
+            d['recommendedPackage'] = recommended_dependency[1]
+            d['url'] = recommended_dependency[2]
+            d['pkgpkrScore'] = recommended_dependency[3]
+            d['absoluteTrendScore'] = recommended_dependency[4]
+            d['relativeTrendScore'] = recommended_dependency[5]
+            d['boundedPopularityScore'] = recommended_dependency[6]
+            d['boundedSimilarityScore'] = recommended_dependency[7]
+            d['categories'] = recommended_dependency[8]
+            d['displayDate'] = recommended_dependency[9]
+            d['monthlyDownloadsLastMonth'] = recommended_dependency[10]
+
+            output_recommended_dependencies.append(d)
+
+        # Setup data to be returned
+        data = {
+            'language': language,
+            'recommended_dependencies': output_recommended_dependencies
+        }
+
+        return HttpResponse(json.dumps(data), content_type="application/json")
+
+    return HttpResponseNotAllowed(['POST'])

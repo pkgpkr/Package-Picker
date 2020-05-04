@@ -215,7 +215,7 @@ def get_dependencies(token, repo_full_name, branch_name):
         # Fetch the text that contains the package.json inner text
         text_response = res.json()['data']['repository']['object']['text']
 
-        all_parsed_dependencies += parse_dependencies(text_response, lang)
+        all_parsed_dependencies += parse_dependencies(text_response, lang, is_from_github=True)
 
         # Keep assigning, to use just ones
         res_to_use_for_brach_fetch = res
@@ -227,24 +227,33 @@ def get_dependencies(token, repo_full_name, branch_name):
     return all_parsed_dependencies, branch_names, language
 
 
-def parse_dependencies(text_response, language):
+def parse_dependencies(dependencies_string, language, is_from_github=False):
     """
     Take a stringified package.json file and extract its dependencies
-    :param text_reponse: A stringified package.json object
+    :param dependencies_string: A stringified package.json object
     :param language: Language for which dependencies are for
     :return:
     """
 
     if language == JAVASCRIPT:
-        # Parse text into JSON to allow further manipulations
-        text_response_json = json.loads(text_response)
 
-        # Return only if dependencies are found
-        if text_response_json.get('dependencies'):
-            # Fetch the dependencies and convert into P-URLs pkg:npm/scope/name@version
-            return javascript_dependencies_name_to_purl(text_response_json['dependencies'])
+        if is_from_github:
+
+            # Parse text into JSON to allow further manipulations
+            dependencies_json = json.loads(dependencies_string)
+
+            # Fetch only if dependencies are found
+            dependencies = None
+            if dependencies_json.get('dependencies'):
+                dependencies = dependencies_json['dependencies']
+        else:
+            dependencies = json.loads(f'{{ {dependencies_string} }}')
+
+        # If the are any, convert into P-URLs pkg:npm/scope/name@version
+        if dependencies:
+            return javascript_dependencies_name_to_purl(dependencies)
 
     elif language == PYTHON:
-        return python_dependencies_name_to_purl(text_response)
+        return python_dependencies_name_to_purl(dependencies_string)
 
     return []

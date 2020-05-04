@@ -163,3 +163,5 @@ PYTHON_DEPENDENCY_FNAME = 'requirements.txt'
 
 SUPPORTED_LANGUAGES = {JAVASCRIPT: {'dependencies_file': JAVASCRIPT_DEPENDENCY_FNAME, 'prefix': 'pkg:npm/'},
                        PYTHON: {'dependencies_file': PYTHON_DEPENDENCY_FNAME, 'prefix': 'pkg:pypi/'}}
+
+DEFAULT_MAX_RECOMMENDATIONS=10000

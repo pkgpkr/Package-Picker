@@ -159,7 +159,9 @@ class TestGithubUtil(TestCase):
         """
         for language, language_attributes in SUPPORTED_LANGUAGES.items():
             # Get dependencies
-            dependencies = parse_dependencies(self.language_to_sampe_file_map[language], language)
+            dependencies = parse_dependencies(dependencies_string=self.language_to_sampe_file_map[language],
+                                              language=language,
+                                              is_from_github=True)
 
             # Assure at least 5 predictions
             self.assertGreaterEqual(len(dependencies), 5)

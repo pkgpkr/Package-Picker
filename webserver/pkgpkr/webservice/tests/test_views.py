@@ -1,14 +1,16 @@
 """
 Test the Django views
 """
-
+import json
 import os
 
 from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import AnonymousUser
 
 from webservice import github_util
-from webservice.views import index, about, login, callback, logout, repositories, recommendations, recommendations_json
+from webservice.views import index, about, login, callback, logout, repositories, recommendations, recommendations_json, \
+    recommendations_service_api
+
 
 class SimpleTest(TestCase):
     """
@@ -22,16 +24,20 @@ class SimpleTest(TestCase):
         """
         self.factory = RequestFactory()
 
-    def prep_not_github_auth_request(self, path):
+    def prep_not_github_auth_request(self, path, instantiate_user_session=True):
         """
         Prepares request without Github authentication in session
         :param path: Path to which request will be sent
+        :param instantiate_user_session: If there's a need to create placeholder for user session
         :return: Request to pass to views function
         """
         # Create an instance of a GET request.
         request = self.factory.get(path)
-        request.user = AnonymousUser()
-        request.session = dict()
+
+        if instantiate_user_session:
+            request.user = AnonymousUser()
+            request.session = dict()
+
         return request
 
     def prep_with_github_auth_request(self, path):
@@ -153,7 +159,6 @@ class SimpleTest(TestCase):
         response = recommendations(request, 'pkgpkr1/DEMO')
         self.assertEqual(response.status_code, 404)
 
-
     def test_demo_input(self):
         # Test success
         request = self.prep_not_github_auth_request('/repositories/DEMO')
@@ -170,7 +175,6 @@ class SimpleTest(TestCase):
         request.method = 'GET'
         response = recommendations(request, 'DEMO')
         self.assertEqual(response.status_code, 302)
-
 
     def test_recommendations_json(self):
         # Test fail
@@ -191,3 +195,93 @@ class SimpleTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIsNotNone(response.content)
         self.assertIn('"current_branch": "test"', response.content.decode())
+
+    def assertion_helper_for_recom_service_api(self, post_data, expected_code, expected_message_substring):
+
+        request = self.factory.post('/api/recommendations',
+                                    data=post_data,
+                                    content_type='application/json')
+
+        response = recommendations_service_api(request)
+        self.assertEqual(response.status_code, expected_code)
+        self.assertIn(expected_message_substring, response.content.decode())
+
+        return response
+
+    def test_recommendations_service_api(self):
+        # Assert Method not found
+        request = self.prep_not_github_auth_request('/api/recommendations', instantiate_user_session=False)
+        request.method = 'GET'
+        response = recommendations_service_api(request)
+        self.assertEqual(response.status_code, 405)
+
+        ### Assert issues ###
+
+
+        # Issue with json, NOTE: there's no way to pass bad JSON, so just changing content_type so it's not there
+        post_data = "THIS IS NOT A JSON!"
+        self.assertion_helper_for_recom_service_api(post_data, 500, 'Could not parse JSON')
+
+        # Issue with missing keys
+        post_data = {}
+        self.assertion_helper_for_recom_service_api(post_data, 500, 'Required JSON key')
+
+        # Issue with language value
+        post_data = {"language": "NOT SUPPORTED VALUE", "dependencies": {"lodash": "v4.17.15"}}
+        self.assertion_helper_for_recom_service_api(post_data, 500, 'Language not supported')
+
+        # Issue with language missing
+        post_data = {"language": None, "dependencies": {"lodash": "v4.17.15"}}
+        self.assertion_helper_for_recom_service_api(post_data, 500, 'Error casting language to lower()')
+
+        # Issue with empty dependencies for Javascript
+        for dependency in [{}, None]:
+            post_data = {"language": "javascript",
+                         "dependencies": dependency}
+
+            self.assertion_helper_for_recom_service_api(post_data, 500,
+                                                        'Javascript dependencies must be non-empty and of type DICT')
+
+        # Issue with empty dependencies for Python
+        for dependency in [[], None]:
+            post_data = {"language": "Python",
+                         "dependencies": dependency}
+
+            self.assertion_helper_for_recom_service_api(post_data, 500,
+                                                        'Python dependencies must be non-empty and of type LIST')
+
+        # Proper Javascript
+        post_data = {"language": "Javascript",
+                     "dependencies": {"lodash": "v4.17.15", "react": "16.13.1",
+                                      "express": "4.17.1", "moment": "2.24.0"}}
+
+        response = self.assertion_helper_for_recom_service_api(post_data, 200, 'recommended_dependencies')
+
+        self.assertGreater(len(json.loads(response.content.decode())['recommended_dependencies']), 10)
+
+        # Proper Python
+        post_data = {"language": "Python",
+                     "dependencies": ["Django==2.1.2", "requests>=2.23.0", "tensorflow==2.1.0"]}
+
+        response = self.assertion_helper_for_recom_service_api(post_data, 200, 'recommended_dependencies')
+
+        self.assertGreater(len(json.loads(response.content.decode())['recommended_dependencies']), 10)
+
+        # Limited Javascript
+        post_data = {"language": "Javascript",
+                     "dependencies": {"lodash": "v4.17.15", "react": "16.13.1",
+                                      "express": "4.17.1", "moment": "2.24.0"},
+                     "max_recommendations": 10}
+
+        response = self.assertion_helper_for_recom_service_api(post_data, 200, 'recommended_dependencies')
+
+        self.assertLessEqual(len(json.loads(response.content.decode())['recommended_dependencies']), 10)
+
+        # Limited Python
+        post_data = {"language": "Python",
+                     "dependencies": ["Django==2.1.2", "requests>=2.23.0", "tensorflow==2.1.0"],
+                     "max_recommendations": 10}
+
+        response = self.assertion_helper_for_recom_service_api(post_data, 200, 'recommended_dependencies')
+
+        self.assertLessEqual(len(json.loads(response.content.decode())['recommended_dependencies']), 10)
