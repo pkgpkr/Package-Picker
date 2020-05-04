@@ -2,4 +2,4 @@
 
 # Intro
 
-Package Picker is a recommendation platform for JavaScript packages. It uses machine learning to predict packages that are frequently used with the packages in your projects. Check it out at [pkgpkr.com](http://pkgpkr.com).
+Package Picker is a recommendation platform for JavaScript packages. It uses machine learning to predict packages that are frequently used with the packages in your projects. Check it out at [pkgpkr.com](http://pkgpkr.com), or our [documentation site](https://pkgpkr.github.io/Package-Picker/).
