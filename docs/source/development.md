@@ -36,11 +36,17 @@ DB_HOST=$DB_HOST \
 DB_PORT=$DB_PORT \
 DB_DATABASE=$DB_DATABASE \
 GH_TOKEN=$GH_TOKEN \
-run coverage run --source scraper,model --omit */__init__.py,*/tests/* -m unittest
-coverage html
-open htmlcov/index.html
-coverage report -m
+coverage3 run --source scraper,model --omit */__init__.py,*/tests/* -m unittest
+coverage3 report -m
 ```
+
+For more reports, may additionally run:
+
+```
+coverage3 html
+```
+
+and then open htmlcov/index.html or any other reports of interest.
 
 ## Web server
 ### Run
@@ -71,7 +77,6 @@ Run this inside the `webserver/pkgpkr` folder.
 
 ```
 python3 manage.py collectstatic
-
 pip3 install -r requirements.txt
 SELENIUM_TEST=1 \
 CLIENT_ID=$CLIENT_ID \
@@ -81,8 +86,14 @@ DB_PORT=$DB_PORT \
 DB_DATABASE=$DB_DATABASE \
 DB_USER=$DB_USER \
 DB_PASSWORD=$DB_PASSWORD \
-coverage run --source webservice/ --omit */__init__.py,*/urls.py,*/apps.py,*/webservice/tests/* ./manage.py test
-coverage html
-open htmlcov/index.html
-coverage report -m
+coverage3 run --source webservice/ --omit */__init__.py,*/urls.py,*/apps.py,*/webservice/tests/* ./manage.py test
+coverage3 report -m
 ```
+
+For more reports, may additionally run:
+
+```
+coverage3 html
+```
+
+and then open htmlcov/index.html or any other reports of interest.
