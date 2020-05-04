@@ -27,7 +27,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         sudo apt-get update
-        sudo apt-get install chromium-chromedriver -y
+        sudo apt-get install chromium-chromedriver=81 -y
+        sudo apt-get install chromium-browser=81 -y
         sudo apt-get install xvfb -y
 
     - name: Run Tests
