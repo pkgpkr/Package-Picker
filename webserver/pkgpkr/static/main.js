@@ -1,4 +1,4 @@
-const SAMPLE_JS_INPUTS = '"lodash": "v4.17.15",\n"react": "16.13.1",\n"express": "4.17.1",\n"moment": "2.24.0"';
+const SAMPLE_JS_INPUTS = '"lodash": "4.17.15",\n"react": "16.13.1",\n"express": "4.17.1",\n"moment": "2.24.0"';
 const SAMPLE_PYTHON_INPUTS = "Django==2.1.2\nrequests>=2.23.0\ntensorflow==2.1.0";
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -21,7 +21,19 @@ $(document).ready(function () {
     var repoTable = $('#repo-table').DataTable({
         "bLengthChange": false,
         dom: 'tip',
-        scroller: true
+        scroller: true,
+        order: [[2, "desc"]],
+        "autoWidth": false,
+        columnDefs : [
+            {
+                "targets": 1,
+                "width": "7em"
+            },
+            {
+                "targets": 2,
+                "width": "10em"
+            }
+        ]
     });
 
     $('.modal-background').click(function () {
@@ -53,7 +65,7 @@ function hideLoadingAnimation() {
 function categoryClick(value) {
     var categoryName = document.getElementById('category-name');
     categoryName.value = value;
-    var categoryLength = 'width: ' + (value.length + 1) * 10 + 'px;'
+    var categoryLength = 'width: ' + (value.length + 1) * 11 + 'px;'
     categoryName.setAttribute("style", categoryLength);
     triggerEvent(categoryName, 'keyup');
     document.getElementById('category-clear').style.visibility = "visible";
