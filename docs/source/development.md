@@ -29,13 +29,17 @@ docker build \
 Run this inside the `pipeline/` folder.
 
 ```
+pip3 install -r requirements.txt
 DB_USER=$DB_USER \
 DB_PASSWORD=$DB_PASSWORD \
 DB_HOST=$DB_HOST \
 DB_PORT=$DB_PORT \
 DB_DATABASE=$DB_DATABASE \
 GH_TOKEN=$GH_TOKEN \
-python3 -m unittest -v
+run coverage run --source scraper,model --omit */__init__.py,*/tests/* -m unittest
+coverage html
+open htmlcov/index.html
+coverage report -m
 ```
 
 ## Web server
@@ -68,6 +72,7 @@ Run this inside the `webserver/pkgpkr` folder.
 ```
 python3 manage.py collectstatic
 
+pip3 install -r requirements.txt
 SELENIUM_TEST=1 \
 CLIENT_ID=$CLIENT_ID \
 CLIENT_SECRET=$CLIENT_SECRET \
@@ -76,5 +81,8 @@ DB_PORT=$DB_PORT \
 DB_DATABASE=$DB_DATABASE \
 DB_USER=$DB_USER \
 DB_PASSWORD=$DB_PASSWORD \
-python3 manage.py test
+coverage run --source webservice/ --omit */__init__.py,*/urls.py,*/apps.py,*/webservice/tests/* ./manage.py test
+coverage html
+open htmlcov/index.html
+coverage report -m
 ```
