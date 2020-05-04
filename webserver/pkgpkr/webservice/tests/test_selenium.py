@@ -102,7 +102,7 @@ class LoginTest(LiveServerTestCase):
 
         # The first element from the repos list
         first_repo_ele = self.driver.find_element_by_xpath(
-            "//tbody/tr[1]/td[1]/a")
+            "//tbody/tr[2]/td[1]/a")
         first_repo_ele.click()
 
         # Wait until the loading animation is disappeared
