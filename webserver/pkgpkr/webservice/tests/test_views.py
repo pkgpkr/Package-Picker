@@ -231,7 +231,7 @@ class SimpleTest(TestCase):
         self.assertion_helper_for_recom_service_api(post_data, 500, 'Language not supported')
 
         # Issue with language missing
-        post_data = {"language": None, "dependencies": {"lodash": "v4.17.15"}}
+        post_data = {"language": None, "dependencies": {"lodash": "4.17.15"}}
         self.assertion_helper_for_recom_service_api(post_data, 500, 'Error casting language to lower()')
 
         # Issue with empty dependencies for Javascript
@@ -252,7 +252,7 @@ class SimpleTest(TestCase):
 
         # Proper Javascript
         post_data = {"language": "Javascript",
-                     "dependencies": {"lodash": "v4.17.15", "react": "16.13.1",
+                     "dependencies": {"lodash": "4.17.15", "react": "16.13.1",
                                       "express": "4.17.1", "moment": "2.24.0"}}
 
         response = self.assertion_helper_for_recom_service_api(post_data, 200, 'recommended_dependencies')
@@ -269,7 +269,7 @@ class SimpleTest(TestCase):
 
         # Limited Javascript
         post_data = {"language": "Javascript",
-                     "dependencies": {"lodash": "v4.17.15", "react": "16.13.1",
+                     "dependencies": {"lodash": "4.17.15", "react": "16.13.1",
                                       "express": "4.17.1", "moment": "2.24.0"},
                      "max_recommendations": 10}
 
