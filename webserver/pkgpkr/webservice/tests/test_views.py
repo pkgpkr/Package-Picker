@@ -227,7 +227,7 @@ class SimpleTest(TestCase):
         self.assertion_helper_for_recom_service_api(post_data, 500, 'Required JSON key')
 
         # Issue with language value
-        post_data = {"language": "NOT SUPPORTED VALUE", "dependencies": {"lodash": "v4.17.15"}}
+        post_data = {"language": "NOT SUPPORTED VALUE", "dependencies": {}}
         self.assertion_helper_for_recom_service_api(post_data, 500, 'Language not supported')
 
         # Issue with language missing

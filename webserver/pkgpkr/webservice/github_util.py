@@ -232,6 +232,7 @@ def parse_dependencies(dependencies_string, language, is_from_github=False):
     Take a stringified package.json file and extract its dependencies
     :param dependencies_string: A stringified package.json object
     :param language: Language for which dependencies are for
+    :param is_from_github: Indicates if dependencies came for GitHub API (or manual/api call)
     :return:
     """
 
