@@ -36,7 +36,7 @@ DB_HOST=$DB_HOST \
 DB_PORT=$DB_PORT \
 DB_DATABASE=$DB_DATABASE \
 GH_TOKEN=$GH_TOKEN \
-coverage3 run --source scraper,model --omit */__init__.py,*/tests/* -m unittest
+coverage3 run --source scraper,model --omit "*/__init__.py,*/tests/*" -m unittest
 coverage3 report -m
 ```
 
