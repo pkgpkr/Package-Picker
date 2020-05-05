@@ -197,15 +197,22 @@ completes. It will automatically scrape data and train the model, and quit when 
 <div class="section" id="test">
 <h3>Test<a class="headerlink" href="#test" title="Permalink to this headline">¶</a></h3>
 <p>Run this inside the <code class="docutils literal notranslate"><span class="pre">pipeline/</span></code> folder.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>DB_USER=$DB_USER \
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>pip3 install -r requirements.txt
+DB_USER=$DB_USER \
 DB_PASSWORD=$DB_PASSWORD \
 DB_HOST=$DB_HOST \
 DB_PORT=$DB_PORT \
 DB_DATABASE=$DB_DATABASE \
 GH_TOKEN=$GH_TOKEN \
-python3 -m unittest -v
+coverage3 run --source scraper,model --omit &quot;*/__init__.py,*/tests/*&quot; -m unittest
+coverage3 report -m
 </pre></div>
 </div>
+<p>For more reports, may additionally run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">coverage3</span> <span class="n">html</span>
+</pre></div>
+</div>
+<p>and then open htmlcov/index.html or any other reports of interest.</p>
 </div>
 </div>
 <div class="section" id="web-server">
@@ -239,7 +246,7 @@ docker build \
 <h3>Test<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>Run this inside the <code class="docutils literal notranslate"><span class="pre">webserver/pkgpkr</span></code> folder.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>python3 manage.py collectstatic
-
+pip3 install -r requirements.txt
 SELENIUM_TEST=1 \
 CLIENT_ID=$CLIENT_ID \
 CLIENT_SECRET=$CLIENT_SECRET \
@@ -248,9 +255,15 @@ DB_PORT=$DB_PORT \
 DB_DATABASE=$DB_DATABASE \
 DB_USER=$DB_USER \
 DB_PASSWORD=$DB_PASSWORD \
-python3 manage.py test
+coverage3 run --source webservice/ --omit &quot;*/__init__.py,*/urls.py,*/apps.py,*/webservice/tests/*&quot; ./manage.py test
+coverage3 report -m
 </pre></div>
 </div>
+<p>For more reports, may additionally run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">coverage3</span> <span class="n">html</span>
+</pre></div>
+</div>
+<p>and then open htmlcov/index.html or any other reports of interest.</p>
 </div>
 </div>
 </div>
