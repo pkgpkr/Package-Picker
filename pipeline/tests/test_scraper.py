@@ -14,6 +14,77 @@ from scraper import npm
 
 assert os.environ.get('GH_TOKEN'), "GH_TOKEN not set"
 
+json_result_js = """
+{
+  "data": {
+    "search": {
+      "edges": [
+        {
+          "node": {
+            "nameWithOwner": "wuhan2020/wuhan2020",
+            "url": "https://github.com/wuhan2020/wuhan2020",
+            "watchers": {
+              "totalCount": 255
+            },
+            "object": null
+          },
+          "cursor": "Y3Vyc29yOjE="
+        },
+        {
+          "node": {
+            "nameWithOwner": "excalidraw/excalidraw",
+            "url": "https://github.com/excalidraw/excalidraw",
+            "watchers": {
+              "totalCount": 99
+            },
+            "object": {
+              "text": "{\n  \"browserslist\": {\n    \"production\": [\n      \">0.2%\",\n      \"not dead\",\n      \"not ie <= 11\",\n      \"not op_mini all\",\n      \"not safari < 12\",\n      \"not kaios <= 2.5\",\n      \"not edge < 79\",\n      \"not chrome < 70\",\n      \"not and_uc < 13\",\n      \"not samsung < 10\"\n    ],\n    \"development\": [\n      \"last 1 chrome version\",\n      \"last 1 firefox version\",\n      \"last 1 safari version\"\n    ]\n  },\n  \"dependencies\": {\n    \"@sentry/browser\": \"5.15.5\",\n    \"@sentry/integrations\": \"5.15.5\",\n    \"browser-nativefs\": \"0.7.1\",\n    \"i18next-browser-languagedetector\": \"4.1.1\",\n    \"nanoid\": \"2.1.11\",\n    \"open-color\": \"1.7.0\",\n    \"points-on-curve\": \"0.2.0\",\n    \"pwacompat\": \"2.0.11\",\n    \"react\": \"16.13.1\",\n    \"react-dom\": \"16.13.1\",\n    \"react-scripts\": \"3.4.1\",\n    \"roughjs\": \"4.2.3\",\n    \"socket.io-client\": \"2.3.0\",\n    \"node-sass\": \"4.14.0\",\n    \"typescript\": \"3.8.3\",\n    \"@types/jest\": \"25.2.1\",\n    \"@types/nanoid\": \"2.1.0\",\n    \"@types/react\": \"16.9.34\",\n    \"@types/react-dom\": \"16.9.6\",\n    \"@types/socket.io-client\": \"1.4.32\",\n    \"@testing-library/jest-dom\": \"5.5.0\",\n    \"@testing-library/react\": \"10.0.3\"\n  },\n  \"devDependencies\": {\n    \"asar\": \"3.0.3\",\n    \"eslint\": \"6.8.0\",\n    \"eslint-config-prettier\": \"6.11.0\",\n    \"eslint-plugin-prettier\": \"3.1.3\",\n    \"husky\": \"4.2.5\",\n    \"jest-canvas-mock\": \"2.2.0\",\n    \"lint-staged\": \"10.1.7\",\n    \"pepjs\": \"0.5.2\",\n    \"prettier\": \"2.0.5\",\n    \"rewire\": \"5.0.0\"\n  },\n  \"engines\": {\n    \"node\": \">=12.0.0\"\n  },\n  \"homepage\": \".\",\n  \"husky\": {\n    \"hooks\": {\n      \"pre-commit\": \"lint-staged\"\n    }\n  },\n  \"jest\": {\n    \"transformIgnorePatterns\": [\n      \"node_modules/(?!(roughjs|points-on-curve|path-data-parser|points-on-path|browser-nativefs)/)\"\n    ]\n  },\n  \"private\": true,\n  \"scripts\": {\n    \"build\": \"npm run build:app && npm run build:zip\",\n    \"build-node\": \"node ./scripts/build-node.js\",\n    \"build:app\": \"REACT_APP_GIT_SHA=$NOW_GITHUB_COMMIT_SHA react-scripts build\",\n    \"build:zip\": \"node ./scripts/build-version.js\",\n    \"eject\": \"react-scripts eject\",\n    \"fix\": \"npm run fix:other && npm run fix:code\",\n    \"fix:code\": \"npm run test:code -- --fix\",\n    \"fix:other\": \"npm run prettier -- --write\",\n    \"prettier\": \"prettier \\\"**/*.{css,scss,json,md,html,yml}\\\" --ignore-path=.eslintignore\",\n    \"start\": \"react-scripts start\",\n    \"test\": \"npm run test:app\",\n    \"test:all\": \"npm run test:typecheck && npm run test:code && npm run test:other && npm run test:app -- --watchAll=false\",\n    \"test:update\": \"npm run test:app -- --updateSnapshot --watchAll=false\",\n    \"test:app\": \"react-scripts test --env=jsdom --passWithNoTests\",\n    \"test:code\": \"eslint --max-warnings=0 --ignore-path .gitignore --ext .js,.ts,.tsx .\",\n    \"test:debug\": \"react-scripts --inspect-brk test --runInBand --no-cache\",\n    \"test:other\": \"npm run prettier -- --list-different\",\n    \"test:typecheck\": \"tsc\"\n  }\n}\n"
+            }
+          },
+          "cursor": "Y3Vyc29yOjI="
+        }],
+      "repositoryCount": 2
+    }
+  }
+}
+"""
+
+json_result_python = """
+{
+  "data": {
+    "search": {
+      "edges": [
+        {
+          "node": {
+            "nameWithOwner": "CorentinJ/Real-Time-Voice-Cloning",
+            "url": "https://github.com/CorentinJ/Real-Time-Voice-Cloning",
+            "watchers": {
+              "totalCount": 530
+            },
+            "object": {
+              "text": "tensorflow-gpu>=1.10.0,<=1.14.0\numap-learn\nvisdom\nwebrtcvad\nlibrosa>=0.5.1\nmatplotlib>=2.0.2\nnumpy>=1.14.0\nscipy>=1.0.0\ntqdm\nsounddevice\nUnidecode\ninflect\nPyQt5\nmultiprocess\nnumba\n"
+            }
+          },
+          "cursor": "Y3Vyc29yOjE="
+        },
+        {
+          "node": {
+            "nameWithOwner": "seemoo-lab/opendrop",
+            "url": "https://github.com/seemoo-lab/opendrop",
+            "watchers": {
+              "totalCount": 53
+            },
+            "object": null
+          },
+          "cursor": "Y3Vyc29yOjI="
+        }
+      ],
+      "repositoryCount": 381
+    }
+  }
+}
+"""
+
 class TestScraper(unittest.TestCase):
     """
     Tests for the ML pipeline scraper
@@ -83,7 +154,7 @@ class TestScraper(unittest.TestCase):
         self.assertEqual(month_delta(november, 8), datetime.date(2018, 2, 28))
 
 
-    def test_run_query(self):
+    def test_run_query_github(self):
         """
         Try fetching a month of npm data from the GitHub API
         """
@@ -92,7 +163,7 @@ class TestScraper(unittest.TestCase):
         github.run_query(distant_past)
 
 
-    def test_run_query_once(self):
+    def test_run_query_once_github(self):
         """
         Try fetching data from the GitHub API
         """
@@ -108,6 +179,47 @@ class TestScraper(unittest.TestCase):
                 self.assertIsNotNone(result['data']['search']['edges'])
             except ValueError:
                 self.assertIsNone(result)
+
+    
+    def write_db_github(self):
+        """
+        Try writing to the database
+        """
+
+        # case for JS
+        database = connect_to_db()
+        github.write_db(database, json_result_js, 'JavaScript')
+        cur = database.cursor()
+
+        cur.execute(
+            f"SELECT id FROM applications WHERE name = 'excalidraw';"
+        )
+        application_id = cur.fetchone()[0]
+        self.assertIsInstance(application_id, int)
+
+        cur.execute(
+            f"SELECT id FROM packages WHERE name = 'pkg:npm/react@16';"
+        )
+        package_id = cur.fetchone()[0]
+        self.assertIsInstance(package_id, int)
+
+        # case for python
+        database = connect_to_db()
+        github.write_db(database, json_result_python, 'Python')
+        cur = database.cursor()
+
+        cur.execute(
+            f"SELECT id FROM applications WHERE name = 'Real-Time-Voice-Cloning';"
+        )
+        application_id = cur.fetchone()[0]
+        self.assertIsInstance(application_id, int)
+
+        cur.execute(
+            f"SELECT id FROM packages WHERE name = 'pkg:pypi/numpy@1';"
+        )
+        package_id = cur.fetchone()[0]
+        self.assertIsInstance(package_id, int)
+
 
     def test_connect_to_db(self):
         """
