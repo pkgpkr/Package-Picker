@@ -86,7 +86,7 @@ DB_PORT=$DB_PORT \
 DB_DATABASE=$DB_DATABASE \
 DB_USER=$DB_USER \
 DB_PASSWORD=$DB_PASSWORD \
-coverage3 run --source webservice/ --omit */__init__.py,*/urls.py,*/apps.py,*/webservice/tests/* ./manage.py test
+coverage3 run --source webservice/ --omit "*/__init__.py,*/urls.py,*/apps.py,*/webservice/tests/*" ./manage.py test
 coverage3 report -m
 ```
 
