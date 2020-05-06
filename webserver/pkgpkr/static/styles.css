@@ -500,3 +500,8 @@ body {
 table.dataTable tbody td {
   vertical-align: center;
 }
+
+.fa-external-link-alt {
+  opacity: 0.8;
+  font-size: 0.8em;
+}
