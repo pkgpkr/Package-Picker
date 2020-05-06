@@ -9,32 +9,31 @@ TODO About scraper
 ```eval_rst
 month_calculation
 ----------------------
-.. automodule:: month_calculation
+.. automodule:: scraper.month_calculation
    :members:
    :undoc-members:
 
-
-github_query
+github
 ----------------------
- .. automodule:: github_query
+ .. automodule:: scraper.github
     :members:
     :undoc-members:
 
-npm_query
+npm
 ----------------------
- .. automodule:: npm_query
+ .. automodule:: scraper.npm
     :members:
     :undoc-members:
 
 psql
 ----------------------
- .. automodule:: psql
+ .. automodule:: scraper.psql
     :members:
     :undoc-members:
 
-pypi_query
+pypi
 ----------------------
- .. automodule:: pypi_query
+ .. automodule:: scraper.pypi
     :members:
     :undoc-members:
 ```
@@ -43,11 +42,16 @@ pypi_query
 TODO About model
 
 
-```
-TODO this may need to be eval_rst, but no use
-generate
+```eval_rst
+database
 ----------------------
- .. automodule:: generate
+ .. automodule:: model.database
+    :members:
+    :undoc-members:
+
+model
+----------------------
+ .. automodule:: model.model
     :members:
     :undoc-members:
 ```
