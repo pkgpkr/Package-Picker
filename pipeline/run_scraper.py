@@ -7,6 +7,7 @@ import os
 from scraper.github import run_query
 import scraper.npm as npm
 import scraper.pypi as pypi
+import scraper.conda as conda
 
 
 def main():
