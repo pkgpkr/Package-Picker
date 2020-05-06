@@ -97,3 +97,35 @@ coverage3 html
 ```
 
 and then open htmlcov/index.html or any other reports of interest.
+
+## Docs
+
+To build the docs, first install Sphinx. If on macOS, you can install via brew, so long as you add sphinx-doc to
+your path afterwards:
+
+```
+brew install sphinx-doc
+echo 'export PATH="/usr/local/opt/sphinx-doc/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+Then switch to the `docs/` directory and build the docs. You may need to create a virtual environment first.
+
+```
+python3 -m venv docs_env
+pip install -r requirements.txt
+make html
+```
+
+Once the docs have built, you can view them (on macOS) with the following command.
+
+```
+open build/html/index.html
+```
+
+If you created a virtual environment, deactivate it and optionally delete the environment folder when done.
+
+```
+deactivate
+rm -rf docs_env
+```
