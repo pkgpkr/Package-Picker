@@ -7,7 +7,7 @@ import json
 import urllib.parse
 
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponseServerError
+from django.http import HttpResponseRedirect, HttpResponseNotAllowed, HttpResponseBadRequest
 from django.http import HttpResponse
 from django.urls import reverse
 
@@ -28,7 +28,15 @@ DEMO_REPO_INPUT_NAME = 'DEMO'
 
 
 def index(request):
-    """ Return landing page"""
+    """
+    Return landing page
+
+    arguments:
+        :request: GET HTTP request
+
+    returns:
+        Rendered home (index) page
+    """
     return render(request,
                   "webservice/index.html",
                   {'demo_input_repo_name': DEMO_REPO_INPUT_NAME,
@@ -36,12 +44,27 @@ def index(request):
 
 
 def about(request):
-    """ Return about info"""
+    """
+    Return about info
+
+    arguments:
+        :request: GET HTTP request
+
+    returns:
+        Rendered about page
+    """
     return render(request, "webservice/about.html")
 
 
 def login(request):
-    """ Log user in using Github OAuth"""
+    """ Log user in using Github OAuth
+
+    arguments:
+        :request: GET HTTP request
+
+    returns:
+        Redirects to index
+    """
 
     # Create keys if not yet there!
     if not request.session.get('github_token'):
@@ -61,8 +84,15 @@ def login(request):
 
 
 def callback(request):
-    """ Github redirect here, then retrieves token for API """
+    """
+    Github redirect here, then retrieves token for API
 
+    arguments:
+        :request: GET HTTP request
+
+    returns:
+        Redirects to  index
+    """
     # Get code supplied by github
     code = request.GET.get('code')
 
@@ -88,7 +118,16 @@ def callback(request):
 
 
 def logout(request):
-    """ Logs user out but keep authorization ot OAuth Github"""
+    """
+    Logs user out but keep authorization ot OAuth Github
+
+    arguments:
+        :request: GET HTTP request
+
+    returns:
+        Redirects to index
+    """
+
     # Flush the session
     request.session['github_token'] = None
     request.session['github_info'] = None
@@ -97,7 +136,16 @@ def logout(request):
 
 
 def repositories(request):
-    """ Get full list (up to 100) for the current user """
+    """
+    Get full list (up to 100) for the current user
+
+    arguments:
+        :request: GET HTTP request
+
+    returns:
+        Rendered repositories page
+    """
+
     # Assure login
     if not request.session.get('github_token'):
         return HttpResponseRedirect(reverse("index"))
@@ -142,7 +190,7 @@ def recommendations(request, name):
     Get recommended packages for the repo
 
     arguments:
-        :request:
+        :request: GET/POST HTTP request
         :name: repo name
 
     returns:
@@ -197,7 +245,7 @@ def recommendations_json(request, name):
     Get recommended packages for the repo in JSON format
 
     arguments:
-        :request:
+        :request: GET HTTP request
         :name: repo name
 
     returns:
@@ -255,31 +303,31 @@ def recommendations_service_api(request):
         try:
             json_data = json.loads(request.body)  # request.raw_post_data w/ Django < 1.4
         except json.JSONDecodeError:
-            return HttpResponseServerError("Could not parse JSON.")
+            return HttpResponseBadRequest("Could not parse JSON.")
 
         # Fetch non-optional keys
         try:
             dependencies = json_data['dependencies']
             language = json_data['language'].lower()
         except KeyError:
-            return HttpResponseServerError('Required JSON keys: `dependencies`, `language`')
+            return HttpResponseBadRequest('Required JSON keys: `dependencies`, `language`')
         except AttributeError as e:
-            return HttpResponseServerError(f'Error casting language to lower(): {e}')
+            return HttpResponseBadRequest(f'Error casting language to lower(): {e}')
 
         # Assure proper inputs
-        if language == PYTHON and (not isinstance(dependencies, list) or not dependencies):
-            return HttpResponseServerError('Python dependencies must be non-empty and of type LIST (i.e. [...]).')
-
-        if language == JAVASCRIPT and (not isinstance(dependencies, dict) or not dependencies):
-            return HttpResponseServerError('Javascript dependencies must be non-empty and of type DICT (i.e. {...}).')
+        if not isinstance(dependencies, list) or not dependencies:
+            return HttpResponseBadRequest(f'{language.capitalize()} dependencies must be non-empty and of type LIST (i.e. [...]).')
 
         # Convert comma separated dependencies into proper expected format
         if language == PYTHON:
             dependencies = '\n'.join(dependencies)
         elif language == JAVASCRIPT:
-            dependencies = ','.join([f'"{k}":"{v}"' for k, v in dependencies.items()])
+            # Converts e.g ["lodash:4.17.15","react:16.13.1"] -> '"lodash":"4.17.15","react":"16.13.1"'
+            formatted_dependencies_list = ['"' + dep.replace(":", '":"') + '"' for dep in dependencies]
+            dependencies = ','.join(formatted_dependencies_list)
+
         else:
-            return HttpResponseServerError(f"Language not supported: [{language}].")
+            return HttpResponseBadRequest(f"Language not supported: [{language}].")
 
         # Parse dependencies
         dependencies = github_util.parse_dependencies(dependencies, language)

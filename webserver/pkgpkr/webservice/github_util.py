@@ -117,6 +117,9 @@ def javascript_dependencies_name_to_purl(dependencies):
 
     arguments:
         :dependencies: Array of name@version like names
+
+    returns:
+        list of dependencies in P-URL format
     """
 
     purl_dependencies = []
@@ -136,6 +139,9 @@ def python_dependencies_name_to_purl(dependencies):
 
     arguments:
         :dependencies: List of name straight from requirements text file
+
+    returns:
+        list of dependencies in P-URL format
     """
 
     purl_dependencies = []
