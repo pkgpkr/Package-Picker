@@ -250,6 +250,7 @@ body {
   text-decoration: underline;
 }
 
+.tooltip .tooltiptext a:hover,
 .tooltip-left .tooltiptext-left a:hover {
   color: #ffffff;
 }
