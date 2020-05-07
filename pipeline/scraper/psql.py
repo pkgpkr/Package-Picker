@@ -87,7 +87,6 @@ def insert_to_package(database, name):
     """
     Upsert a row into the packages table
 
-
     arguments:
         :database: database name
         :name: package name
