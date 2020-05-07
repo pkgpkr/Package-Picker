@@ -85,7 +85,7 @@ def login(request):
 
 def callback(request):
     """
-    Github redirect here, then retrieves token for API
+    GitHub redirect here, then retrieves token for API
 
     arguments:
         :request: GET HTTP request
