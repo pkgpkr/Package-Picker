@@ -132,7 +132,7 @@ def run_query_once(node_per_loop, daily_search_str, cursor, language):
 
     arguments:
         :node_per_loop: number of nodes in batch
-        :daily_search_str: Github v4 API search string, e.g specify start/end
+        :daily_search_str: GitHub v4 API search string, e.g specify start/end
         :cursor: DB cursor
         :language: ecosystem language
 
