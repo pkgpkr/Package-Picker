@@ -114,8 +114,8 @@ def update_package_metadata(database,
     arguments:
         :database: database name
         :name: package name
-        :monthly_downloads_last_month: pacackage donwloads last month
-        :monthly_downloads_a_year_ago: pacackage donwloads a year ago
+        :monthly_downloads_last_month: package downloads last month
+        :monthly_downloads_a_year_ago: package downloads a year ago
         :categories: package categories
         :modified: when was package last modified
     """
