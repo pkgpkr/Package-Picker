@@ -201,15 +201,6 @@ body {
   font-size: 14px;
 }
 
-.tooltip .tooltiptext a {
-  color: #cccccc;
-  text-decoration: underline;
-}
-
-.tooltip .tooltiptext a:hover {
-  color: #ffffff;
-}
-
 .tooltip .tooltiptext::after {
   content: "";
   position: absolute;
@@ -242,6 +233,17 @@ body {
   transition: opacity 0.3s;
   font-weight: normal;
   font-size: 14px;
+}
+
+.tooltip .tooltiptext a,
+.tooltip-left .tooltiptext-left a {
+  color: #cccccc;
+  text-decoration: underline;
+}
+
+.tooltip .tooltiptext a:hover,
+.tooltip-left .tooltiptext-left a:hover {
+  color: #ffffff;
 }
 
 .tooltip-left .tooltiptext-left::after {
