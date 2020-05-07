@@ -20,16 +20,22 @@ class SimpleTest(TestCase):
     def setUp(self):
         """
         Preapares request factory for every test
-        :return: Nothing
+
+        returns:
+            A RequestFactory
         """
         self.factory = RequestFactory()
 
     def prep_not_github_auth_request(self, path, instantiate_user_session=True):
         """
         Prepares request without Github authentication in session
-        :param path: Path to which request will be sent
-        :param instantiate_user_session: If there's a need to create placeholder for user session
-        :return: Request to pass to views function
+
+        arguments:
+            :path: Path to which request will be sent
+            :instantiate_user_session: If there's a need to create placeholder for user session
+
+        returns:
+            Request to pass to views function
         """
         # Create an instance of a GET request.
         request = self.factory.get(path)
@@ -43,8 +49,12 @@ class SimpleTest(TestCase):
     def prep_with_github_auth_request(self, path):
         """
         Prepares request with Github authentication in session already
-        :param path: Path to which request will be sent
-        :return: Request to pass to views function
+
+        arguments:
+            :path: Path to which request will be sent
+
+        returns:
+            Request to pass to views function
         """
         # Create an instance of a GET request.
         request = self.factory.get(path)
@@ -59,10 +69,14 @@ class SimpleTest(TestCase):
     def call_method_and_assert(self, request, method, exp_status_code=200):
         """
         Calls method supplied and evaluate response code
-        :param request: Request object prepared for this evaluation
-        :param method: Method in views to call
-        :param exp_status_code: Expected status code
-        :return: Response, in case more evaluation are needed (e.g. on Url)
+
+        arguments:
+            :request: Request object prepared for this evaluation
+            :method: Method in views to call
+            :exp_status_code: Expected status code
+
+        returns:
+            Response, in case more evaluation are needed (e.g. on Url)
         """
         response = method(request)
         self.assertEqual(response.status_code, exp_status_code)

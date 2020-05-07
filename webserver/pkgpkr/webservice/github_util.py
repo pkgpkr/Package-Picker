@@ -13,8 +13,12 @@ from pkgpkr.settings import GITHUB_GRAPHQL_URL
 def get_user_info(token):
     """
     Get the user info associated with the given GitHub token
-    :param token: GitHub API token
-    :return:
+
+    arguments:
+        :token: GitHub API token
+
+    returns:
+        JSON object with user info
     """
 
     header = {'Authorization': 'Bearer ' + token}
@@ -26,8 +30,12 @@ def get_user_info(token):
 def is_user_authenticated(token):
     """
     Determine if the user is authenticated
-    :param token: GitHub API token
-    :return:
+
+    arguments:
+        :token: GitHub API token
+
+    returns:
+        Boolean flag that is True if the user is authenticated
     """
 
     user_info = get_user_info(token)
@@ -40,8 +48,12 @@ def is_user_authenticated(token):
 def get_user_name(token):
     """
     Retrieves name of the authenticated GitHub user
-    :param token: GitHub API token
-    :return:
+
+    arguments:
+        :token: GitHub API token
+
+    returns:
+        Get the name of the user who is authenticated
     """
 
     # Call method to get full info
@@ -52,8 +64,12 @@ def get_user_name(token):
 def get_repositories(token):
     """
     Get the repositories associated with the given GitHub token
-    :param token: GitHub API token
-    :return:
+
+    arguments:
+        :token: GitHub API token
+
+    returns:
+        Get the repositories associated with a user's token
     """
 
     user_name = get_user_name(token)
@@ -98,7 +114,9 @@ def get_repositories(token):
 def javascript_dependencies_name_to_purl(dependencies):
     """
     Convert Javascript dependency names to the universal Package URL (PURL) format
-    :param dependencies: Array of name@version like names
+
+    arguments:
+        :dependencies: Array of name@version like names
     """
 
     purl_dependencies = []
@@ -115,7 +133,9 @@ def javascript_dependencies_name_to_purl(dependencies):
 def python_dependencies_name_to_purl(dependencies):
     """
     Convert Python dependencies names to the universal Package URL (PURL) format
-    :param dependencies: List of name straight from requirements text file
+
+    arguments:
+        :dependencies: List of name straight from requirements text file
     """
 
     purl_dependencies = []
@@ -157,10 +177,14 @@ def python_dependencies_name_to_purl(dependencies):
 def get_dependencies(token, repo_full_name, branch_name):
     """
     Gets repository info for a specific repo (from package.json)
-    :param token: GitHub token for auth
-    :param repo_full_name: repo name with user name
-    :param branch_name: specific branch to fetch dependencies for, or MASTER (default)
-    :return: dependencies and all branch names
+
+    arguments:
+        :token: GitHub token for auth
+        :repo_full_name: repo name with user name
+        :branch_name: specific branch to fetch dependencies for, or MASTER (default)
+
+    returns:
+        dependencies and all branch names
     """
 
     # Split qualified repo name into user nae and repo name
@@ -230,10 +254,14 @@ def get_dependencies(token, repo_full_name, branch_name):
 def parse_dependencies(dependencies_string, language, is_from_github=False):
     """
     Take a stringified package.json file and extract its dependencies
-    :param dependencies_string: A stringified package.json object
-    :param language: Language for which dependencies are for
-    :param is_from_github: Indicates if dependencies came for GitHub API (or manual/api call)
-    :return:
+    
+    arguments:
+        :dependencies_string: A stringified package.json object
+        :language: Language for which dependencies are for
+        :is_from_github: Indicates if dependencies came for GitHub API (or manual/api call)
+
+    returns:
+        A list of npm dependencies
     """
 
     if language == JAVASCRIPT:

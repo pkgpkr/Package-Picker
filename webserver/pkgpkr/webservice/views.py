@@ -139,10 +139,14 @@ def repositories(request):
 
 def recommendations(request, name):
     """
-    Get recomended pacakges for the repo
-    :param request:
-    :param name: repo name
-    :return:
+    Get recommended packages for the repo
+
+    arguments:
+        :request:
+        :name: repo name
+
+    returns:
+        Rendered recommendation page
     """
 
     # Convert encoded URL back to string e.g. hello%2world -> hello/world
@@ -191,9 +195,13 @@ def recommendations(request, name):
 def recommendations_json(request, name):
     """
     Get recommended packages for the repo in JSON format
-    :param request:
-    :param name: repo name
-    :return:
+
+    arguments:
+        :request:
+        :name: repo name
+
+    returns:
+        JSON object with recommendations
     """
 
     # Convert encoded URL back to string e.g. hello%2world -> hello/world
@@ -234,8 +242,12 @@ def recommendations_json(request, name):
 def recommendations_service_api(request):
     """
     Returns package recommendations for API POST call without authentication
-    :param request: POST request of application/json type
-    :return:
+
+    arguments:
+        :request: POST request of application/json type
+
+    returns:
+        list of package recommendations
     """
     if request.method == 'POST':
 

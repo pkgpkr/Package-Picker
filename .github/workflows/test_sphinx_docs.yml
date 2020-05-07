@@ -19,12 +19,13 @@ jobs:
     - uses: actions/checkout@v2
 
     # Build Sphinx
-    - name: Sphinx Build
+    - name: Sphinx build
       uses: ammaraskar/sphinx-action@0.4
       with:
+        python-version: 3.7
         # The folder containing your sphinx docs.
         docs-folder: docs/
         # The command used to build your documentation.
         build-command: make html
         # Run before the build command, you can use this to install system level dependencies, for example with "apt-get update -y && apt-get install -y perl"
-        #pre-build-command: # optional
+        pre-build-command: apt-get update -y && apt-get install -y gcc
