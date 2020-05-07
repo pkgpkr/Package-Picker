@@ -87,10 +87,7 @@ def get_package_metadata(dependency):
 
     try:
         entry['modified'] = json_result['urls'][0]['upload_time_iso_8601']
-    except KeyError as exc:
-        print(f"Could not fetch modified date for {dependency_name}: {exc}")
-        entry['modified'] = None
-    except IndexError as exc:
+    except (KeyError, IndexError) as exc:
         print(f"Could not fetch modified date for {dependency_name}: {exc}")
         entry['modified'] = None
     print(f"pypi entry: {entry}")
