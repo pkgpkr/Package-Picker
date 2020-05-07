@@ -43,7 +43,7 @@ class RecommenderService:
 
         arguments:
             :dependencies: list of dependencies (P-URLs)
-            :max_recommendations: limit how may recomendations to fetch
+            :max_recommendations: limit how many recommendations to fetch
 
         returns:
             list of tuples where each tuple contains metadata about recommended dependencies
