@@ -323,7 +323,7 @@ def recommendations_service_api(request):
             dependencies = '\n'.join(dependencies)
         elif language == JAVASCRIPT:
             # Converts e.g ["lodash:4.17.15","react:16.13.1"] -> '"lodash":"4.17.15","react":"16.13.1"'
-            formatted_dependencies_list = ['"' + dep.replace(":", '":"') + '"' for dep in dependencies]
+            formatted_dependencies_list = ['"' + dep.replace("@", '":"') + '"' for dep in dependencies]
             dependencies = ','.join(formatted_dependencies_list)
 
         else:
