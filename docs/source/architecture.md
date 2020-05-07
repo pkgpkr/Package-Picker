@@ -41,8 +41,6 @@ pypi
 ```
 
 ### Recommender model
-TODO About model
-
 
 ```eval_rst
 database
