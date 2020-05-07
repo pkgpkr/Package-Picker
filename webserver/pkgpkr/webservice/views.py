@@ -91,7 +91,7 @@ def callback(request):
         :request: GET HTTP request
 
     returns:
-        Redirects to  index
+        Redirects to index
     """
     # Get code supplied by github
     code = request.GET.get('code')
