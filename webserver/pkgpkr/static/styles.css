@@ -201,6 +201,15 @@ body {
   font-size: 14px;
 }
 
+.tooltip .tooltiptext a {
+  color: #cccccc;
+  text-decoration: underline;
+}
+
+.tooltip .tooltiptext a:hover {
+  color: #ffffff;
+}
+
 .tooltip .tooltiptext::after {
   content: "";
   position: absolute;
@@ -499,4 +508,9 @@ body {
 
 table.dataTable tbody td {
   vertical-align: center;
+}
+
+.fa-external-link-alt {
+  opacity: 0.8;
+  font-size: 0.8em;
 }

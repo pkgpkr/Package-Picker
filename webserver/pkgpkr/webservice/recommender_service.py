@@ -5,7 +5,8 @@ Get package recommendations from our database
 import re
 import psycopg2
 
-from pkgpkr.settings import DB_HOST, DB_PORT, DB_DATABASE, DB_USER, DB_PASSWORD
+from pkgpkr.settings import DB_HOST, DB_PORT, DB_DATABASE, DB_USER, DB_PASSWORD, DEFAULT_MAX_RECOMMENDATIONS
+
 
 class RecommenderService:
     """
@@ -15,7 +16,6 @@ class RecommenderService:
     def __init__(self):
 
         self.major_version_regex = re.compile(r'pkg:(npm|pypi)/.*@\d+')
-        self.max_recommendations = 10000
 
     def strip_to_major_version(self, dependencies):
         """
@@ -31,7 +31,7 @@ class RecommenderService:
 
         return packages
 
-    def get_recommendations(self, dependencies):
+    def get_recommendations(self, dependencies, max_recommendations=DEFAULT_MAX_RECOMMENDATIONS):
         """
         Return a list of package recommendations and metadata given a set of dependencies
         """
@@ -58,7 +58,7 @@ class RecommenderService:
                     a.short_name,
                     b.short_name,
                     b.url,
-                    CEIL(CEIL(10 * s.similarity) * 0.5 + b.bounded_popularity * 0.3 + b.absolute_trend * 0.1 + b.relative_trend * 0.1),
+                    CAST(CEIL(CEIL(10 * s.similarity) * 0.5 + b.bounded_popularity * 0.3 + b.absolute_trend * 0.1 + b.relative_trend * 0.1) AS INTEGER),
                     b.absolute_trend,
                     b.relative_trend,
                     b.bounded_popularity,
@@ -74,7 +74,7 @@ class RecommenderService:
                     AND
                     s.package_b NOT IN (SELECT id FROM packages WHERE name in ({str(packages)[1:-1]}))
                     ORDER BY s.similarity DESC
-                    LIMIT {self.max_recommendations}
+                    LIMIT {max_recommendations}
                     """)
 
         # Fetch results
