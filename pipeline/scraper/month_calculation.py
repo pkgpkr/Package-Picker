@@ -8,7 +8,7 @@ def month_delta(date, delta):
 
     arguments:
         :date: date to be offset
-        :delta: number of month to offset the date back in time to
+        :delta: number of months to offset the date back in time to
 
     returns:
         DateTime shifted back by number of month specified
