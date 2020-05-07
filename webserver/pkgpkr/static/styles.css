@@ -244,6 +244,7 @@ body {
   font-size: 14px;
 }
 
+.tooltip .tooltiptext a,
 .tooltip-left .tooltiptext-left a {
   color: #cccccc;
   text-decoration: underline;
