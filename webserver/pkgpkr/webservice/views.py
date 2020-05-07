@@ -57,7 +57,7 @@ def about(request):
 
 
 def login(request):
-    """ Log user in using Github OAuth
+    """ Log user in using GitHub OAuth
 
     arguments:
         :request: GET HTTP request
