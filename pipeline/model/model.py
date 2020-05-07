@@ -13,8 +13,12 @@ from pyspark import SparkContext
 def get_similarity_dataframe(cursor):
     """
     Compute a similarity matrix from the dependency table
-    :param cursor: Database cursor
-    :return: Spark DataFrame
+
+    arguments:
+        :cursor: Database cursor
+
+    returns:
+        Spark DataFrame
     """
 
     context = SparkContext("local[1]", "pkgpkr")
