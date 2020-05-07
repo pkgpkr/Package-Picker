@@ -201,15 +201,6 @@ body {
   font-size: 14px;
 }
 
-.tooltip .tooltiptext a {
-  color: #cccccc;
-  text-decoration: underline;
-}
-
-.tooltip .tooltiptext a:hover {
-  color: #ffffff;
-}
-
 .tooltip .tooltiptext::after {
   content: "";
   position: absolute;
