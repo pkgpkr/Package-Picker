@@ -119,7 +119,7 @@ def callback(request):
 
 def logout(request):
     """
-    Logs user out but keep authorization ot OAuth Github
+    Logs user out but keep authorization ot OAuth GitHub
 
     arguments:
         :request: GET HTTP request
