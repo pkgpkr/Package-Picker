@@ -7,7 +7,9 @@ def month_delta(date, delta):
     Get the date string corresponding with the given offset from the given date
     """
 
-    month, year = (date.month - delta) % 12, date.year + ((date.month) - delta - 1) // 12
+    month = (date.month - delta) % 12
+    year = date.year + ((date.month) - delta - 1) // 12
+
     if not month:
         month = 12
     day = min(date.day, [31,
