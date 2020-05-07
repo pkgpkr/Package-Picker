@@ -86,7 +86,31 @@
 <li class="toctree-l1"><a class="reference internal" href="deploy.html">AWS Deploy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
 <li class="toctree-l1"><a class="reference internal" href="webserver.html">Web Server</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Architecture</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#diagrams">Diagrams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interface-definition">Interface definition</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#query-engine">Query engine</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-scraper.month_calculation">month_calculation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#github">github</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#npm">npm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#psql">psql</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pypi">pypi</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#recommender-model">Recommender model</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#database">database</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#web-service">Web service</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-webservice.views">webservice.views</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-webservice.recommender_service">webservice.recommender_service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webservice-github-util">webservice.github_util</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
             
@@ -153,7 +177,478 @@
             
   <div class="section" id="architecture">
 <h1>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="diagrams">
+<h2>Diagrams<a class="headerlink" href="#diagrams" title="Permalink to this headline">¶</a></h2>
 <p><img alt="Pipeline Tests" src="_images/diagram.png" /></p>
+</div>
+<div class="section" id="interface-definition">
+<h2>Interface definition<a class="headerlink" href="#interface-definition" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="query-engine">
+<h3>Query engine<a class="headerlink" href="#query-engine" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="module-scraper.month_calculation">
+<span id="month-calculation"></span><h4>month_calculation<a class="headerlink" href="#module-scraper.month_calculation" title="Permalink to this headline">¶</a></h4>
+<p>Compute month-long time slices for use in GitHub scraping</p>
+<dl class="py function">
+<dt id="scraper.month_calculation.month_delta">
+<code class="sig-prename descclassname">scraper.month_calculation.</code><code class="sig-name descname">month_delta</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">date</span></em>, <em class="sig-param"><span class="n">delta</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.month_calculation.month_delta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the date string corresponding with the given offset from the given date</p>
+</dd></dl>
+
+</div>
+<div class="section" id="github">
+<h4>github<a class="headerlink" href="#github" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><span class="target" id="module-scraper.github"></span><p>Fetch npm dependency information from the GitHub v4 API</p>
+<dl class="py function">
+<dt id="scraper.github.run_query">
+<code class="sig-prename descclassname">scraper.github.</code><code class="sig-name descname">run_query</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">today</span></em>, <em class="sig-param"><span class="n">language</span><span class="o">=</span><span class="default_value">'JavaScript'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.github.run_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch all repositories for the given month</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scraper.github.run_query_once">
+<code class="sig-prename descclassname">scraper.github.</code><code class="sig-name descname">run_query_once</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_per_loop</span></em>, <em class="sig-param"><span class="n">daily_search_str</span></em>, <em class="sig-param"><span class="n">cursor</span></em>, <em class="sig-param"><span class="n">language</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.github.run_query_once" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="scraper.github.write_db">
+<code class="sig-prename descclassname">scraper.github.</code><code class="sig-name descname">write_db</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">result</span></em>, <em class="sig-param"><span class="n">language</span><span class="o">=</span><span class="default_value">'JavaScript'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.github.write_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a set of repositories and their dependencies to the database for JS packages</p>
+</dd></dl>
+
+</div></blockquote>
+</div>
+<div class="section" id="npm">
+<h4>npm<a class="headerlink" href="#npm" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><span class="target" id="module-scraper.npm"></span><p>Fetch package metadata from the npmjs registry API</p>
+<dl class="py function">
+<dt id="scraper.npm.get_package_metadata">
+<code class="sig-prename descclassname">scraper.npm.</code><code class="sig-name descname">get_package_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dependency</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.npm.get_package_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the downloads, categories, and modified date for a package</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scraper.npm.run_query">
+<code class="sig-prename descclassname">scraper.npm.</code><code class="sig-name descname">run_query</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scraper.npm.run_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enrich the package table with metadata for all packages in the table</p>
+</dd></dl>
+
+</div></blockquote>
+</div>
+<div class="section" id="psql">
+<h4>psql<a class="headerlink" href="#psql" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><span class="target" id="module-scraper.psql"></span><p>Insert application, package, and dependency data into a PostgreSQL database</p>
+<dl class="py function">
+<dt id="scraper.psql.connect_to_db">
+<code class="sig-prename descclassname">scraper.psql.</code><code class="sig-name descname">connect_to_db</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scraper.psql.connect_to_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect to the database</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scraper.psql.insert_to_app">
+<code class="sig-prename descclassname">scraper.psql.</code><code class="sig-name descname">insert_to_app</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">url</span></em>, <em class="sig-param"><span class="n">followers</span></em>, <em class="sig-param"><span class="n">app_name</span></em>, <em class="sig-param"><span class="n">app_hash</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.psql.insert_to_app" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upsert a row into the applications table</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scraper.psql.insert_to_dependencies">
+<code class="sig-prename descclassname">scraper.psql.</code><code class="sig-name descname">insert_to_dependencies</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">application_id</span></em>, <em class="sig-param"><span class="n">package_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.psql.insert_to_dependencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upsert a row into the dependency table</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scraper.psql.insert_to_package">
+<code class="sig-prename descclassname">scraper.psql.</code><code class="sig-name descname">insert_to_package</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.psql.insert_to_package" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upsert a row into the packages table</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scraper.psql.update_package_metadata">
+<code class="sig-prename descclassname">scraper.psql.</code><code class="sig-name descname">update_package_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">monthly_downloads_last_month</span></em>, <em class="sig-param"><span class="n">monthly_downloads_a_year_ago</span></em>, <em class="sig-param"><span class="n">categories</span></em>, <em class="sig-param"><span class="n">modified</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.psql.update_package_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update metadata for a particular package</p>
+</dd></dl>
+
+</div></blockquote>
+</div>
+<div class="section" id="pypi">
+<h4>pypi<a class="headerlink" href="#pypi" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><span class="target" id="module-scraper.pypi"></span><p>Fetch package metadata from the pypi API</p>
+<dl class="py function">
+<dt id="scraper.pypi.get_package_metadata">
+<code class="sig-prename descclassname">scraper.pypi.</code><code class="sig-name descname">get_package_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dependency</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.pypi.get_package_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the downloads, categories, and modified date for a package from pypi API</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scraper.pypi.run_query">
+<code class="sig-prename descclassname">scraper.pypi.</code><code class="sig-name descname">run_query</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scraper.pypi.run_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enrich the package table with metadata for all packages in the table</p>
+</dd></dl>
+
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="recommender-model">
+<h3>Recommender model<a class="headerlink" href="#recommender-model" title="Permalink to this headline">¶</a></h3>
+<p>TODO About model</p>
+<div class="section" id="database">
+<h4>database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><span class="target" id="module-model.database"></span><p>Database processing to prepopulate UI tables</p>
+<dl class="py function">
+<dt id="model.database.package_table_postprocessing">
+<code class="sig-prename descclassname">model.database.</code><code class="sig-name descname">package_table_postprocessing</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cursor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.database.package_table_postprocessing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Preprocessing on the packages table</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">cursor</dt>
+<dd class="field-odd"><p>Database cursor</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="model.database.update_bounded_similarity_scores">
+<code class="sig-prename descclassname">model.database.</code><code class="sig-name descname">update_bounded_similarity_scores</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cursor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.database.update_bounded_similarity_scores" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update bounded similarity score</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">cursor</dt>
+<dd class="field-odd"><p>Database cursor</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="model.database.update_popularity_scores">
+<code class="sig-prename descclassname">model.database.</code><code class="sig-name descname">update_popularity_scores</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cursor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.database.update_popularity_scores" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update popularity scores</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">cursor</dt>
+<dd class="field-odd"><p>Database cursor</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="model.database.update_trending_scores">
+<code class="sig-prename descclassname">model.database.</code><code class="sig-name descname">update_trending_scores</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cursor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.database.update_trending_scores" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update trending scores</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">cursor</dt>
+<dd class="field-odd"><p>Database cursor</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="model.database.write_similarity_scores">
+<code class="sig-prename descclassname">model.database.</code><code class="sig-name descname">write_similarity_scores</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scores</span></em>, <em class="sig-param"><span class="n">host</span></em>, <em class="sig-param"><span class="n">port</span></em>, <em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">table</span></em>, <em class="sig-param"><span class="n">user</span></em>, <em class="sig-param"><span class="n">password</span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.database.write_similarity_scores" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write similarity scores to the database</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">scores</dt>
+<dd class="field-odd"><p>DataFrame containing pairs of packages and their similarity score</p>
+</dd>
+<dt class="field-even">host</dt>
+<dd class="field-even"><p>Database host</p>
+</dd>
+<dt class="field-odd">port</dt>
+<dd class="field-odd"><p>Database port</p>
+</dd>
+<dt class="field-even">database</dt>
+<dd class="field-even"><p>Database name</p>
+</dd>
+<dt class="field-odd">table</dt>
+<dd class="field-odd"><p>Database table for the similarity scores</p>
+</dd>
+<dt class="field-even">user</dt>
+<dd class="field-even"><p>Database user</p>
+</dd>
+<dt class="field-odd">password</dt>
+<dd class="field-odd"><p>Database password</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="web-service">
+<h3>Web service<a class="headerlink" href="#web-service" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="module-webservice.views">
+<span id="webservice-views"></span><h4>webservice.views<a class="headerlink" href="#module-webservice.views" title="Permalink to this headline">¶</a></h4>
+<p>Views for the web service</p>
+<dl class="py function">
+<dt id="webservice.views.about">
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">about</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.about" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return about info</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="webservice.views.callback">
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.callback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Github redirect here, then retrieves token for API</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="webservice.views.index">
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return landing page</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="webservice.views.login">
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">login</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log user in using Github OAuth</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="webservice.views.logout">
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">logout</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.logout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logs user out but keep authorization ot OAuth Github</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="webservice.views.recommendations">
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">recommendations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.recommendations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get recommended packages for the repo</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">request</dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">name</dt>
+<dd class="field-even"><p>repo name</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>Rendered recommendation page</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="webservice.views.recommendations_json">
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">recommendations_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.recommendations_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get recommended packages for the repo in JSON format</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">request</dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">name</dt>
+<dd class="field-even"><p>repo name</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>JSON object with recommendations</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="webservice.views.recommendations_service_api">
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">recommendations_service_api</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.recommendations_service_api" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns package recommendations for API POST call without authentication</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">request</dt>
+<dd class="field-odd"><p>POST request of application/json type</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>list of package recommendations</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="webservice.views.repositories">
+<code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">repositories</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.repositories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get full list (up to 100) for the current user</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-webservice.recommender_service">
+<span id="webservice-recommender-service"></span><h4>webservice.recommender_service<a class="headerlink" href="#module-webservice.recommender_service" title="Permalink to this headline">¶</a></h4>
+<p>Get package recommendations from our database</p>
+<dl class="py class">
+<dt id="webservice.recommender_service.RecommenderService">
+<em class="property">class </em><code class="sig-prename descclassname">webservice.recommender_service.</code><code class="sig-name descname">RecommenderService</code><a class="headerlink" href="#webservice.recommender_service.RecommenderService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recommender engine for the web server</p>
+<dl class="py method">
+<dt id="webservice.recommender_service.RecommenderService.get_recommendations">
+<code class="sig-name descname">get_recommendations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dependencies</span></em>, <em class="sig-param"><span class="n">max_recommendations</span><span class="o">=</span><span class="default_value">10000</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.recommender_service.RecommenderService.get_recommendations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of package recommendations and metadata given a set of dependencies</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="webservice.recommender_service.RecommenderService.strip_to_major_version">
+<code class="sig-name descname">strip_to_major_version</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dependencies</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.recommender_service.RecommenderService.strip_to_major_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strip everything after the major version in each dependency</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="webservice-github-util">
+<h4>webservice.github_util<a class="headerlink" href="#webservice-github-util" title="Permalink to this headline">¶</a></h4>
+<blockquote>
+<div><span class="target" id="module-webservice.github_util"></span><p>Utility functions for the web server</p>
+<dl class="py function">
+<dt id="webservice.github_util.get_dependencies">
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">get_dependencies</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">token</span></em>, <em class="sig-param"><span class="n">repo_full_name</span></em>, <em class="sig-param"><span class="n">branch_name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.get_dependencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets repository info for a specific repo (from package.json)</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">token</dt>
+<dd class="field-odd"><p>GitHub token for auth</p>
+</dd>
+<dt class="field-even">repo_full_name</dt>
+<dd class="field-even"><p>repo name with user name</p>
+</dd>
+<dt class="field-odd">branch_name</dt>
+<dd class="field-odd"><p>specific branch to fetch dependencies for, or MASTER (default)</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>dependencies and all branch names</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="webservice.github_util.get_repositories">
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">get_repositories</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">token</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.get_repositories" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the repositories associated with the given GitHub token</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">token</dt>
+<dd class="field-odd"><p>GitHub API token</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>Get the repositories associated with a user’s token</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="webservice.github_util.get_user_info">
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">get_user_info</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">token</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.get_user_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the user info associated with the given GitHub token</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">token</dt>
+<dd class="field-odd"><p>GitHub API token</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>JSON object with user info</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="webservice.github_util.get_user_name">
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">get_user_name</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">token</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.get_user_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves name of the authenticated GitHub user</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">token</dt>
+<dd class="field-odd"><p>GitHub API token</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>Get the name of the user who is authenticated</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="webservice.github_util.is_user_authenticated">
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">is_user_authenticated</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">token</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.is_user_authenticated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the user is authenticated</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">token</dt>
+<dd class="field-odd"><p>GitHub API token</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>Boolean flag that is True if the user is authenticated</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="webservice.github_util.javascript_dependencies_name_to_purl">
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">javascript_dependencies_name_to_purl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dependencies</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.javascript_dependencies_name_to_purl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert Javascript dependency names to the universal Package URL (PURL) format</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">dependencies</dt>
+<dd class="field-odd"><p>Array of <a class="reference external" href="mailto:name&#37;&#52;&#48;version">name<span>&#64;</span>version</a> like names</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="webservice.github_util.parse_dependencies">
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">parse_dependencies</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dependencies_string</span></em>, <em class="sig-param"><span class="n">language</span></em>, <em class="sig-param"><span class="n">is_from_github</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.parse_dependencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Take a stringified package.json file and extract its dependencies</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">dependencies_string</dt>
+<dd class="field-odd"><p>A stringified package.json object</p>
+</dd>
+<dt class="field-even">language</dt>
+<dd class="field-even"><p>Language for which dependencies are for</p>
+</dd>
+<dt class="field-odd">is_from_github</dt>
+<dd class="field-odd"><p>Indicates if dependencies came for GitHub API (or manual/api call)</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>A list of npm dependencies</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="webservice.github_util.python_dependencies_name_to_purl">
+<code class="sig-prename descclassname">webservice.github_util.</code><code class="sig-name descname">python_dependencies_name_to_purl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dependencies</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.github_util.python_dependencies_name_to_purl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert Python dependencies names to the universal Package URL (PURL) format</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">dependencies</dt>
+<dd class="field-odd"><p>List of name straight from requirements text file</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div></blockquote>
+</div>
+</div>
+</div>
 </div>
 
 

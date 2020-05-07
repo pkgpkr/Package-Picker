@@ -86,15 +86,7 @@
 <li class="toctree-l1"><a class="reference internal" href="development.html">Local development</a></li>
 <li class="toctree-l1"><a class="reference internal" href="deploy.html">AWS Deploy</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Pipeline</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#scraper">Scraper</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-month_calculation">month_calculation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#github-query">github_query</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#npm-query">npm_query</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#psql">psql</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pypi-query">pypi_query</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#recommender-model">Recommender Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scraper">Scraper</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="webserver.html">Web Server</a></li>
@@ -168,73 +160,6 @@
 <div class="section" id="scraper">
 <h2>Scraper<a class="headerlink" href="#scraper" title="Permalink to this headline">¶</a></h2>
 <p>TODO About scraper</p>
-<div class="section" id="module-month_calculation">
-<span id="month-calculation"></span><h3>month_calculation<a class="headerlink" href="#module-month_calculation" title="Permalink to this headline">¶</a></h3>
-<p>Compute month-long time slices for use in GitHub scraping</p>
-<dl class="py function">
-<dt id="month_calculation.month_delta">
-<code class="sig-prename descclassname">month_calculation.</code><code class="sig-name descname">month_delta</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">date</span></em>, <em class="sig-param"><span class="n">delta</span></em><span class="sig-paren">)</span><a class="headerlink" href="#month_calculation.month_delta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the date string corresponding with the given offset from the given date</p>
-</dd></dl>
-
-</div>
-<div class="section" id="github-query">
-<h3>github_query<a class="headerlink" href="#github-query" title="Permalink to this headline">¶</a></h3>
-</div>
-<div class="section" id="npm-query">
-<h3>npm_query<a class="headerlink" href="#npm-query" title="Permalink to this headline">¶</a></h3>
-</div>
-<div class="section" id="psql">
-<h3>psql<a class="headerlink" href="#psql" title="Permalink to this headline">¶</a></h3>
-<blockquote>
-<div><span class="target" id="module-psql"></span><p>Insert application, package, and dependency data into a PostgreSQL database</p>
-<dl class="py function">
-<dt id="psql.connect_to_db">
-<code class="sig-prename descclassname">psql.</code><code class="sig-name descname">connect_to_db</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#psql.connect_to_db" title="Permalink to this definition">¶</a></dt>
-<dd><p>Connect to the database</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="psql.insert_to_app">
-<code class="sig-prename descclassname">psql.</code><code class="sig-name descname">insert_to_app</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">url</span></em>, <em class="sig-param"><span class="n">followers</span></em>, <em class="sig-param"><span class="n">app_name</span></em>, <em class="sig-param"><span class="n">app_hash</span></em><span class="sig-paren">)</span><a class="headerlink" href="#psql.insert_to_app" title="Permalink to this definition">¶</a></dt>
-<dd><p>Upsert a row into the applications table</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="psql.insert_to_dependencies">
-<code class="sig-prename descclassname">psql.</code><code class="sig-name descname">insert_to_dependencies</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">application_id</span></em>, <em class="sig-param"><span class="n">package_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#psql.insert_to_dependencies" title="Permalink to this definition">¶</a></dt>
-<dd><p>Upsert a row into the dependency table</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="psql.insert_to_package">
-<code class="sig-prename descclassname">psql.</code><code class="sig-name descname">insert_to_package</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#psql.insert_to_package" title="Permalink to this definition">¶</a></dt>
-<dd><p>Upsert a row into the packages table</p>
-</dd></dl>
-
-<dl class="py function">
-<dt id="psql.update_package_metadata">
-<code class="sig-prename descclassname">psql.</code><code class="sig-name descname">update_package_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">monthly_downloads_last_month</span></em>, <em class="sig-param"><span class="n">monthly_downloads_a_year_ago</span></em>, <em class="sig-param"><span class="n">categories</span></em>, <em class="sig-param"><span class="n">modified</span></em><span class="sig-paren">)</span><a class="headerlink" href="#psql.update_package_metadata" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update metadata for a particular package</p>
-</dd></dl>
-
-</div></blockquote>
-</div>
-<div class="section" id="pypi-query">
-<h3>pypi_query<a class="headerlink" href="#pypi-query" title="Permalink to this headline">¶</a></h3>
-</div>
-</div>
-<div class="section" id="recommender-model">
-<h2>Recommender Model<a class="headerlink" href="#recommender-model" title="Permalink to this headline">¶</a></h2>
-<p>TODO About model</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TODO</span> <span class="n">this</span> <span class="n">may</span> <span class="n">need</span> <span class="n">to</span> <span class="n">be</span> <span class="n">eval_rst</span><span class="p">,</span> <span class="n">but</span> <span class="n">no</span> <span class="n">use</span>
-<span class="n">generate</span>
-<span class="o">----------------------</span>
- <span class="o">..</span> <span class="n">automodule</span><span class="p">::</span> <span class="n">generate</span>
-    <span class="p">:</span><span class="n">members</span><span class="p">:</span>
-    <span class="p">:</span><span class="n">undoc</span><span class="o">-</span><span class="n">members</span><span class="p">:</span>
-</pre></div>
-</div>
 </div>
 </div>
 
