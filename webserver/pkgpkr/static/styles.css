@@ -244,6 +244,15 @@ body {
   font-size: 14px;
 }
 
+.tooltip-left .tooltiptext-left a {
+  color: #cccccc;
+  text-decoration: underline;
+}
+
+.tooltip-left .tooltiptext-left a:hover {
+  color: #ffffff;
+}
+
 .tooltip-left .tooltiptext-left::after {
   content: "";
   position: absolute;
