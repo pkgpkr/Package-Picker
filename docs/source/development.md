@@ -100,12 +100,11 @@ and then open htmlcov/index.html or any other reports of interest.
 
 ## Docs
 
-To build the docs, first install Sphinx. If on macOS, you can install via brew, so long as you add sphinx-doc to
-your path afterwards:
+To build the docs, first install Sphinx with pip and update your PATH:
 
 ```
-brew install sphinx-doc
-echo 'export PATH="/usr/local/opt/sphinx-doc/bin:$PATH"' >> ~/.zshrc
+pip install sphinx
+echo 'export PATH="/path/to/sphinx:$PATH"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
