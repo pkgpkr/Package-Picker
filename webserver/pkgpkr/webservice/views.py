@@ -211,7 +211,8 @@ def recommendations(request, name):
         if language not in SUPPORTED_LANGUAGES.keys():
             return HttpResponse(f'Demo language {language} not supported', status=404)
 
-        request.session['dependencies'] = dependencies
+        temp = dependencies.split('@')
+        request.session['dependencies'] = f'"{temp[0]}":"{temp[1]}"'
         request.session['language'] = language
 
         branch_name = None
@@ -367,3 +368,30 @@ def recommendations_service_api(request):
         return HttpResponse(json.dumps(data), content_type="application/json")
 
     return HttpResponseNotAllowed(['POST'])
+
+
+@csrf_exempt
+def packages_api(request):
+    """
+    Returns packages that match the given query without authentication
+
+    arguments:
+        :request: GET request
+
+    returns:
+        list of packages
+    """
+    if request.method == 'GET':
+
+        query = request.GET.get('q')
+
+        packages = RECOMMENDER_SERVICE.get_packages(query)
+
+        # Setup data to be returned
+        data = {
+            'packages': packages
+        }
+
+        return HttpResponse(json.dumps(data), content_type="application/json")
+
+    return HttpResponseNotAllowed(['GET'])

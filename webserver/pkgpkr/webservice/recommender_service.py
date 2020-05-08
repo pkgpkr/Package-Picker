@@ -37,6 +37,7 @@ class RecommenderService:
 
         return packages
 
+
     def get_recommendations(self, dependencies, max_recommendations=DEFAULT_MAX_RECOMMENDATIONS):
         """
         Return a list of package recommendations and metadata given a set of dependencies
@@ -92,6 +93,35 @@ class RecommenderService:
 
         # Fetch results
         recommended = cur.fetchall()
+
+        # Disconnect from the database
+        cur.close()
+        database.close()
+
+        return recommended
+
+
+    def get_packages(self, query):
+        """
+        Return a list of package recommendations and metadata given a set of dependencies
+
+        arguments:
+            :query: the string to do partial matching with
+
+        returns:
+            list of the most popular packages that match the package string
+        """
+
+        # Connect to our database
+        database = psycopg2.connect(f"host={DB_HOST} port={DB_PORT} dbname={DB_DATABASE} user={DB_USER} password={DB_PASSWORD}")
+        cur = database.cursor()
+
+        # Get packages from the database
+        cur.execute(f"SELECT short_name FROM packages WHERE name LIKE '%{query}%' ORDER BY monthly_downloads_last_month DESC LIMIT 10;")
+
+        # Fetch results
+        recommended = cur.fetchall()
+        recommended = [r[0] for r in recommended]
 
         # Disconnect from the database
         cur.close()

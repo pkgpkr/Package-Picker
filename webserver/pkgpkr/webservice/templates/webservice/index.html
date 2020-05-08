@@ -7,132 +7,65 @@
 {% block body %}
 <section class="section">
   <div class="container">
-      <div class="content is-medium">
-        <section class="section">
-          <div class="container">
-              <div class="content is-medium">
-                  <div id="left-div">
-                  <form method="POST" action={% url 'recommendations' demo_input_repo_name %}>
-                      {% csrf_token %}
-                        <div class="field">
-                            <label class="label">Add one dependency per line</label>
-                            <label class="label">(You can copy them from your package.json or requirements.txt file!)</label>
-                            <div class="control">
-                                <div id="pick-div-head">
-                                    <p>Pick</p>
-                                </div>
-                                <div id="pick-select" class="select">
-                                    <select name='language' id="lang-select" onchange="loadDemoLanguage(this.value);">
-                                        {% for language in supported_languages %}
-                                            <option value = {{ language }}>{{ language }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div id="pick-div-tail">
-                                    <p>dependencies</p>
-                                </div>
-                            </div>
-                            <div id="pick-textarea" class="control">
-                                    <textarea id='manual-input' class="textarea" name="dependencies"
-                                              placeholder="Dependency 1&#x0a;Dependency 2&#x0a;Dependency 3&#x0a;..."
-                                              rows="10"></textarea>
-                            </div>
-                            <div class="control">
-                                <div id="recommendation-button-div">
-                                    <button id="recommendation-button" class="button is-large is-link">Get Recommendation</button>
-                                </div>
-                                <div id="recommendation-hyperlink-div">
-                                    <b><a id="recommendation-hyperlink-a" target="_blank" href="{% url 'about' %}">
-                                        How do we generate these recommendations?
-                                    </a>
-                                  </b>
-                                </div>
-                            </div>
-                            <div>
-                            </div>
-                        </div>
-                  </form>
-                  </div>
-                  <div id="right-div">
-                      <div class="bullet-div">
-                          <div class="bullet-img-div">
-                              <img class="bullet-img" src="/static/images/bullet1.png" />
-                          </div>
-                          <div class="bullet-p-div">
-                              <p>Choose a language</p>
-                          </div>
-                      </div>
-                      <div class="bullet-div">
-                          <div class="bullet-img-div">
-                              <img class="bullet-img" src="/static/images/bullet2.png" />
-                          </div>
-                          <div class="bullet-p-div">
-                              <p>Add some packages</p>
-                          </div>
-                      </div>
-                      <div class="bullet-div">
-                          <div class="bullet-img-div">
-                              <img class="bullet-img" src="/static/images/bullet3.png" />
-                          </div>
-                          <div class="bullet-p-div">
-                              <p>Explore recommendations</p>
-                          </div>
-                      </div>
-                      <div class="bullet-div">
-                          <div class="bullet-img-div">
-                              <img class="bullet-img" src="/static/images/bullet4.png" />
-                          </div>
-                          <div class="bullet-p-div">
-                              <p>Export to code</p>
-                          </div>
-                      </div>
-                  </div>
-                </div>
-            </div>
-        </div>
+    <div class="columns">
+      <div class="column"></div>
+      <div class="column is-half">
+        <form id="demo" method="POST" action={% url 'recommendations' demo_input_repo_name %}>
+          {% csrf_token %}
+          <h1>Find packages that work well with&hellip;</h1>
+          <input name="language" type="hidden" value="javascript"/>
+          <input name="dependencies" type="text" autocomplete="off" onchange="fetchRecommendations(this.value);" placeholder="react@16"/>
+          <div class="results">
+            <!-- Automatically populated with recommendations -->
+          </div>
+        </form>
+      </div>
+      <div class="column"></div>
     </div>
-</section>
-<div id="center-div" class="container has-text-centered">
-  <div class="content is-medium">
-    <h2>
-      What do we look for in a package?
-    </h2>
-    <br>
-    <h3>
-      <i class="fas fa-chart-line"></i>
-      Lasting
-    </h3>
-    <p>
-      Good packages aren't just popular today, but tomorrow as well.
-    </p>
-    <h3>
-      <i class="far fa-check-square"></i>
-      Compatible
-    </h3>
-    <p>
-      Good packages play nicely with the packages you already use.
-    </p>
-    <h3>
-      <i class="far fa-copy"></i>
-      Unique
-    </h3>
-    <p>
-      Good packages don't duplicate functionality in other packages.
-    </p>
-    <h3>
-      <i class="fas fa-recycle"></i>
-      Reused
-    </h3>
-    <p>
-      Good packages are often the ones your company already uses.
-    </p>
-    <h3>
-      <i class="far fa-gem"></i>
-      Exceptional
-    </h3>
-    <p>
-      Good packages are the needles in a haystack of millions of packages.
-    </p>
   </div>
-</div>
+</section>
+<script>
+  $(document).ready(function() {
+    var input = document.getElementsByName("dependencies")[0];
+    var opts = {
+      minLength: 1,
+      limit:false
+    }
+    var lookup = new TypeAhead(input, [], opts);
+    var xhr;
+
+    lookup.getCandidates = function (callback) {
+      if (xhr) {
+        xhr.abort();
+      }
+
+      xhr = $.getJSON(`/api/packages?q=${this.query}`, function (response) {
+        callback(response.packages);
+      });
+    }
+  });
+
+  function fetchRecommendations(package) {
+    $.ajax({
+      type: 'POST',
+      url: '/api/recommendations',
+      contentType: 'application/json',
+      data: `{"language": "javascript", "dependencies": ["${package}"], "max_recommendations": 10}`,
+      success: displayRecommendations
+    });
+  }
+
+  function displayRecommendations(result, status, xhr) {
+    var results = document.getElementsByClassName("results")[0];
+    
+    var outputHtml = "<ul>";
+    for (r of result.recommended_dependencies) {
+      outputHtml += `<li>${r.recommendedPackage}</li>`;
+    }
+    outputHtml += "<li><input type='submit' value='See all results'/></li>";
+    outputHtml += "</ul>";
+    
+    results.innerHTML = outputHtml;
+  }
+</script>
 {% endblock %}

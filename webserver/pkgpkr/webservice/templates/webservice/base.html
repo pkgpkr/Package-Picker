@@ -11,6 +11,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
     <script type="text/javascript" charset="utf8" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/type-ahead.min.js"></script>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-3ZJTB9DHQG"></script>
@@ -23,90 +24,74 @@
 		</script>
   </head>
   <body>
-    <section id="main-banner" class="hero is-medium is-primary is-bold">
-      <div class="hero-body" style="padding-top: 4rem; padding-bottom: 2rem;">
-        <div id="title-text-parent" class="container has-text-centered">
-          <a href="/">
-            <h1 id="title-text" class="title is-1">
+    <header>
+      <nav class="navbar is-link" role="navigation" aria-label="main navigation">
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+        <div id="navbarBasicExample" class="navbar-menu">
+          <div class="navbar-start">
+            <a class="navbar-item" href="{% url 'index' %}">
               <i class="fas fa-box"></i>
-              Package Picker
-            </h1>
-          </a>
-          <h2 id="subtitle-text" class="subtitle">
-            Better packages, faster
-          </h2>
-        </div>
-        <nav class="container" role="navigation" aria-label="main navigation">
-          <div class="navbar">
-            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-              <span aria-hidden="true"></span>
-              <span aria-hidden="true"></span>
-              <span aria-hidden="true"></span>
+              <p class="text-icon">Package Picker</p>
             </a>
+
+            <a class="navbar-item" href="{% url 'about' %}">
+              <i class="fas fa-question"></i>
+              <p class="text-icon">How It Works</p>
+            </a>
+
+            <a class="navbar-item" target="_blank" href="https://pkgpkr.github.io/Package-Picker/">
+              <i class="fas fa-file-alt"></i>
+              <p class="text-icon">Docs <i class="fas fa-external-link-alt"></i></p>
+            </a>
+
+            {% if request.session.github_token %}
+            <a class="navbar-item" href="{% url 'repositories' %}">
+              <i class="fas fa-list"></i>
+              <p class="text-icon">My Repositories</p>
+            </a>
+            {% endif %}
+
           </div>
 
-          <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-start">
-              <a class="navbar-item" href="{% url 'index' %}">
-                <i class="fas fa-home"></i>
-                <p class="text-icon">Home</p>
+          <div class="navbar-end">
+            {% if request.session.github_token %}
+              {%  if request.session.github_info.name %}
+              <a class="navbar-item" style="pointer-events: none;">
+                Welcome, {{ request.session.github_info.name }}
               </a>
-
-              <a class="navbar-item" href="{% url 'about' %}">
-                <i class="fas fa-question"></i>
-                <p class="text-icon">How It Works</p>
-              </a>
-
-              <a class="navbar-item" target="_blank" href="https://pkgpkr.github.io/Package-Picker/">
-                <i class="fas fa-file-alt"></i>
-                <p class="text-icon">Docs <i class="fas fa-external-link-alt"></i></p>
-              </a>
-
-              {% if request.session.github_token %}
-              <a class="navbar-item" href="{% url 'repositories' %}">
-                <i class="fas fa-list"></i>
-                <p class="text-icon">My Repositories</p>
+              {%  else %}
+              <a class="navbar-item" style="pointer-events: none;">
+                Welcome {{ request.session.github_info.login }}
               </a>
               {% endif %}
-
-            </div>
-
-            <div class="navbar-end">
-              {% if request.session.github_token %}
-                {%  if request.session.github_info.name %}
-                <a class="navbar-item" style="pointer-events: none;">
-                  Welcome, {{ request.session.github_info.name }}
+              <img src="{{ request.session.github_info.avatar_url }}" alt="Profile" style="height: 48px; width: 40px; padding: 8px 0 0 0">
+            {% endif %}
+            <div class="navbar-item">
+              {% if not request.session.github_token %}
+              <div class="buttons">
+                <a class="button is-linkl" href="{% url 'login' %}">
+                  <i class="fab fa-github"></i>
+                  <strong><p class="text-icon">Pick dependencies from Github</p></strong>
                 </a>
-                {%  else %}
-                <a class="navbar-item" style="pointer-events: none;">
-                  Welcome {{ request.session.github_info.login }}
-                </a>
-                {% endif %}
-                <img src="{{ request.session.github_info.avatar_url }}" alt="Profile" style="height: 48px; width: 40px; padding: 8px 0 0 0">
-              {% endif %}
-              <div class="navbar-item">
-                {% if not request.session.github_token %}
-                <div class="buttons">
-                  <a class="button is-linkl" href="{% url 'login' %}">
-                    <i class="fab fa-github"></i>
-                    <strong><p class="text-icon">Pick dependencies from Github</p></strong>
-                  </a>
-                </div>
-                {% endif %}
-                {% if request.session.github_token %}
-                <div class="buttons">
-                  <a class="button is-light" href="{% url 'logout' %}">
-                    <i class="fas fa-sign-in-alt"></i>
-                    <strong><p class="text-icon">Logout</p></strong>
-                  </a>
-                </div>
-                {% endif %}
               </div>
+              {% endif %}
+              {% if request.session.github_token %}
+              <div class="buttons">
+                <a class="button is-light" href="{% url 'logout' %}">
+                  <i class="fas fa-sign-in-alt"></i>
+                  <strong><p class="text-icon">Logout</p></strong>
+                </a>
+              </div>
+              {% endif %}
             </div>
           </div>
-        </nav>
-      </div>
-    </section>
+        </div>
+      </nav>
+    </header>
     {% block body %}
     {% endblock %}
     <footer id="main-footer" class="footer has-background-black has-text-light">

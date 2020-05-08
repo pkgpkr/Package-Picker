@@ -15,5 +15,6 @@ urlpatterns = [
     path("repositories", views.repositories, name="repositories"),
     path("repositories/<str:name>", views.recommendations, name="recommendations"),
     path("recommendations/<str:name>", views.recommendations_json, name="recommendations_json"),
-    path("api/recommendations", views.recommendations_service_api, name="recommendations_service_api")
+    path("api/recommendations", views.recommendations_service_api, name="recommendations_service_api"),
+    path("api/packages", views.packages_api, name="packages_api")
 ]

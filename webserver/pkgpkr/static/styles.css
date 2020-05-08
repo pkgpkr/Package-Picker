@@ -338,33 +338,6 @@ body {
   background-color: #044C6B !important;
 }
 
-#title-text-link {
-  color: #f2f2f2;
-}
-
-.smaller-banner-z-index {
-    position: relative;
-    z-index: 10;
-}
-
-.smaller-banner {
-  float: left;
-  font-size: 35px !important;
-  padding: 0 0 0 12px;
-}
-
-.hidden-banner {
-  display: none;
-}
-
-.navbar-item {
-  color: #f2f2f2 !important;
-}
-
-.navbar-item:focus {
-  background-color: transparent !important;
-}
-
 #left-div, #right-div {
   float: left;
   padding: 0 10px 0 80px;
@@ -515,4 +488,50 @@ table.dataTable tbody td {
 .fa-external-link-alt {
   opacity: 0.8;
   font-size: 0.8em;
+}
+
+#demo {
+  display: flex;
+  flex-direction: column;
+}
+
+#demo h1 {
+  font-size: 2em;
+  padding-bottom: 0.5em;
+}
+
+#demo input[type=text] {
+  font-size: 1.5em;
+  border-radius: 5px;
+  border-style: solid;
+  border-color: #e8e8e8;
+  border-width: 1px;
+  padding: 0.5em;
+}
+
+#demo input[type=text] + ul {
+  list-style: none;
+  border-color: #999999;
+  border-style: solid;
+  border-width: 1px;
+  margin-top: 1em;
+  padding: 0.5em;
+}
+
+#demo input[type=submit] {
+  border: none;
+  padding: 0;
+  font-size: 1em;
+  color: #3333ff;
+}
+
+#demo input[type=submit]:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+#demo .results ul {
+  line-height: 2em;
+  font-size: 1.1em;
+  padding-top: 1em;
 }
