@@ -192,6 +192,19 @@
 <dt id="scraper.month_calculation.month_delta">
 <code class="sig-prename descclassname">scraper.month_calculation.</code><code class="sig-name descname">month_delta</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">date</span></em>, <em class="sig-param"><span class="n">delta</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.month_calculation.month_delta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the date string corresponding with the given offset from the given date</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">date</dt>
+<dd class="field-odd"><p>date to be offset</p>
+</dd>
+<dt class="field-even">delta</dt>
+<dd class="field-even"><p>number of months to offset the date back in time to</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>DateTime shifted back by number of month specified</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -203,17 +216,60 @@
 <dt id="scraper.github.run_query">
 <code class="sig-prename descclassname">scraper.github.</code><code class="sig-name descname">run_query</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">today</span></em>, <em class="sig-param"><span class="n">language</span><span class="o">=</span><span class="default_value">'JavaScript'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.github.run_query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch all repositories for the given month</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">today</dt>
+<dd class="field-odd"><p>today’s date</p>
+</dd>
+<dt class="field-even">language</dt>
+<dd class="field-even"><p>the ecosystem language</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="scraper.github.run_query_once">
 <code class="sig-prename descclassname">scraper.github.</code><code class="sig-name descname">run_query_once</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">node_per_loop</span></em>, <em class="sig-param"><span class="n">daily_search_str</span></em>, <em class="sig-param"><span class="n">cursor</span></em>, <em class="sig-param"><span class="n">language</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.github.run_query_once" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Fetch a single page of repositories for the given month</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">node_per_loop</dt>
+<dd class="field-odd"><p>number of nodes in batch</p>
+</dd>
+<dt class="field-even">daily_search_str</dt>
+<dd class="field-even"><p>GitHub v4 API search string, e.g specify start/end</p>
+</dd>
+<dt class="field-odd">cursor</dt>
+<dd class="field-odd"><p>DB cursor</p>
+</dd>
+<dt class="field-even">language</dt>
+<dd class="field-even"><p>ecosystem language</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt id="scraper.github.write_db">
 <code class="sig-prename descclassname">scraper.github.</code><code class="sig-name descname">write_db</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">result</span></em>, <em class="sig-param"><span class="n">language</span><span class="o">=</span><span class="default_value">'JavaScript'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.github.write_db" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a set of repositories and their dependencies to the database for JS packages</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">database</dt>
+<dd class="field-odd"><p>database name</p>
+</dd>
+<dt class="field-even">result</dt>
+<dd class="field-even"><p>GitHub v4 query result containing dependencies</p>
+</dd>
+<dt class="field-odd">language</dt>
+<dd class="field-odd"><p>the ecosystem language of the dependencies written</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </div></blockquote>
@@ -226,6 +282,16 @@
 <dt id="scraper.npm.get_package_metadata">
 <code class="sig-prename descclassname">scraper.npm.</code><code class="sig-name descname">get_package_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dependency</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.npm.get_package_metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the downloads, categories, and modified date for a package</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">dependency</dt>
+<dd class="field-odd"><p>A specific dependency to fetch metadata for</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>dict with package metadata (e.g name, categories, modified)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -250,24 +316,96 @@
 <dt id="scraper.psql.insert_to_app">
 <code class="sig-prename descclassname">scraper.psql.</code><code class="sig-name descname">insert_to_app</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">url</span></em>, <em class="sig-param"><span class="n">followers</span></em>, <em class="sig-param"><span class="n">app_name</span></em>, <em class="sig-param"><span class="n">app_hash</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.psql.insert_to_app" title="Permalink to this definition">¶</a></dt>
 <dd><p>Upsert a row into the applications table</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">database</dt>
+<dd class="field-odd"><p>database name</p>
+</dd>
+<dt class="field-even">url</dt>
+<dd class="field-even"><p>package url</p>
+</dd>
+<dt class="field-odd">followers</dt>
+<dd class="field-odd"><p>number of followers</p>
+</dd>
+<dt class="field-even">app_name</dt>
+<dd class="field-even"><p>name of the application</p>
+</dd>
+<dt class="field-odd">app_hash</dt>
+<dd class="field-odd"><p>hashed application name</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>int application_id</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="scraper.psql.insert_to_dependencies">
 <code class="sig-prename descclassname">scraper.psql.</code><code class="sig-name descname">insert_to_dependencies</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">application_id</span></em>, <em class="sig-param"><span class="n">package_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.psql.insert_to_dependencies" title="Permalink to this definition">¶</a></dt>
 <dd><p>Upsert a row into the dependency table</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">database</dt>
+<dd class="field-odd"><p>database name</p>
+</dd>
+<dt class="field-even">application_id</dt>
+<dd class="field-even"><p>application id</p>
+</dd>
+<dt class="field-odd">package_id</dt>
+<dd class="field-odd"><p>pacackage id</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="scraper.psql.insert_to_package">
 <code class="sig-prename descclassname">scraper.psql.</code><code class="sig-name descname">insert_to_package</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.psql.insert_to_package" title="Permalink to this definition">¶</a></dt>
 <dd><p>Upsert a row into the packages table</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">database</dt>
+<dd class="field-odd"><p>database name</p>
+</dd>
+<dt class="field-even">name</dt>
+<dd class="field-even"><p>package name</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>int package_id</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="scraper.psql.update_package_metadata">
 <code class="sig-prename descclassname">scraper.psql.</code><code class="sig-name descname">update_package_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">database</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">monthly_downloads_last_month</span></em>, <em class="sig-param"><span class="n">monthly_downloads_a_year_ago</span></em>, <em class="sig-param"><span class="n">categories</span></em>, <em class="sig-param"><span class="n">modified</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.psql.update_package_metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update metadata for a particular package</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">database</dt>
+<dd class="field-odd"><p>database name</p>
+</dd>
+<dt class="field-even">name</dt>
+<dd class="field-even"><p>package name</p>
+</dd>
+<dt class="field-odd">monthly_downloads_last_month</dt>
+<dd class="field-odd"><p>package downloads last month</p>
+</dd>
+<dt class="field-even">monthly_downloads_a_year_ago</dt>
+<dd class="field-even"><p>package downloads a year ago</p>
+</dd>
+<dt class="field-odd">categories</dt>
+<dd class="field-odd"><p>package categories</p>
+</dd>
+<dt class="field-even">modified</dt>
+<dd class="field-even"><p>when was package last modified</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </div></blockquote>
@@ -280,6 +418,16 @@
 <dt id="scraper.pypi.get_package_metadata">
 <code class="sig-prename descclassname">scraper.pypi.</code><code class="sig-name descname">get_package_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dependency</span></em><span class="sig-paren">)</span><a class="headerlink" href="#scraper.pypi.get_package_metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the downloads, categories, and modified date for a package from pypi API</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">dependency</dt>
+<dd class="field-odd"><p>A specific dependency to fetch metadata for</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>dict with package metadata (e.g name, categories, modified)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -293,7 +441,6 @@
 </div>
 <div class="section" id="recommender-model">
 <h3>Recommender model<a class="headerlink" href="#recommender-model" title="Permalink to this headline">¶</a></h3>
-<p>TODO About model</p>
 <div class="section" id="database">
 <h4>database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h4>
 <blockquote>
@@ -398,30 +545,80 @@
 <dt id="webservice.views.about">
 <code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">about</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.about" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return about info</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">request</dt>
+<dd class="field-odd"><p>GET HTTP request</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>Rendered about page</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="webservice.views.callback">
 <code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">callback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.callback" title="Permalink to this definition">¶</a></dt>
-<dd><p>Github redirect here, then retrieves token for API</p>
+<dd><p>GitHub redirect here, then retrieves token for API</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">request</dt>
+<dd class="field-odd"><p>GET HTTP request</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>Redirects to index</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="webservice.views.index">
 <code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return landing page</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">request</dt>
+<dd class="field-odd"><p>GET HTTP request</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>Rendered home (index) page</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="webservice.views.login">
 <code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">login</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.login" title="Permalink to this definition">¶</a></dt>
-<dd><p>Log user in using Github OAuth</p>
+<dd><p>Log user in using GitHub OAuth</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">request</dt>
+<dd class="field-odd"><p>GET HTTP request</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>Redirects to index</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="webservice.views.logout">
 <code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">logout</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.logout" title="Permalink to this definition">¶</a></dt>
-<dd><p>Logs user out but keep authorization ot OAuth Github</p>
+<dd><p>Logs user out but keep authorization ot OAuth GitHub</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">request</dt>
+<dd class="field-odd"><p>GET HTTP request</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>Redirects to index</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -431,7 +628,8 @@
 <dl class="simple">
 <dt>arguments:</dt><dd><dl class="field-list simple">
 <dt class="field-odd">request</dt>
-<dd class="field-odd"><p></p></dd>
+<dd class="field-odd"><p>GET/POST HTTP request</p>
+</dd>
 <dt class="field-even">name</dt>
 <dd class="field-even"><p>repo name</p>
 </dd>
@@ -449,7 +647,8 @@
 <dl class="simple">
 <dt>arguments:</dt><dd><dl class="field-list simple">
 <dt class="field-odd">request</dt>
-<dd class="field-odd"><p></p></dd>
+<dd class="field-odd"><p>GET HTTP request</p>
+</dd>
 <dt class="field-even">name</dt>
 <dd class="field-even"><p>repo name</p>
 </dd>
@@ -480,6 +679,16 @@
 <dt id="webservice.views.repositories">
 <code class="sig-prename descclassname">webservice.views.</code><code class="sig-name descname">repositories</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.views.repositories" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get full list (up to 100) for the current user</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">request</dt>
+<dd class="field-odd"><p>GET HTTP request</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>Rendered repositories page</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -494,12 +703,35 @@
 <dt id="webservice.recommender_service.RecommenderService.get_recommendations">
 <code class="sig-name descname">get_recommendations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dependencies</span></em>, <em class="sig-param"><span class="n">max_recommendations</span><span class="o">=</span><span class="default_value">10000</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.recommender_service.RecommenderService.get_recommendations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of package recommendations and metadata given a set of dependencies</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">dependencies</dt>
+<dd class="field-odd"><p>list of dependencies (P-URLs)</p>
+</dd>
+<dt class="field-even">max_recommendations</dt>
+<dd class="field-even"><p>limit how many recommendations to fetch</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>list of tuples where each tuple contains metadata about recommended dependencies</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="webservice.recommender_service.RecommenderService.strip_to_major_version">
 <code class="sig-name descname">strip_to_major_version</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dependencies</span></em><span class="sig-paren">)</span><a class="headerlink" href="#webservice.recommender_service.RecommenderService.strip_to_major_version" title="Permalink to this definition">¶</a></dt>
 <dd><p>Strip everything after the major version in each dependency</p>
+<dl class="simple">
+<dt>arguments:</dt><dd><dl class="field-list simple">
+<dt class="field-odd">dependencies</dt>
+<dd class="field-odd"><p>list of dependencies to remove major versions from</p>
+</dd>
+</dl>
+</dd>
+<dt>returns:</dt><dd><p>list of dependencies with major version only</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -606,6 +838,8 @@
 </dd>
 </dl>
 </dd>
+<dt>returns:</dt><dd><p>list of dependencies in P-URL format</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -641,6 +875,8 @@
 <dd class="field-odd"><p>List of name straight from requirements text file</p>
 </dd>
 </dl>
+</dd>
+<dt>returns:</dt><dd><p>list of dependencies in P-URL format</p>
 </dd>
 </dl>
 </dd></dl>
