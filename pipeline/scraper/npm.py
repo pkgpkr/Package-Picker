@@ -15,6 +15,12 @@ NPM_DOWNLOADS_API_URL = 'https://api.npmjs.org/downloads/point'
 def get_package_metadata(dependency):
     """
     Retrieve the downloads, categories, and modified date for a package
+
+    arguments:
+        :dependency: A specific dependency to fetch metadata for
+
+    returns:
+        dict with package metadata (e.g name, categories, modified) 
     """
 
     version_symbol_index = dependency.rfind('@')

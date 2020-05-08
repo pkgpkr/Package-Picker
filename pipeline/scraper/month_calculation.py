@@ -5,6 +5,13 @@ Compute month-long time slices for use in GitHub scraping
 def month_delta(date, delta):
     """
     Get the date string corresponding with the given offset from the given date
+
+    arguments:
+        :date: date to be offset
+        :delta: number of months to offset the date back in time to
+
+    returns:
+        DateTime shifted back by number of month specified
     """
 
     month = (date.month - delta) % 12

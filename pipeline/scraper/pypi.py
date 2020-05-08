@@ -46,6 +46,12 @@ def run_query():
 def get_package_metadata(dependency):
     """
     Retrieve the downloads, categories, and modified date for a package from pypi API
+
+    arguments:
+        :dependency: A specific dependency to fetch metadata for
+
+    returns:
+        dict with package metadata (e.g name, categories, modified)
     """
 
     version_symbol_index = dependency.rfind('@')
