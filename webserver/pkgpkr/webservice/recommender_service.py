@@ -101,12 +101,13 @@ class RecommenderService:
         return recommended
 
 
-    def get_packages(self, query):
+    def get_packages(self, query, package_type):
         """
         Return a list of package recommendations and metadata given a set of dependencies
 
         arguments:
             :query: the string to do partial matching with
+            :package_type: the package type to fetch packages for
 
         returns:
             list of the most popular packages that match the package string
@@ -117,7 +118,7 @@ class RecommenderService:
         cur = database.cursor()
 
         # Get packages from the database
-        cur.execute(f"SELECT short_name FROM packages WHERE name LIKE '%{query}%' ORDER BY monthly_downloads_last_month DESC LIMIT 10;")
+        cur.execute(f"SELECT short_name FROM packages WHERE short_name LIKE '%{query}%' AND name LIKE 'pkg:{package_type}/%' ORDER BY (bounded_popularity * 0.3 + absolute_trend * 0.1 + relative_trend * 0.1) DESC LIMIT 10;")
 
         # Fetch results
         recommended = cur.fetchall()

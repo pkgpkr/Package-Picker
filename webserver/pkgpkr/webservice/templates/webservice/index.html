@@ -9,12 +9,23 @@
   <div class="container">
     <div class="columns">
       <div class="column"></div>
-      <div class="column is-half">
+      <div class="column is-two-thirds">
         <form id="demo" method="POST" action={% url 'recommendations' demo_input_repo_name %}>
           {% csrf_token %}
-          <h1>Find packages that work well with&hellip;</h1>
-          <input name="language" type="hidden" value="javascript"/>
-          <input name="dependencies" type="text" autocomplete="off" onchange="fetchRecommendations(this.value);" placeholder="react@16"/>
+          <h1 class="title is-2">I want a package that works well with&hellip;</h1>
+          <div class="inputs">
+            <div class="control">
+              <div class="select is-large">
+                <select name="language" onchange="clearPackage();">
+                  <option value="javascript">JavaScript</option>
+                  <option value="python">Python</option>
+                </select>
+              </div>
+            </div>
+            <div class="dependency">
+              <input class="input is-large" name="dependencies" type="text" autocomplete="off" oninput="clearRecommendations();" onchange="fetchRecommendations(this.value);" placeholder="react@16"/>
+            </div>
+          </div>
           <div class="results">
             <!-- Automatically populated with recommendations -->
           </div>
@@ -26,6 +37,8 @@
 </section>
 <script>
   $(document).ready(function() {
+
+    // Set up the Type Ahead component
     var input = document.getElementsByName("dependencies")[0];
     var opts = {
       minLength: 1,
@@ -34,38 +47,56 @@
     var lookup = new TypeAhead(input, [], opts);
     var xhr;
 
+    // Query packages using the packages API
     lookup.getCandidates = function (callback) {
       if (xhr) {
         xhr.abort();
       }
 
-      xhr = $.getJSON(`/api/packages?q=${this.query}`, function (response) {
+      // Get the current language
+      package_type_el = document.getElementsByName("language")[0];
+
+      xhr = $.getJSON(`/api/packages?q=${this.query}&language=${package_type_el.value}`, function (response) {
         callback(response.packages);
       });
     }
   });
 
   function fetchRecommendations(package) {
+
+    // Get the current language
+    package_type_el = document.getElementsByName("language")[0];
+
+    // Query recommendations using the recommendations API
     $.ajax({
       type: 'POST',
       url: '/api/recommendations',
       contentType: 'application/json',
-      data: `{"language": "javascript", "dependencies": ["${package}"], "max_recommendations": 10}`,
-      success: displayRecommendations
+      data: `{"language": "${package_type_el.value}", "dependencies": ["${package}"], "max_recommendations": 10}`,
+      success: function (result, status, xhr) {
+
+        // Display the recommendations once returned
+        var results = document.getElementsByClassName("results")[0];
+
+        var outputHtml = `<h1 class="title is-2">Best packages to use with ${package}</h1><ol>`;
+        for (r of result.recommended_dependencies) {
+          outputHtml += `<li><a href='${r.url}' target='_blank'>${r.recommendedPackage} <i class='fas fa-external-link-alt'></i></a></li>`;
+        }
+        outputHtml += "</ol>";
+        outputHtml += "<input type='submit' value='See all results >' class='button is-primary'/>";
+
+        results.innerHTML = outputHtml;
+      }
     });
   }
 
-  function displayRecommendations(result, status, xhr) {
-    var results = document.getElementsByClassName("results")[0];
-    
-    var outputHtml = "<ul>";
-    for (r of result.recommended_dependencies) {
-      outputHtml += `<li>${r.recommendedPackage}</li>`;
-    }
-    outputHtml += "<li><input type='submit' value='See all results'/></li>";
-    outputHtml += "</ul>";
-    
-    results.innerHTML = outputHtml;
+  function clearRecommendations() {
+    document.getElementsByClassName("results")[0].innerHTML = '';
+  }
+
+  function clearPackage() {
+    document.getElementsByName("dependencies")[0].value = '';
+    clearRecommendations();
   }
 </script>
 {% endblock %}

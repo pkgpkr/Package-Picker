@@ -486,27 +486,13 @@ table.dataTable tbody td {
 }
 
 .fa-external-link-alt {
-  opacity: 0.8;
+  opacity: 0.6;
   font-size: 0.8em;
 }
 
 #demo {
   display: flex;
   flex-direction: column;
-}
-
-#demo h1 {
-  font-size: 2em;
-  padding-bottom: 0.5em;
-}
-
-#demo input[type=text] {
-  font-size: 1.5em;
-  border-radius: 5px;
-  border-style: solid;
-  border-color: #e8e8e8;
-  border-width: 1px;
-  padding: 0.5em;
 }
 
 #demo input[type=text] + ul {
@@ -518,20 +504,21 @@ table.dataTable tbody td {
   padding: 0.5em;
 }
 
-#demo input[type=submit] {
-  border: none;
-  padding: 0;
-  font-size: 1em;
-  color: #3333ff;
-}
-
-#demo input[type=submit]:hover {
-  text-decoration: underline;
-  opacity: 0.8;
-}
-
-#demo .results ul {
+#demo .results ol {
   line-height: 2em;
   font-size: 1.1em;
-  padding-top: 1em;
+  list-style-position: inside;
+  margin-bottom: 1em;
+}
+
+#demo .results h1 {
+  margin-top: 1em;
+}
+
+#demo .inputs {
+  display: flex;
+}
+
+#demo .inputs .dependency {
+  flex-grow: 1;
 }

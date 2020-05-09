@@ -321,9 +321,11 @@ def recommendations_service_api(request):
 
         # Convert comma separated dependencies into proper expected format
         if language == PYTHON:
-            dependencies = '\n'.join(dependencies)
+            # Converts e.g ["lodash@4.17.15","react@16.13.1"] -> '"lodash==4.17.15\nreact==16.13.1"'
+            formatted_dependencies_list = ['=='.join(dep.split('@')) for dep in dependencies]
+            dependencies = '\n'.join(formatted_dependencies_list)
         elif language == JAVASCRIPT:
-            # Converts e.g ["lodash:4.17.15","react:16.13.1"] -> '"lodash":"4.17.15","react":"16.13.1"'
+            # Converts e.g ["lodash@4.17.15","react@16.13.1"] -> '"lodash":"4.17.15","react":"16.13.1"'
             formatted_dependencies_list = ['"' + dep.replace("@", '":"') + '"' for dep in dependencies]
             dependencies = ','.join(formatted_dependencies_list)
 
@@ -384,8 +386,14 @@ def packages_api(request):
     if request.method == 'GET':
 
         query = request.GET.get('q')
+        language = request.GET.get('language')
 
-        packages = RECOMMENDER_SERVICE.get_packages(query)
+        # Convert the language to a package type
+        package_type = 'npm'
+        if language == 'python':
+            package_type = 'pypi'
+
+        packages = RECOMMENDER_SERVICE.get_packages(query, package_type)
 
         # Setup data to be returned
         data = {
