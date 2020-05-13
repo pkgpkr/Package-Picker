@@ -20,6 +20,12 @@ class RecommenderService:
     def strip_to_major_version(self, dependencies):
         """
         Strip everything after the major version in each dependency
+
+        arguments:
+            :dependencies:  list of dependencies to remove major versions from
+
+        returns:
+            list of dependencies with major version only
         """
 
         packages = []
@@ -34,6 +40,13 @@ class RecommenderService:
     def get_recommendations(self, dependencies, max_recommendations=DEFAULT_MAX_RECOMMENDATIONS):
         """
         Return a list of package recommendations and metadata given a set of dependencies
+
+        arguments:
+            :dependencies: list of dependencies (P-URLs)
+            :max_recommendations: limit how many recommendations to fetch
+
+        returns:
+            list of tuples where each tuple contains metadata about recommended dependencies
         """
 
         # Connect to our database

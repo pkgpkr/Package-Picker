@@ -20,16 +20,22 @@ class SimpleTest(TestCase):
     def setUp(self):
         """
         Preapares request factory for every test
-        :return: Nothing
+
+        returns:
+            A RequestFactory
         """
         self.factory = RequestFactory()
 
     def prep_not_github_auth_request(self, path, instantiate_user_session=True):
         """
         Prepares request without Github authentication in session
-        :param path: Path to which request will be sent
-        :param instantiate_user_session: If there's a need to create placeholder for user session
-        :return: Request to pass to views function
+
+        arguments:
+            :path: Path to which request will be sent
+            :instantiate_user_session: If there's a need to create placeholder for user session
+
+        returns:
+            Request to pass to views function
         """
         # Create an instance of a GET request.
         request = self.factory.get(path)
@@ -43,8 +49,12 @@ class SimpleTest(TestCase):
     def prep_with_github_auth_request(self, path):
         """
         Prepares request with Github authentication in session already
-        :param path: Path to which request will be sent
-        :return: Request to pass to views function
+
+        arguments:
+            :path: Path to which request will be sent
+
+        returns:
+            Request to pass to views function
         """
         # Create an instance of a GET request.
         request = self.factory.get(path)
@@ -59,10 +69,14 @@ class SimpleTest(TestCase):
     def call_method_and_assert(self, request, method, exp_status_code=200):
         """
         Calls method supplied and evaluate response code
-        :param request: Request object prepared for this evaluation
-        :param method: Method in views to call
-        :param exp_status_code: Expected status code
-        :return: Response, in case more evaluation are needed (e.g. on Url)
+
+        arguments:
+            :request: Request object prepared for this evaluation
+            :method: Method in views to call
+            :exp_status_code: Expected status code
+
+        returns:
+            Response, in case more evaluation are needed (e.g. on Url)
         """
         response = method(request)
         self.assertEqual(response.status_code, exp_status_code)
@@ -220,40 +234,40 @@ class SimpleTest(TestCase):
 
         # Issue with json, NOTE: there's no way to pass bad JSON, so just changing content_type so it's not there
         post_data = "THIS IS NOT A JSON!"
-        self.assertion_helper_for_recom_service_api(post_data, 500, 'Could not parse JSON')
+        self.assertion_helper_for_recom_service_api(post_data, 400, 'Could not parse JSON')
 
         # Issue with missing keys
         post_data = {}
-        self.assertion_helper_for_recom_service_api(post_data, 500, 'Required JSON key')
+        self.assertion_helper_for_recom_service_api(post_data, 400, 'Required JSON key')
 
         # Issue with language value
-        post_data = {"language": "NOT SUPPORTED VALUE", "dependencies": {}}
-        self.assertion_helper_for_recom_service_api(post_data, 500, 'Language not supported')
+        post_data = {"language": "NOT SUPPORTED VALUE", "dependencies": ["lodash@4.17.15"]}
+        self.assertion_helper_for_recom_service_api(post_data, 400, 'Language not supported')
 
         # Issue with language missing
-        post_data = {"language": None, "dependencies": {"lodash": "4.17.15"}}
-        self.assertion_helper_for_recom_service_api(post_data, 500, 'Error casting language to lower()')
+        post_data = {"language": None, "dependencies": ["lodash@4.17.15"]}
+        self.assertion_helper_for_recom_service_api(post_data, 400, 'Error casting language to lower()')
 
         # Issue with empty dependencies for Javascript
         for dependency in [{}, None]:
             post_data = {"language": "javascript",
                          "dependencies": dependency}
 
-            self.assertion_helper_for_recom_service_api(post_data, 500,
-                                                        'Javascript dependencies must be non-empty and of type DICT')
+            self.assertion_helper_for_recom_service_api(post_data, 400,
+                                                        'Javascript dependencies must be non-empty and of type LIST')
 
         # Issue with empty dependencies for Python
         for dependency in [[], None]:
             post_data = {"language": "Python",
                          "dependencies": dependency}
 
-            self.assertion_helper_for_recom_service_api(post_data, 500,
+            self.assertion_helper_for_recom_service_api(post_data, 400,
                                                         'Python dependencies must be non-empty and of type LIST')
 
         # Proper Javascript
         post_data = {"language": "Javascript",
-                     "dependencies": {"lodash": "4.17.15", "react": "16.13.1",
-                                      "express": "4.17.1", "moment": "2.24.0"}}
+                     "dependencies": ["lodash@4.17.15", "react@16.13.1",
+                                      "express@4.17.1", "moment@2.24.0"]}
 
         response = self.assertion_helper_for_recom_service_api(post_data, 200, 'recommended_dependencies')
 
@@ -269,8 +283,8 @@ class SimpleTest(TestCase):
 
         # Limited Javascript
         post_data = {"language": "Javascript",
-                     "dependencies": {"lodash": "4.17.15", "react": "16.13.1",
-                                      "express": "4.17.1", "moment": "2.24.0"},
+                     "dependencies": ["lodash@4.17.15", "react@16.13.1",
+                                      "express@4.17.1", "moment@2.24.0"],
                      "max_recommendations": 10}
 
         response = self.assertion_helper_for_recom_service_api(post_data, 200, 'recommended_dependencies')

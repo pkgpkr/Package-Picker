@@ -61,6 +61,16 @@ def connect_to_db():
 def insert_to_app(database, url, followers, app_name, app_hash):
     """
     Upsert a row into the applications table
+
+    arguments:
+        :database: database name
+        :url: package url
+        :followers: number of followers
+        :app_name: name of the application
+        :app_hash: hashed application name
+
+    returns:
+        int application_id
     """
 
     cur = database.cursor()
@@ -76,6 +86,13 @@ def insert_to_app(database, url, followers, app_name, app_hash):
 def insert_to_package(database, name):
     """
     Upsert a row into the packages table
+
+    arguments:
+        :database: database name
+        :name: package name
+
+    returns:
+        int package_id
     """
 
     cur = database.cursor()
@@ -84,9 +101,22 @@ def insert_to_package(database, name):
     package_id = cur.fetchone()[0]
     return package_id
 
-def update_package_metadata(database, name, monthly_downloads_last_month, monthly_downloads_a_year_ago, categories, modified):
+def update_package_metadata(database,
+                            name,
+                            monthly_downloads_last_month,
+                            monthly_downloads_a_year_ago,
+                            categories,
+                            modified):
     """
     Update metadata for a particular package
+
+    arguments:
+        :database: database name
+        :name: package name
+        :monthly_downloads_last_month: package downloads last month
+        :monthly_downloads_a_year_ago: package downloads a year ago
+        :categories: package categories
+        :modified: when was package last modified
     """
 
     # Reformat the category array to a string literal for PostgreSQL
@@ -112,6 +142,11 @@ def update_package_metadata(database, name, monthly_downloads_last_month, monthl
 def insert_to_dependencies(database, application_id, package_id):
     """
     Upsert a row into the dependency table
+
+    arguments:
+        :database: database name
+        :application_id: application id
+        :package_id: pacackage id
     """
 
     cur = database.cursor()

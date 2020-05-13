@@ -5,13 +5,15 @@ Database processing to prepopulate UI tables
 def write_similarity_scores(scores, host, port, database, table, user, password):
     """
     Write similarity scores to the database
-    :param scores: DataFrame containing pairs of packages and their similarity score
-    :param host: Database host
-    :param port: Database port
-    :param database: Database name
-    :param table: Database table for the similarity scores
-    :param user: Database user
-    :param password: Database password
+
+    arguments:
+        :scores: DataFrame containing pairs of packages and their similarity score
+        :host: Database host
+        :port: Database port
+        :database: Database name
+        :table: Database table for the similarity scores
+        :user: Database user
+        :password: Database password
     """
 
     connection_string = f"jdbc:postgresql://{host}:{port}/{database}"
@@ -21,7 +23,9 @@ def write_similarity_scores(scores, host, port, database, table, user, password)
 def update_bounded_similarity_scores(cursor):
     """
     Update bounded similarity score
-    :param cursor: Database cursor
+
+    arguments:
+        :cursor: Database cursor
     """
 
     bounded_similarity_update = """
@@ -43,7 +47,9 @@ def update_bounded_similarity_scores(cursor):
 def update_popularity_scores(cursor):
     """
     Update popularity scores
-    :param cursor: Database cursor
+
+    arguments:
+        :cursor: Database cursor
     """
 
     popularity_update = """
@@ -81,7 +87,9 @@ def update_popularity_scores(cursor):
 def update_trending_scores(cursor):
     """
     Update trending scores
-    :param cursor: Database cursor
+
+    arguments:
+        :cursor: Database cursor
     """
 
     monthly_downloads_last_month_null_to_zero = """
@@ -135,7 +143,9 @@ def update_trending_scores(cursor):
 def package_table_postprocessing(cursor):
     """
     Preprocessing on the packages table
-    :param cursor: Database cursor
+
+    arguments:
+        :cursor: Database cursor
     """
 
     npm_dependency_base_url = 'https://npmjs.com/package'

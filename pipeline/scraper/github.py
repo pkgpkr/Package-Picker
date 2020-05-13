@@ -13,9 +13,7 @@ from .psql import insert_to_app
 from .psql import insert_to_dependencies
 from .psql import insert_to_package
 
-assert os.environ.get('GH_TOKEN'), "GH_TOKEN not set"
-
-HEADERS = {"Authorization": "Bearer " + os.environ['GH_TOKEN']}
+HEADERS = {"Authorization": "Bearer " + str(os.environ.get('GH_TOKEN'))}
 MAX_NODES_PER_LOOP = 100
 NUMBER_REGEX = re.compile(r'\d+')
 
@@ -25,6 +23,11 @@ GITHUB_V4_URL = 'https://api.github.com/graphql'
 def write_db(database, result, language="JavaScript"):
     """
     Write a set of repositories and their dependencies to the database for JS packages
+
+    arguments:
+        :database: database name
+        :result: GitHub v4 query result containing dependencies
+        :language: the ecosystem language of the dependencies written
     """
 
     nodes = [edge['node'] for edge in result['data']['search']['edges']]
@@ -91,6 +94,10 @@ def write_db(database, result, language="JavaScript"):
 def run_query(today, language='JavaScript'):
     """
     Fetch all repositories for the given month
+
+    arguments:
+        :today: today's date
+        :language: the ecosystem language
     """
 
     # set up database
@@ -110,11 +117,7 @@ def run_query(today, language='JavaScript'):
                 last_node = result['data']['search']['edges'][-1]['cursor']
             else:
                 break
-        except ValueError as exc:
-            # pylint: disable=line-too-long
-            print(f"Could not run query starting at {last_node} for {daily_search_str}: {exc}: {result}")
-            break
-        except TypeError as exc:
+        except (ValueError, TypeError) as exc:
             # pylint: disable=line-too-long
             print(f"Could not run query starting at {last_node} for {daily_search_str}: {exc}: {result}")
             break
@@ -126,7 +129,16 @@ def run_query(today, language='JavaScript'):
 def run_query_once(node_per_loop, daily_search_str, cursor, language):
     """
     Fetch a single page of repositories for the given month
+
+    arguments:
+        :node_per_loop: number of nodes in batch
+        :daily_search_str: GitHub v4 API search string, e.g specify start/end
+        :cursor: DB cursor
+        :language: ecosystem language
+
     """
+    assert os.environ.get('GH_TOKEN'), "GH_TOKEN not set"
+
     if language == "JavaScript":
         expression_string = "master:package.json"
     elif language == "Python":
