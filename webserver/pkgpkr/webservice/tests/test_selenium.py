@@ -100,9 +100,9 @@ class LoginTest(LiveServerTestCase):
         # Check if the user at my repositories page
         self.assertEqual(f'http://localhost:{LoginTest.port}/repositories', self.driver.current_url)
 
-        # The last element from the repos list
+        # The express element from the repos list
         first_repo_ele = self.driver.find_element_by_xpath(
-            "//tbody/tr[4]/td[1]/a")
+            "//tbody//a[text()='pkgpkr1/express']")
         first_repo_ele.click()
 
         # Wait until the loading animation is disappeared
