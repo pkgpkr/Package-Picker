@@ -23,17 +23,6 @@ export default function App(props) {
             <Stack.Screen
               name="Home"
               component={BottomTabNavigator}
-              options={{
-                headerStyle: {
-                  backgroundColor: '#00756A',
-                },
-                headerTintColor: '#f2f2f2',
-                headerTitleStyle: {
-                  fontWeight: 'bold',
-                  alignSelf: 'center',
-                },
-                headerLayoutPreset: 'center'
-              }}
             />
           </Stack.Navigator>
         </NavigationContainer>
