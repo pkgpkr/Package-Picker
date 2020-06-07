@@ -90,7 +90,7 @@ resource "local_file" "pipeline-task-definition" {
 {
   "executionRoleArn": "${aws_iam_role.execute_task.arn}",
   "containerDefinitions": ${file("task-definitions/pkgpkr-pipeline-container.json")},
-  "memory": "2048",
+  "memory": "16384",
   "family": "pkgpkr-ml-task-definition",
   "requiresCompatibilities": [
     "FARGATE"
