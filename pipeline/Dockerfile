@@ -26,5 +26,5 @@ WORKDIR /code
 COPY . /code/
 RUN pip3 install -r requirements.txt
 
-CMD python3.7 run_scraper.py && spark-submit --driver-class-path=postgresql-42.2.11.jar --jars=postgresql-42.2.11.jar --driver-memory 12g train_model.py
+CMD python3.7 run_scraper.py && spark-submit --driver-class-path=postgresql-42.2.11.jar --jars=postgresql-42.2.11.jar --driver-memory 15g train_model.py
 

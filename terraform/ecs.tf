@@ -56,7 +56,7 @@ resource "aws_ecs_task_definition" "web" {
 resource "aws_ecs_task_definition" "pipeline" {
   execution_role_arn = aws_iam_role.execute_task.arn
   container_definitions = file("task-definitions/pkgpkr-pipeline-container.json")
-  memory = "2048"
+  memory = "16384"
   family = "pkgpkr-ml-task-definition"
   requires_compatibilities = [
     "FARGATE"
