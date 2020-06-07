@@ -62,7 +62,7 @@ resource "aws_ecs_task_definition" "pipeline" {
     "FARGATE"
   ]
   network_mode = "awsvpc"
-  cpu = "1024"
+  cpu = "2048"
 }
 
 // Write task definitions to local files for use by GitHub Actions
