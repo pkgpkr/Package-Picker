@@ -19,8 +19,8 @@ resource "aws_cloudwatch_log_stream" "web" {
 // Rule to trigger a run of our ML pipeline once per day
 resource "aws_cloudwatch_event_rule" "run_ml_pipeline" {
   role_arn = aws_iam_role.invoke_step_function.arn
-  description = "Run the pkgpkr ML Pipeline every day"
-  schedule_expression = "rate(1 day)"
+  description = "Run the pkgpkr ML Pipeline every week"
+  schedule_expression = "rate(7 days)"
 }
 
 // Event target which glues our CloudWatch rule to our State Machine
