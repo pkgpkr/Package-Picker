@@ -96,7 +96,7 @@ resource "local_file" "pipeline-task-definition" {
     "FARGATE"
   ],
   "networkMode": "awsvpc",
-  "cpu": "1024"
+  "cpu": "2048"
 }
 PATTERN
 }
