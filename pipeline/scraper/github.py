@@ -117,7 +117,7 @@ def run_query(today, language='JavaScript'):
                 last_node = result['data']['search']['edges'][-1]['cursor']
             else:
                 break
-        except (ValueError, TypeError) as exc:
+        except (ValueError, TypeError, KeyError) as exc:
             # pylint: disable=line-too-long
             print(f"Could not run query starting at {last_node} for {daily_search_str}: {exc}: {result}")
             break
