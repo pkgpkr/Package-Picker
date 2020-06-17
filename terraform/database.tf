@@ -6,7 +6,7 @@ resource "aws_db_instance" "default" {
   storage_type         = "gp2"
   engine               = "postgres"
   engine_version       = "11.5"
-  instance_class       = "db.t2.small"
+  instance_class       = "db.t2.medium"
   name                 = "pkgpkr"
   username             = var.DB_USER
   password             = var.DB_PASSWORD
