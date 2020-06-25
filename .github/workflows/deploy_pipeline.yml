@@ -30,10 +30,6 @@ on:
     paths:
       - 'pipeline/**'
       - '.github/workflows/deploy_pipeline.yml'
-  pull_request: # REMOVE BEFORE MERGE
-    paths:
-      - 'pipeline/**'
-      - '.github/workflows/deploy_pipeline.yml'
 
 name: Pipeline Deploy
 
