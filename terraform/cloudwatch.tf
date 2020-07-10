@@ -27,5 +27,5 @@ resource "aws_cloudwatch_event_rule" "run_ml_pipeline" {
 resource "aws_cloudwatch_event_target" "run_ml_pipeline" {
   rule = aws_cloudwatch_event_rule.run_ml_pipeline.name
   arn = aws_sfn_state_machine.run_ml_pipeline.id
-  role_arn = aws_iam_role.run_ml_pipeline.arn
+  role_arn = aws_iam_role.invoke_step_function.arn
 }

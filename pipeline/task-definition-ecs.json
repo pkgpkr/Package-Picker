@@ -17,19 +17,19 @@
         "containerPort": 80
       }
     ],
-    "cpu": 1024,
-    "memoryReservation": 2048,
+    "cpu": 2048,
+    "memoryReservation": 16384,
     "image": "nginx:latest",
     "essential": true,
     "name": "nginx"
   }
 ]
 ,
-  "memory": "2048",
+  "memory": "16384",
   "family": "pkgpkr-ml-task-definition",
   "requiresCompatibilities": [
     "FARGATE"
   ],
   "networkMode": "awsvpc",
-  "cpu": "1024"
+  "cpu": "2048"
 }
