@@ -1,6 +1,6 @@
 psycopg2-binary==2.8.4
 requests==2.23.0
-pyspark==2.4.5
+pyspark==3.2.2
 numpy==1.17.2
 simplejson==3.16.0
 pypistats==0.11.0
